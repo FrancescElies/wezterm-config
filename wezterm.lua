@@ -48,20 +48,6 @@ local function is_vim(pane)
 	return pane:get_user_vars().IS_NVIM == "true"
 end
 
--- if you *ARE* lazy-loading smart-splits.nvim (not recommended)
--- you have to use this instead, but note that this will not work
--- in all cases (e.g. over an SSH connection). Also note that
--- `pane:get_foreground_process_name()` can have high and highly variable
--- latency, so the other implementation of `is_vim()` will be more
--- performant as well.
-local function is_vim(pane)
-	-- This gsub is equivalent to POSIX basename(3)
-	-- Given "/foo/bar" returns "bar"
-	-- Given "c:\\foo\\bar" returns "bar"
-	local process_name = string.gsub(pane:get_foreground_process_name(), "(.*[/\\])(.*)", "%2")
-	return process_name == "nvim" or process_name == "vim"
-end
-
 local direction_keys = {
 	Left = "h",
 	Down = "j",
