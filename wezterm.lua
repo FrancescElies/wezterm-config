@@ -4,6 +4,44 @@
 
 local w = require("wezterm")
 
+local platform = {
+	is_win = string.find(w.target_triple, "windows") ~= nil,
+	is_linux = string.find(w.target_triple, "linux") ~= nil,
+	is_mac = string.find(w.target_triple, "apple") ~= nil,
+}
+
+local options = {
+	default_prog = {},
+	launch_menu = {},
+}
+
+if platform.is_win then
+	options.default_prog = { "pwsh" }
+	options.launch_menu = {
+		{ label = "PowerShell Core", args = { "pwsh" } },
+		{ label = "PowerShell Desktop", args = { "powershell" } },
+		{ label = "Command Prompt", args = { "cmd" } },
+		{ label = "Nushell", args = { "nu" } },
+	}
+elseif platform.is_mac then
+	options.default_prog = { "~/.cargo/bin/nuu" }
+	options.launch_menu = {
+		{ label = "Bash", args = { "bash" } },
+		{ label = "Nushell", args = { "~/.cargo/bin/nu" } },
+		{ label = "Zsh", args = { "zsh" } },
+	}
+end
+
+local mod = {} -- modifier keys
+
+if platform.is_mac then
+	mod.super_or_alt = "SUPER"
+	mod.super_or_alt_ctrl = "SUPER|CTRL"
+elseif platform.is_win then
+	mod.super_or_alt = "ALT" -- to not conflict with Windows key shortcuts
+	mod.super_or_alt_ctrl = "ALT|CTRL"
+end
+
 -- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
 local function is_vim(pane)
 	-- this is set by the plugin, and unset on ExitPre in Neovim
@@ -59,13 +97,24 @@ end
 
 return {
 	keys = {
-		{ key = "a", mods = "ALT", action = w.action.ShowLauncher },
-		{ key = "-", mods = "ALT", action = w.action({ SplitVertical = { domain = "CurrentPaneDomain" } }) },
-		{ key = "\\", mods = "ALT", action = w.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }) },
-		{ key = "s", mods = "ALT", action = w.action.PaneSelect({ alphabet = "1234567890" }) },
-		{ key = "r", mods = "ALT", action = w.action("ReloadConfiguration") },
-		{ key = "q", mods = "ALT", action = w.action({ CloseCurrentPane = { confirm = true } }) },
-		{ key = "x", mods = "ALT", action = w.action({ CloseCurrentPane = { confirm = true } }) },
+		{ key = "F1", mods = "NONE", action = w.action.ActivateCopyMode },
+		{ key = "F12", mods = "NONE", action = w.action.ShowDebugOverlay },
+
+		{ key = "a", mods = mod.super_or_alt, action = w.action.ShowLauncher },
+
+		{ key = "-", mods = mod.super_or_alt, action = w.action({ SplitVertical = { domain = "CurrentPaneDomain" } }) },
+		{
+			key = "\\",
+			mods = mod.super_or_alt,
+			action = w.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }),
+		},
+
+		{ key = "s", mods = mod.super_or_alt, action = w.action.PaneSelect({ alphabet = "1234567890" }) },
+		{ key = "r", mods = mod.super_or_alt, action = w.action("ReloadConfiguration") },
+
+		{ key = "q", mods = mod.super_or_alt, action = w.action({ CloseCurrentPane = { confirm = true } }) },
+		{ key = "x", mods = mod.super_or_alt, action = w.action({ CloseCurrentPane = { confirm = true } }) },
+
 		-- move between split panes
 		split_nav("move", "h"),
 		split_nav("move", "j"),
@@ -77,5 +126,5 @@ return {
 		split_nav("resize", "k"),
 		split_nav("resize", "l"),
 	},
-	default_prog = { "nu" },
+	default_prog = { "/Users/cesc/.cargo/bin/nu" },
 }
