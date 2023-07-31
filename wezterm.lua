@@ -4,6 +4,8 @@
 
 local w = require("wezterm")
 
+local home = os.getenv("HOME")
+
 local platform = {
 	is_win = string.find(w.target_triple, "windows") ~= nil,
 	is_linux = string.find(w.target_triple, "linux") ~= nil,
@@ -24,7 +26,7 @@ if platform.is_win then
 		{ label = "Nushell", args = { "nu" } },
 	}
 elseif platform.is_mac then
-	options.default_prog = { "~/.cargo/bin/nuu" }
+	options.default_prog = {  platform.is_windows and home .. "/.cargo/bin/nu" or home .. "/.cargo/bin/nu.exe" }
 	options.launch_menu = {
 		{ label = "Bash", args = { "bash" } },
 		{ label = "Nushell", args = { "~/.cargo/bin/nu" } },
@@ -112,5 +114,5 @@ return {
 		split_nav("resize", "k"),
 		split_nav("resize", "l"),
 	},
-	default_prog = { "/Users/cesc/.cargo/bin/nu" },
+	default_prog = { platform.is_windows and home .. "/.cargo/bin/nu" or home .. "/.cargo/bin/nu.exe" },
 }
