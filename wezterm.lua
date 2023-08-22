@@ -2,6 +2,7 @@
 -- https://github.com/KevinSilvester/wezterm-config
 -- https://github.com/mrjones2014/smart-splits.nvim#wezterm
 
+-- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local w = require 'wezterm'
 
 local home = os.getenv 'HOME'
@@ -31,19 +32,17 @@ elseif platform.is_mac then
   }
 end
 
-local mod = {} -- modifier keys
+local mod = {
+  shift_ctrl = 'SHIFT|CTRL',
+  -- linux & windows (for mac continue reading)
+  alt = 'ALT',
+  ctrl = 'CTRL',
+  alt_ctrl = 'ALT|CTRL',
+} -- modifier keys
 
 if platform.is_mac then
-  mod.super_or_alt = 'SUPER'
-  mod.super_or_alt_ctrl = 'SUPER|CTRL'
-elseif platform.is_linux then
-  mod.super_or_alt = 'ALT'
-  mod.super_or_alt_ctrl = 'ALT|CTRL'
-elseif platform.is_win then
-  mod.super_or_alt = 'ALT' -- to not conflict with Windows key shortcuts
-  mod.super_or_alt_ctrl = 'ALT|CTRL'
-else
-  error 'unkown os'
+  mod.alt = 'SUPER'
+  mod.alt_ctrl = 'SUPER|CTRL'
 end
 
 -- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
@@ -67,12 +66,12 @@ local direction_keys = {
 local function split_nav(resize_or_move, key)
   return {
     key = key,
-    mods = resize_or_move == 'resize' and 'META' or 'CTRL',
+    mods = resize_or_move == 'resize' and mod.alt or mod.ctrl,
     action = w.action_callback(function(win, pane)
       if is_vim(pane) then
         -- pass the keys through to vim/nvim
         win:perform_action({
-          SendKey = { key = key, mods = resize_or_move == 'resize' and 'META' or 'CTRL' },
+          SendKey = { key = key, mods = resize_or_move == 'resize' and mod.alt or mod.ctrl },
         }, pane)
       else
         if resize_or_move == 'resize' then
@@ -86,27 +85,28 @@ local function split_nav(resize_or_move, key)
 end
 
 config.keys = {
+  { key = 'z', mods = mod.shift_ctrl, action = w.action.TogglePaneZoomState },
   { key = 'F1', mods = 'NONE', action = w.action.ActivateCopyMode },
   { key = 'F12', mods = 'NONE', action = w.action.ShowDebugOverlay },
-  { key = 'a', mods = mod.super_or_alt, action = w.action.ShowLauncher },
+  { key = 'a', mods = mod.alt, action = w.action.ShowLauncher },
   {
     key = '-',
-    mods = mod.super_or_alt,
+    mods = mod.alt,
     action = w.action {
       SplitVertical = { domain = 'CurrentPaneDomain' },
     },
   },
   {
     key = '\\',
-    mods = mod.super_or_alt,
+    mods = mod.alt,
     action = w.action { SplitHorizontal = { domain = 'CurrentPaneDomain' } },
   },
 
-  { key = 'Enter', mods = mod.super_or_alt, action = w.action.DisableDefaultAssignment }, -- broot uses alt-enter
-  { key = 's', mods = mod.super_or_alt, action = w.action.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r', mods = mod.super_or_alt, action = w.action 'ReloadConfiguration' },
-  { key = 'q', mods = mod.super_or_alt, action = w.action { CloseCurrentPane = { confirm = true } } },
-  { key = 'x', mods = mod.super_or_alt, action = w.action { CloseCurrentPane = { confirm = true } } },
+  { key = 'Enter', mods = mod.alt, action = w.action.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 's', mods = mod.alt, action = w.action.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r', mods = mod.alt, action = w.action 'ReloadConfiguration' },
+  { key = 'q', mods = mod.alt, action = w.action { CloseCurrentPane = { confirm = true } } },
+  { key = 'x', mods = mod.alt, action = w.action { CloseCurrentPane = { confirm = true } } },
 
   -- move between split panes
   split_nav('move', 'h'),
@@ -121,5 +121,54 @@ config.keys = {
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
+config.exit_behavior = 'CloseOnCleanExit'
+config.window_close_confirmation = 'AlwaysPrompt'
+
+config.hyperlink_rules = {
+  -- Matches: a URL in parens: (URL)
+  {
+    regex = '\\((\\w+://\\S+)\\)',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Matches: a URL in brackets: [URL]
+  {
+    regex = '\\[(\\w+://\\S+)\\]',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Matches: a URL in curly braces: {URL}
+  {
+    regex = '\\{(\\w+://\\S+)\\}',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Matches: a URL in angle brackets: <URL>
+  {
+    regex = '<(\\w+://\\S+)>',
+    format = '$1',
+    highlight = 1,
+  },
+  -- Then handle URLs not wrapped in brackets
+  {
+    -- Before
+    --regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
+    --format = '$0',
+    -- After
+    regex = '[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)',
+    format = '$1',
+    highlight = 1,
+  },
+  -- implicit mailto link
+  {
+    regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
+    format = 'mailto:$0',
+  },
+  -- github
+  {
+    regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
+    format = 'https://github.com/$1/$3',
+  },
+}
 
 return config
