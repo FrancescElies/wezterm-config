@@ -64,6 +64,7 @@ local direction_keys = {
 }
 
 local function split_nav(resize_or_move, key)
+  w.log_info(resize_or_move .. ' ' .. key)
   return {
     key = key,
     mods = resize_or_move == 'resize' and mod.alt or mod.ctrl,
@@ -122,7 +123,6 @@ config.keys = {
 
 config.switch_to_last_active_tab_when_closing_tab = true
 config.exit_behavior = 'CloseOnCleanExit'
-config.window_close_confirmation = 'AlwaysPrompt'
 
 config.hyperlink_rules = {
   -- Matches: a URL in parens: (URL)
