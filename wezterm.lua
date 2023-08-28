@@ -13,22 +13,24 @@ local platform = {
   is_mac = string.find(w.target_triple, 'apple') ~= nil,
 }
 
-local config = {}
+local config = {
+  debug_key_events = true,
+}
 
 if platform.is_win then
   config.default_prog = { 'nu' }
   config.launch_menu = {
-    { label = 'PowerShell Core', args = { 'pwsh' } },
+    { label = 'PowerShell Core',    args = { 'pwsh' } },
     { label = 'PowerShell Desktop', args = { 'powershell' } },
-    { label = 'Command Prompt', args = { 'cmd' } },
-    { label = 'Nushell', args = { 'nu' } },
+    { label = 'Command Prompt',     args = { 'cmd' } },
+    { label = 'Nushell',            args = { 'nu' } },
   }
 elseif platform.is_mac then
   config.default_prog = { home .. '/.cargo/bin/nu' }
   config.launch_menu = {
-    { label = 'Bash', args = { 'bash' } },
+    { label = 'Bash',    args = { 'bash' } },
     { label = 'Nushell', args = { '~/.cargo/bin/nu' } },
-    { label = 'Zsh', args = { 'zsh' } },
+    { label = 'Zsh',     args = { 'zsh' } },
   }
 end
 
@@ -86,10 +88,13 @@ local function split_nav(resize_or_move, key)
 end
 
 config.keys = {
-  { key = 'z', mods = mod.shift_ctrl, action = w.action.TogglePaneZoomState },
-  { key = 'F1', mods = 'NONE', action = w.action.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE', action = w.action.ShowDebugOverlay },
-  { key = 'a', mods = mod.alt, action = w.action.ShowLauncher },
+  { key = 'z',   mods = mod.shift_ctrl, action = w.action.TogglePaneZoomState },
+  { key = ' ',   mods = mod.ctrl,       action = 'DisableDefaultAssignment' },
+  -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
+  { key = ' ',   mods = mod.ctrl,       action = w.action.SendKey { key = ' ', mods = mod.ctrl } },
+  { key = 'F1',  mods = 'NONE',         action = w.action.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE',         action = w.action.ShowDebugOverlay },
+  { key = 'a',   mods = mod.alt,        action = w.action.ShowLauncher },
   {
     key = '-',
     mods = mod.alt,
@@ -104,10 +109,10 @@ config.keys = {
   },
 
   { key = 'Enter', mods = mod.alt, action = w.action.DisableDefaultAssignment }, -- broot uses alt-enter
-  { key = 's', mods = mod.alt, action = w.action.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r', mods = mod.alt, action = w.action 'ReloadConfiguration' },
-  { key = 'q', mods = mod.alt, action = w.action { CloseCurrentPane = { confirm = true } } },
-  { key = 'x', mods = mod.alt, action = w.action { CloseCurrentPane = { confirm = true } } },
+  { key = 's',     mods = mod.alt, action = w.action.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r',     mods = mod.alt, action = w.action 'ReloadConfiguration' },
+  { key = 'q',     mods = mod.alt, action = w.action { CloseCurrentPane = { confirm = true } } },
+  { key = 'x',     mods = mod.alt, action = w.action { CloseCurrentPane = { confirm = true } } },
 
   -- move between split panes
   split_nav('move', 'h'),
@@ -164,11 +169,11 @@ config.hyperlink_rules = {
     regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
     format = 'mailto:$0',
   },
-  -- github
-  {
-    regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
-    format = 'https://github.com/$1/$3',
-  },
+  -- -- github
+  -- {
+  --   regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
+  --   format = 'https://github.com/$1/$3',
+  -- },
 }
 
 return config
