@@ -4,7 +4,6 @@
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local wezterm = require 'wezterm'
-local wezterm = require 'wezterm'
 local act = require('wezterm').action
 local mux = require('wezterm').mux
 
@@ -24,18 +23,18 @@ if platform.is_win then
   wezterm.log_info 'on windows'
   config.default_prog = { 'nu' }
   config.launch_menu = {
-    { label = 'PowerShell Core', args = { 'pwsh' } },
+    { label = 'PowerShell Core',    args = { 'pwsh' } },
     { label = 'PowerShell Desktop', args = { 'powershell' } },
-    { label = 'Command Prompt', args = { 'cmd' } },
-    { label = 'Nushell', args = { 'nu' } },
+    { label = 'Command Prompt',     args = { 'cmd' } },
+    { label = 'Nushell',            args = { 'nu' } },
   }
 elseif platform.is_mac then
   wezterm.log_info 'on mac'
   config.default_prog = { home .. '/.cargo/bin/nu' }
   config.launch_menu = {
-    { label = 'Bash', args = { 'bash' } },
+    { label = 'Bash',    args = { 'bash' } },
     { label = 'Nushell', args = { '~/.cargo/bin/nu' } },
-    { label = 'Zsh', args = { 'zsh' } },
+    { label = 'Zsh',     args = { 'zsh' } },
   }
 end
 
@@ -77,7 +76,7 @@ wezterm.on('move-left', function(window, pane)
   wez_nvim_action(
     window,
     pane,
-    act.ActivatePaneDirection 'Left', -- this will execute when the active pane is not a nvim instance
+    act.ActivatePaneDirection 'Left',               -- this will execute when the active pane is not a nvim instance
     act.SendKey { key = 'h', mods = mod_pane_move } -- this key combination will be forwarded to nvim if the active pane is a nvim instance
   )
 end)
@@ -101,13 +100,13 @@ wezterm.on('close-pane', function(window, pane)
 end)
 
 config.keys = {
-  { key = 'z', mods = mod.shift_ctrl, action = act.TogglePaneZoomState },
-  { key = ' ', mods = mod.ctrl, action = 'DisableDefaultAssignment' },
+  { key = 'z',   mods = mod.shift_ctrl, action = act.TogglePaneZoomState },
+  { key = ' ',   mods = mod.ctrl,       action = 'DisableDefaultAssignment' },
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ', mods = mod.ctrl, action = act.SendKey { key = ' ', mods = mod.ctrl } },
-  { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-  { key = 'a', mods = mod.alt, action = act.ShowLauncher },
+  { key = ' ',   mods = mod.ctrl,       action = act.SendKey { key = ' ', mods = mod.ctrl } },
+  { key = 'F1',  mods = 'NONE',         action = act.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE',         action = act.ShowDebugOverlay },
+  { key = 'a',   mods = mod.alt,        action = act.ShowLauncher },
   {
     key = '-',
     mods = mod.alt,
@@ -121,18 +120,18 @@ config.keys = {
     action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } },
   },
 
-  { key = 'Enter', mods = mod.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'Enter', mods = mod.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
-  { key = 's', mods = mod.alt, action = act.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r', mods = mod.alt, action = act 'ReloadConfiguration' },
-  { key = 'q', mods = mod.alt, action = act { CloseCurrentPane = { confirm = true } } },
+  { key = 's',     mods = mod.alt,       action = act.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r',     mods = mod.alt,       action = act 'ReloadConfiguration' },
+  { key = 'q',     mods = mod.alt,       action = act { CloseCurrentPane = { confirm = true } } },
 
   -- window movements
-  { key = 'h', mods = mod_pane_move, action = act { EmitEvent = 'move-left' } },
-  { key = 'l', mods = mod_pane_move, action = act { EmitEvent = 'move-right' } },
-  { key = 'j', mods = mod_pane_move, action = act { EmitEvent = 'move-down' } },
-  { key = 'k', mods = mod_pane_move, action = act { EmitEvent = 'move-up' } },
-  { key = 'x', mods = mod.alt, action = act { EmitEvent = 'close-pane' } },
+  { key = 'h',     mods = mod_pane_move, action = act { EmitEvent = 'move-left' } },
+  { key = 'l',     mods = mod_pane_move, action = act { EmitEvent = 'move-right' } },
+  { key = 'j',     mods = mod_pane_move, action = act { EmitEvent = 'move-down' } },
+  { key = 'k',     mods = mod_pane_move, action = act { EmitEvent = 'move-up' } },
+  { key = 'x',     mods = mod.alt,       action = act { EmitEvent = 'close-pane' } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
