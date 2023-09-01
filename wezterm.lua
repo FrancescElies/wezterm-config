@@ -51,17 +51,27 @@ if platform.is_mac then
   mod.alt_ctrl = 'SUPER|CTRL'
 end
 
-local mod_pane_move = 'CTRL'
-
 local function is_nvim(window)
-  local current_process = mux.get_window(window:window_id()):active_pane():get_foreground_process_name()
-  wezterm.log_info(current_process)
-  if platform.is_win then
-    return string.find(current_process, 'nvim')
-  else
-    local nvim = '/usr/bin/nvim' -- change this to the location of you nvim
-    return current_process == nvim
+  local function process_is_vim(process_info)
+    wezterm.log_info('process: ' .. process_info.name)
+    return string.find(process_info.name, 'nvim')
   end
+  -- local process_name = mux.get_window(window:window_id()):active_pane():get_foreground_process_name()
+  -- check current process
+  local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
+  for i = 1, 50, 1 do
+    if p == nil then
+      return false
+    end
+
+    if process_is_vim(p) then
+      return true
+    end
+    -- check parent process in the next iteration
+    p = wezterm.procinfo.get_info_for_pid(p.ppid)
+  end
+
+  return false
 end
 
 --- Cahanges wezterm pane or nvim pane acording to where you are.
@@ -71,32 +81,34 @@ end
 ---@param forward_key_nvim act.SendKey key combination will be forwarded to nvim if the active pane is a nvim instance
 local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
   if is_nvim(window) then
+    wezterm.log_info 'nvim change pane'
     window:perform_action(forward_key_nvim, pane)
   else
+    wezterm.log_info 'wezterm change pane'
     window:perform_action(action_wez, pane)
   end
 end
 
 wezterm.on('move-left', function(window, pane)
-  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Left', act.SendKey { key = 'h', mods = mod_pane_move })
+  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Left', act.SendKey { key = 'h', mods = mod.ctrl })
 end)
 
 wezterm.on('move-right', function(window, pane)
-  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Right', act.SendKey { key = 'l', mods = mod_pane_move })
+  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Right', act.SendKey { key = 'l', mods = mod.ctrl })
 end)
 
 wezterm.on('move-down', function(window, pane)
-  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Down', act.SendKey { key = 'j', mods = mod_pane_move })
+  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Down', act.SendKey { key = 'j', mods = mod.ctrl })
 end)
 
 wezterm.on('move-up', function(window, pane)
-  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Up', act.SendKey { key = 'k', mods = mod_pane_move })
+  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Up', act.SendKey { key = 'k', mods = mod.ctrl })
 end)
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
 wezterm.on('close-pane', function(window, pane)
-  wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = 'ALT' })
+  wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mod.alt })
 end)
 
 config.keys = {
@@ -120,18 +132,18 @@ config.keys = {
     action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } },
   },
 
-  { key = 'Enter', mods = mod.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'Enter', mods = mod.alt,  action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
-  { key = 's',     mods = mod.alt,       action = act.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r',     mods = mod.alt,       action = act 'ReloadConfiguration' },
-  { key = 'q',     mods = mod.alt,       action = act { CloseCurrentPane = { confirm = true } } },
+  { key = 's',     mods = mod.alt,  action = act.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r',     mods = mod.alt,  action = act 'ReloadConfiguration' },
+  { key = 'q',     mods = mod.alt,  action = act { CloseCurrentPane = { confirm = false } } },
 
   -- window movements
-  { key = 'h',     mods = mod_pane_move, action = act { EmitEvent = 'move-left' } },
-  { key = 'l',     mods = mod_pane_move, action = act { EmitEvent = 'move-right' } },
-  { key = 'j',     mods = mod_pane_move, action = act { EmitEvent = 'move-down' } },
-  { key = 'k',     mods = mod_pane_move, action = act { EmitEvent = 'move-up' } },
-  { key = 'x',     mods = mod.alt,       action = act { EmitEvent = 'close-pane' } },
+  { key = 'h',     mods = mod.ctrl, action = act { EmitEvent = 'move-left' } },
+  { key = 'l',     mods = mod.ctrl, action = act { EmitEvent = 'move-right' } },
+  { key = 'j',     mods = mod.ctrl, action = act { EmitEvent = 'move-down' } },
+  { key = 'k',     mods = mod.ctrl, action = act { EmitEvent = 'move-up' } },
+  { key = 'x',     mods = mod.alt,  action = act { EmitEvent = 'close-pane' } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
