@@ -4,6 +4,7 @@
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local w = require 'wezterm'
+local wezterm = require 'wezterm'
 local act = require('wezterm').action
 local mux = require('wezterm').mux
 
@@ -52,20 +53,27 @@ if platform.is_mac then
 end
 
 local mod_window = 'CTRL'
-local wez_nvim_action = function(window, pane, action_wez, forward_key_nvim)
+
+local function is_nvim(window)
   local current_process = mux.get_window(window:window_id()):active_pane():get_foreground_process_name()
   w.log_info(current_process)
+  if platform.is_win then
+    return string.find(current_process, 'nvim')
+  else
+    local nvim = '/usr/bin/nvim' -- change this to the location of you nvim
+    return current_process == nvim
+  end
+end
 
-  if string.find(current_process, 'nvim') then
-    w.log_info 'change window nvim'
+local wez_nvim_action = function(window, pane, action_wez, forward_key_nvim)
+  if is_nvim(window) then
     window:perform_action(forward_key_nvim, pane)
   else
-    w.log_info 'change window wezterm'
     window:perform_action(action_wez, pane)
   end
 end
 
-w.on('move-left', function(window, pane)
+wezterm.on('move-left', function(window, pane)
   wez_nvim_action(
     window,
     pane,
@@ -74,21 +82,21 @@ w.on('move-left', function(window, pane)
   )
 end)
 
-w.on('move-right', function(window, pane)
+wezterm.on('move-right', function(window, pane)
   wez_nvim_action(window, pane, act.ActivatePaneDirection 'Right', act.SendKey { key = 'l', mods = mod_window })
 end)
 
-w.on('move-down', function(window, pane)
+wezterm.on('move-down', function(window, pane)
   wez_nvim_action(window, pane, act.ActivatePaneDirection 'Down', act.SendKey { key = 'j', mods = mod_window })
 end)
 
-w.on('move-up', function(window, pane)
+wezterm.on('move-up', function(window, pane)
   wez_nvim_action(window, pane, act.ActivatePaneDirection 'Up', act.SendKey { key = 'k', mods = mod_window })
 end)
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
-w.on('close-pane', function(window, pane)
+wezterm.on('close-pane', function(window, pane)
   wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = 'ALT' })
 end)
 
