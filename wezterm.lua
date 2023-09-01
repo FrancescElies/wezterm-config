@@ -64,7 +64,12 @@ local function is_nvim(window)
   end
 end
 
-local wez_nvim_action = function(window, pane, action_wez, forward_key_nvim)
+--- Cahanges wezterm pane or nvim pane acording to where you are.
+---@param window Window
+---@param pane Pane
+---@param action_wez act.ActivatePaneDirection will execute when the active pane is not a nvim instance
+---@param forward_key_nvim act.SendKey key combination will be forwarded to nvim if the active pane is a nvim instance
+local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
   if is_nvim(window) then
     window:perform_action(forward_key_nvim, pane)
   else
@@ -73,12 +78,7 @@ local wez_nvim_action = function(window, pane, action_wez, forward_key_nvim)
 end
 
 wezterm.on('move-left', function(window, pane)
-  wez_nvim_action(
-    window,
-    pane,
-    act.ActivatePaneDirection 'Left',               -- this will execute when the active pane is not a nvim instance
-    act.SendKey { key = 'h', mods = mod_pane_move } -- this key combination will be forwarded to nvim if the active pane is a nvim instance
-  )
+  wez_nvim_action(window, pane, act.ActivatePaneDirection 'Left', act.SendKey { key = 'h', mods = mod_pane_move })
 end)
 
 wezterm.on('move-right', function(window, pane)
