@@ -3,16 +3,16 @@
 -- https://github.com/mrjones2014/smart-splits.nvim#wezterm
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
-local wezterm = require 'wezterm'
+local w = require 'wezterm'
 local act = require('wezterm').action
 local mux = require('wezterm').mux
 
 local home = os.getenv 'HOME'
 
 local platform = {
-  is_win = string.find(wezterm.target_triple, 'windows') ~= nil,
-  is_linux = string.find(wezterm.target_triple, 'linux') ~= nil,
-  is_mac = string.find(wezterm.target_triple, 'apple') ~= nil,
+  is_win = string.find(w.target_triple, 'windows') ~= nil,
+  is_linux = string.find(w.target_triple, 'linux') ~= nil,
+  is_mac = string.find(w.target_triple, 'apple') ~= nil,
 }
 
 local config = {
@@ -20,7 +20,7 @@ local config = {
 }
 
 if platform.is_win then
-  wezterm.log_info 'on windows'
+  w.log_info 'on windows'
   config.default_prog = { 'nu' }
   config.launch_menu = {
     { label = 'PowerShell Core', args = { 'pwsh' } },
@@ -29,7 +29,7 @@ if platform.is_win then
     { label = 'Nushell', args = { 'nu' } },
   }
 elseif platform.is_mac then
-  wezterm.log_info 'on mac'
+  w.log_info 'on mac'
   config.default_prog = { home .. '/.cargo/bin/nu' }
   config.launch_menu = {
     { label = 'Bash', args = { 'bash' } },
@@ -53,7 +53,7 @@ end
 
 local function is_nvim(window)
   local function process_is_vim(process_info)
-    wezterm.log_info('process: ' .. process_info.name)
+    w.log_info('process: ' .. process_info.name)
     return string.find(process_info.name, 'nvim')
   end
   -- local process_name = mux.get_window(window:window_id()):active_pane():get_foreground_process_name()
@@ -68,7 +68,7 @@ local function is_nvim(window)
       return true
     end
     -- check parent process in the next iteration
-    p = wezterm.procinfo.get_info_for_pid(p.ppid)
+    p = w.procinfo.get_info_for_pid(p.ppid)
   end
 
   return false
@@ -81,33 +81,33 @@ end
 ---@param forward_key_nvim act.SendKey key combination will be forwarded to nvim if the active pane is a nvim instance
 local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
   if is_nvim(window) then
-    wezterm.log_info 'nvim change pane'
+    w.log_info 'nvim change pane'
     window:perform_action(forward_key_nvim, pane)
   else
-    wezterm.log_info 'wezterm change pane'
+    w.log_info 'wezterm change pane'
     window:perform_action(action_wez, pane)
   end
 end
 
-wezterm.on('move-left', function(window, pane)
+w.on('move-left', function(window, pane)
   wez_nvim_action(window, pane, act.ActivatePaneDirection 'Left', act.SendKey { key = 'h', mods = mod.ctrl })
 end)
 
-wezterm.on('move-right', function(window, pane)
+w.on('move-right', function(window, pane)
   wez_nvim_action(window, pane, act.ActivatePaneDirection 'Right', act.SendKey { key = 'l', mods = mod.ctrl })
 end)
 
-wezterm.on('move-down', function(window, pane)
+w.on('move-down', function(window, pane)
   wez_nvim_action(window, pane, act.ActivatePaneDirection 'Down', act.SendKey { key = 'j', mods = mod.ctrl })
 end)
 
-wezterm.on('move-up', function(window, pane)
+w.on('move-up', function(window, pane)
   wez_nvim_action(window, pane, act.ActivatePaneDirection 'Up', act.SendKey { key = 'k', mods = mod.ctrl })
 end)
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
-wezterm.on('close-pane', function(window, pane)
+w.on('close-pane', function(window, pane)
   wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mod.alt })
 end)
 
