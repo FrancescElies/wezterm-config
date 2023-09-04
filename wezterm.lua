@@ -23,18 +23,18 @@ if platform.is_win then
   wezterm.log_info 'on windows'
   config.default_prog = { 'nu' }
   config.launch_menu = {
-    { label = 'PowerShell Core',    args = { 'pwsh' } },
+    { label = 'PowerShell Core', args = { 'pwsh' } },
     { label = 'PowerShell Desktop', args = { 'powershell' } },
-    { label = 'Command Prompt',     args = { 'cmd' } },
-    { label = 'Nushell',            args = { 'nu' } },
+    { label = 'Command Prompt', args = { 'cmd' } },
+    { label = 'Nushell', args = { 'nu' } },
   }
 elseif platform.is_mac then
   wezterm.log_info 'on mac'
   config.default_prog = { home .. '/.cargo/bin/nu' }
   config.launch_menu = {
-    { label = 'Bash',    args = { 'bash' } },
+    { label = 'Bash', args = { 'bash' } },
     { label = 'Nushell', args = { '~/.cargo/bin/nu' } },
-    { label = 'Zsh',     args = { 'zsh' } },
+    { label = 'Zsh', args = { 'zsh' } },
   }
 end
 
@@ -59,7 +59,7 @@ local function is_nvim(window)
   -- local process_name = mux.get_window(window:window_id()):active_pane():get_foreground_process_name()
   -- check current process
   local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
-  for i = 1, 50, 1 do
+  for i = 1, 10, 1 do
     if p == nil then
       return false
     end
@@ -112,13 +112,13 @@ wezterm.on('close-pane', function(window, pane)
 end)
 
 config.keys = {
-  { key = 'z',   mods = mod.shift_ctrl, action = act.TogglePaneZoomState },
-  { key = ' ',   mods = mod.ctrl,       action = 'DisableDefaultAssignment' },
+  { key = 'z', mods = mod.shift_ctrl, action = act.TogglePaneZoomState },
+  { key = ' ', mods = mod.ctrl, action = 'DisableDefaultAssignment' },
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ',   mods = mod.ctrl,       action = act.SendKey { key = ' ', mods = mod.ctrl } },
-  { key = 'F1',  mods = 'NONE',         action = act.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE',         action = act.ShowDebugOverlay },
-  { key = 'a',   mods = mod.alt,        action = act.ShowLauncher },
+  { key = ' ', mods = mod.ctrl, action = act.SendKey { key = ' ', mods = mod.ctrl } },
+  { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
+  { key = 'a', mods = mod.alt, action = act.ShowLauncher },
   {
     key = '-',
     mods = mod.alt,
@@ -132,18 +132,18 @@ config.keys = {
     action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } },
   },
 
-  { key = 'Enter', mods = mod.alt,  action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'Enter', mods = mod.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
-  { key = 's',     mods = mod.alt,  action = act.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r',     mods = mod.alt,  action = act 'ReloadConfiguration' },
-  { key = 'q',     mods = mod.alt,  action = act { CloseCurrentPane = { confirm = false } } },
+  { key = 's', mods = mod.alt, action = act.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r', mods = mod.alt, action = act 'ReloadConfiguration' },
+  { key = 'q', mods = mod.alt, action = act { CloseCurrentPane = { confirm = false } } },
 
   -- window movements
-  { key = 'h',     mods = mod.ctrl, action = act { EmitEvent = 'move-left' } },
-  { key = 'l',     mods = mod.ctrl, action = act { EmitEvent = 'move-right' } },
-  { key = 'j',     mods = mod.ctrl, action = act { EmitEvent = 'move-down' } },
-  { key = 'k',     mods = mod.ctrl, action = act { EmitEvent = 'move-up' } },
-  { key = 'x',     mods = mod.alt,  action = act { EmitEvent = 'close-pane' } },
+  { key = 'h', mods = mod.ctrl, action = act { EmitEvent = 'move-left' } },
+  { key = 'l', mods = mod.ctrl, action = act { EmitEvent = 'move-right' } },
+  { key = 'j', mods = mod.ctrl, action = act { EmitEvent = 'move-down' } },
+  { key = 'k', mods = mod.ctrl, action = act { EmitEvent = 'move-up' } },
+  { key = 'x', mods = mod.alt, action = act { EmitEvent = 'close-pane' } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
@@ -189,11 +189,6 @@ config.hyperlink_rules = {
     regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
     format = 'mailto:$0',
   },
-  -- -- github
-  -- {
-  --   regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
-  --   format = 'https://github.com/$1/$3',
-  -- },
 }
 
 return config
