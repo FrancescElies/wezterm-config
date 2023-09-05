@@ -5,6 +5,7 @@
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local w = require 'wezterm'
 local act = require('wezterm').action
+local mux = require('wezterm').mux
 
 local home = os.getenv 'HOME'
 
@@ -50,45 +51,63 @@ if platform.is_mac then
   mod.alt_ctrl = 'SUPER|CTRL'
 end
 
-local function is_vim(pane)
-  -- this is set by the plugin, and unset on ExitPre in Neovim
-  return pane:get_user_vars().IS_NVIM == 'true'
+local function is_vim(window)
+  local function process_is_vim(process_info)
+    w.log_info('process: ' .. process_info.name)
+    return string.find(process_info.name, 'nvim')
+  end
+  -- check current process
+  local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
+  for i = 1, 8, 1 do
+    if p == nil then
+      return false
+    end
+
+    if process_is_vim(p) then
+      return true
+    end
+    -- check parent process in the next iteration
+    p = w.procinfo.get_info_for_pid(p.ppid)
+  end
+
+  return false
 end
-local direction_keys = {
-  Left = 'h',
-  Down = 'j',
-  Up = 'k',
-  Right = 'l',
-  -- reverse lookup
-  h = 'Left',
-  j = 'Down',
-  k = 'Up',
-  l = 'Right',
+
+---
+---@param window
+---@param pane
+---@param action_wez string executed when the active pane is not a nvim instance
+---@param forward_key_nvim string key combination forwarded to nvim if the active pane is a nvim instance
+local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
+  if is_vim(window) then
+    window:perform_action(forward_key_nvim, pane)
+  else
+    window:perform_action(action_wez, pane)
+  end
+end
+
+local move_map = {
+  { wez_action = 'move-left',  wez_direction = 'Left',  key = 'l', mods = mod.ctrl },
+  { wez_action = 'move-right', wez_direction = 'Right', key = 'l', mods = mod.ctrl },
+  { wez_action = 'move-up',    wez_direction = 'Up',    key = 'k', mods = mod.ctrl },
+  { wez_action = 'move-down',  wez_direction = 'Down',  key = 'j', mods = mod.ctrl },
 }
 
-local function split_nav(resize_or_move, key)
-  return {
-    key = key,
-    mods = resize_or_move == 'resize' and mod.alt or mod.ctrl,
-    action = w.action_callback(function(win, pane)
-      if is_vim(pane) then
-        -- pass the keys through to vim/nvim
-        win:perform_action({
-          SendKey = { key = key, mods = resize_or_move == 'resize' and mod.alt or mod.ctrl },
-        }, pane)
-      else
-        if resize_or_move == 'resize' then
-          win:perform_action({ AdjustPaneSize = { direction_keys[key], 3 } }, pane)
-        else
-          win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
-        end
-      end
-    end),
-  }
+for _, v in pairs(move_map) do
+  w.on(v.wez_action, function(window, pane)
+    wez_nvim_action(window, pane, act.ActivatePaneDirection(v.wez_direction), act.SendKey { key = v.key, mods = v.mods })
+  end)
 end
+
+-- you can add other actions, this unifies the way in which panes and windows are closed
+-- (you'll need to bind <A-x> -> <C-w>q)
+w.on('close-pane', function(window, pane)
+  wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mod.alt })
+end)
 
 config.keys = {
   { key = 'z',   mods = mod.shift_ctrl, action = act.TogglePaneZoomState },
+  { key = 'f',   mods = mod.alt,        action = act.TogglePaneZoomState },
   { key = ' ',   mods = mod.ctrl,       action = 'DisableDefaultAssignment' },
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
   { key = ' ',   mods = mod.ctrl,       action = act.SendKey { key = ' ', mods = mod.ctrl } },
@@ -108,22 +127,23 @@ config.keys = {
     action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } },
   },
 
-  { key = 'Enter', mods = mod.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'Enter', mods = mod.alt,  action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
-  { key = 's',     mods = mod.alt, action = act.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r',     mods = mod.alt, action = act 'ReloadConfiguration' },
-  { key = 'q',     mods = mod.alt, action = act { CloseCurrentPane = { confirm = false } } },
+  { key = 's',     mods = mod.alt,  action = act.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r',     mods = mod.alt,  action = act 'ReloadConfiguration' },
 
-  -- move between split panes
-  split_nav('move', 'h'),
-  split_nav('move', 'j'),
-  split_nav('move', 'k'),
-  split_nav('move', 'l'),
-  -- resize panes
-  split_nav('resize', 'h'),
-  split_nav('resize', 'j'),
-  split_nav('resize', 'k'),
-  split_nav('resize', 'l'),
+  -- adjust panes
+  { key = 'h',     mods = mod.alt,  action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l',     mods = mod.alt,  action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j',     mods = mod.alt,  action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k',     mods = mod.alt,  action = act.AdjustPaneSize { 'Up', 3 } },
+
+  -- move between neovim and wezterm panes
+  { key = 'h',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-left' } },
+  { key = 'l',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-right' } },
+  { key = 'j',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-down' } },
+  { key = 'k',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-up' } },
+  { key = 'x',     mods = mod.alt,  action = w.action { EmitEvent = 'close-pane' } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
