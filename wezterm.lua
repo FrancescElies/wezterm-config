@@ -38,17 +38,19 @@ elseif platform.is_mac then
   }
 end
 
-local mod = {
+local mods = {
   shift_ctrl = 'SHIFT|CTRL',
   -- linux & windows (for mac continue reading)
+  shift_alt = 'SHIFT|ALT',
   alt = 'ALT',
   ctrl = 'CTRL',
   alt_ctrl = 'ALT|CTRL',
 } -- modifier keys
 
 if platform.is_mac then
-  mod.alt = 'SUPER'
-  mod.alt_ctrl = 'SUPER|CTRL'
+  mods.shift_alt = 'SHIFT|SUPER'
+  mods.alt = 'SUPER'
+  mods.alt_ctrl = 'SUPER|CTRL'
 end
 
 local function is_vim(window)
@@ -86,64 +88,65 @@ local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
   end
 end
 
+-- keep in sync with nvim wezterm.lua
 local move_map = {
-  { wez_action = 'move-left',  wez_direction = 'Left',  key = 'l', mods = mod.ctrl },
-  { wez_action = 'move-right', wez_direction = 'Right', key = 'l', mods = mod.ctrl },
-  { wez_action = 'move-up',    wez_direction = 'Up',    key = 'k', mods = mod.ctrl },
-  { wez_action = 'move-down',  wez_direction = 'Down',  key = 'j', mods = mod.ctrl },
+  { wez_action_name = 'move-left',  wez_action = act.ActivatePaneDirection 'Left',  key = 'h', mods = mods.alt },
+  { wez_action_name = 'move-right', wez_action = act.ActivatePaneDirection 'Right', key = 'l', mods = mods.alt },
+  { wez_action_name = 'move-up',    wez_action = act.ActivatePaneDirection 'Up',    key = 'k', mods = mods.alt },
+  { wez_action_name = 'move-down',  wez_action = act.ActivatePaneDirection 'Down',  key = 'j', mods = mods.alt },
 }
 
 for _, v in pairs(move_map) do
-  w.on(v.wez_action, function(window, pane)
-    wez_nvim_action(window, pane, act.ActivatePaneDirection(v.wez_direction), act.SendKey { key = v.key, mods = v.mods })
+  w.on(v.wez_action_name, function(window, pane)
+    wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods })
   end)
 end
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on('close-pane', function(window, pane)
-  wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mod.alt })
+  wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mods.alt })
 end)
 
 config.keys = {
-  { key = 'z',   mods = mod.shift_ctrl, action = act.TogglePaneZoomState },
-  { key = 'f',   mods = mod.alt,        action = act.TogglePaneZoomState },
-  { key = ' ',   mods = mod.ctrl,       action = 'DisableDefaultAssignment' },
+  { key = 'z',   mods = mods.shift_ctrl, action = act.TogglePaneZoomState },
+  { key = 'f',   mods = mods.alt,        action = act.TogglePaneZoomState },
+  { key = ' ',   mods = mods.ctrl,       action = 'DisableDefaultAssignment' },
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ',   mods = mod.ctrl,       action = act.SendKey { key = ' ', mods = mod.ctrl } },
-  { key = 'F1',  mods = 'NONE',         action = act.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE',         action = act.ShowDebugOverlay },
-  { key = 'a',   mods = mod.alt,        action = act.ShowLauncher },
+  { key = ' ',   mods = mods.ctrl,       action = act.SendKey { key = ' ', mods = mods.ctrl } },
+  { key = 'F1',  mods = 'NONE',          action = act.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE',          action = act.ShowDebugOverlay },
+  { key = 'a',   mods = mods.alt,        action = act.ShowLauncher },
   {
     key = '-',
-    mods = mod.alt,
+    mods = mods.alt,
     action = act {
       SplitVertical = { domain = 'CurrentPaneDomain' },
     },
   },
   {
     key = '\\',
-    mods = mod.alt,
+    mods = mods.alt,
     action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } },
   },
 
-  { key = 'Enter', mods = mod.alt,  action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'Enter', mods = mods.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
-  { key = 's',     mods = mod.alt,  action = act.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r',     mods = mod.alt,  action = act 'ReloadConfiguration' },
+  { key = 's',     mods = mods.alt,       action = act.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r',     mods = mods.alt,       action = act 'ReloadConfiguration' },
 
   -- adjust panes
-  { key = 'h',     mods = mod.alt,  action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l',     mods = mod.alt,  action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j',     mods = mod.alt,  action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k',     mods = mod.alt,  action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'h',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
-  { key = 'h',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-left' } },
-  { key = 'l',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-right' } },
-  { key = 'j',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-down' } },
-  { key = 'k',     mods = mod.ctrl, action = w.action { EmitEvent = 'move-up' } },
-  { key = 'x',     mods = mod.alt,  action = w.action { EmitEvent = 'close-pane' } },
+  { key = 'h',     mods = mods.alt,       action = w.action { EmitEvent = 'move-left' } },
+  { key = 'l',     mods = mods.alt,       action = w.action { EmitEvent = 'move-right' } },
+  { key = 'j',     mods = mods.alt,       action = w.action { EmitEvent = 'move-down' } },
+  { key = 'k',     mods = mods.alt,       action = w.action { EmitEvent = 'move-up' } },
+  { key = 'x',     mods = mods.alt,       action = w.action { EmitEvent = 'close-pane' } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
