@@ -60,7 +60,7 @@ local function is_vim(window)
   end
   -- check current process
   local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
-  for i = 1, 8, 1 do
+  for i = 1, 10, 1 do
     if p == nil then
       return false
     end
