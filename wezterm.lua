@@ -4,10 +4,34 @@
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local w = require 'wezterm'
-local act = require('wezterm').action
-local mux = require('wezterm').mux
+local act = w.action
+local mux = w.mux
 
-local home = os.getenv 'HOME'
+w.on('gui-startup', function(cmd)
+  -- allow `wezterm start -- something` to affect what we spawn
+  -- in our initial window
+  local args = { 'nu' }
+  if cmd then
+    args = cmd.args
+  end
+
+  -- Set a workspace for coding on a current project
+  -- Top pane is for the editor, bottom pane is for the build tool
+  local wez_config_dir = w.home_dir .. '/src/wezterm-config'
+  local wezconfig_tab, wezconfig_free_pane, wezconfig_window = mux.spawn_window { workspace = 'wezterm-config', cwd =
+      wez_config_dir, args = args }
+  -- kick off vim
+  wezconfig_editor_pane:send_text 'nvim wezterm.lua\n'
+
+  -- A workspace for work
+  local work_dir = 'c:/s/eklang'
+  local work_tab, work_free_pane, work_window = mux.spawn_window { workspace = 'work', cwd = work_dir, args = args }
+  local work_editor_pane = work_free_pane:split { direction = 'Left', size = 0.6, cwd = work_dir, args = args }
+  work_editor_pane:send_text 'nvim readme.md\n'
+
+  -- We want to startup in the following workspace
+  mux.set_active_workspace 'work'
+end)
 
 local platform = {
   is_win = string.find(w.target_triple, 'windows') ~= nil,
@@ -38,15 +62,16 @@ elseif platform.is_mac then
   }
 end
 
+-- default modifier keys
 local mods = {
   shift_ctrl = 'SHIFT|CTRL',
-  -- linux & windows (for mac continue reading)
   shift_alt = 'SHIFT|ALT',
   alt = 'ALT',
   ctrl = 'CTRL',
   alt_ctrl = 'ALT|CTRL',
-} -- modifier keys
+}
 
+-- mac modifier keys
 if platform.is_mac then
   mods.shift_alt = 'SHIFT|SUPER'
   mods.alt = 'SUPER'
@@ -75,11 +100,7 @@ local function is_vim(window)
   return false
 end
 
----
----@param window
----@param pane
----@param action_wez string executed when the active pane is not a nvim instance
----@param forward_key_nvim string key combination forwarded to nvim if the active pane is a nvim instance
+
 local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
   if is_vim(window) then
     window:perform_action(forward_key_nvim, pane)
@@ -109,31 +130,40 @@ w.on('close-pane', function(window, pane)
 end)
 
 config.keys = {
-  { key = 'z',   mods = mods.shift_ctrl, action = act.TogglePaneZoomState },
-  { key = 'f',   mods = mods.alt,        action = act.TogglePaneZoomState },
-  { key = ' ',   mods = mods.ctrl,       action = 'DisableDefaultAssignment' },
-  -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ',   mods = mods.ctrl,       action = act.SendKey { key = ' ', mods = mods.ctrl } },
-  { key = 'F1',  mods = 'NONE',          action = act.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE',          action = act.ShowDebugOverlay },
-  { key = 'a',   mods = mods.alt,        action = act.ShowLauncher },
-  {
-    key = '-',
-    mods = mods.alt,
-    action = act {
-      SplitVertical = { domain = 'CurrentPaneDomain' },
-    },
-  },
-  {
-    key = '\\',
-    mods = mods.alt,
-    action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } },
-  },
+  { key = 'z',   mods = mods.alt,  action = act.TogglePaneZoomState },
+  { key = 'd',   mods = mods.alt,  action = act.DisableDefaultAssignment },
 
+  -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
+  { key = ' ',   mods = mods.ctrl, action = act.SendKey { key = ' ', mods = mods.ctrl } },
+
+  -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
+  { key = 'F1',  mods = 'NONE',    action = act.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE',    action = act.ShowDebugOverlay },
+  { key = 'a',   mods = mods.alt,  action = act.ShowLauncher },
+
+  -- Workspaces
+  -- Switch to the default workspace
+  { key = 'w',   mods = mods.alt,  action = act.SwitchToWorkspace { name = 'default' } },
+  -- Switch to a monitoring workspace, which will have `top` launched into it
+  {
+    key = 't',
+    mods = mods.alt,
+    action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } }
+  },
+  -- Create a new workspace with a random name and switch to it
+  { key = 'n',     mods = mods.alt,       action = act.SwitchWorkspaceRelative(1) },
+  { key = 'p',     mods = mods.alt,       action = act.SwitchWorkspaceRelative(-1) },
+  -- Show the launcher in fuzzy selection mode and have it list all workspaces
+  -- and allow activating one.
+  { key = 'F11',   mods = 'NONE',         action = act.ToggleFullScreen },
+  { key = 'f',     mods = mods.alt,       action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { key = 'Enter', mods = mods.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
+  -- Panes
+  { key = '-',     mods = mods.alt,       action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = '\\',    mods = mods.alt,       action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 's',     mods = mods.alt,       action = act.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r',     mods = mods.alt,       action = act 'ReloadConfiguration' },
+  { key = 'r',     mods = mods.alt,       action = act.ReloadConfiguration },
 
   -- adjust panes
   { key = 'h',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Left', 3 } },
@@ -154,44 +184,17 @@ config.exit_behavior = 'CloseOnCleanExit'
 
 config.hyperlink_rules = {
   -- Matches: a URL in parens: (URL)
-  {
-    regex = '\\((\\w+://\\S+)\\)',
-    format = '$1',
-    highlight = 1,
-  },
+  { regex = '\\((\\w+://\\S+)\\)',                 format = '$1',        highlight = 1 },
   -- Matches: a URL in brackets: [URL]
-  {
-    regex = '\\[(\\w+://\\S+)\\]',
-    format = '$1',
-    highlight = 1,
-  },
+  { regex = '\\[(\\w+://\\S+)\\]',                 format = '$1',        highlight = 1 },
   -- Matches: a URL in curly braces: {URL}
-  {
-    regex = '\\{(\\w+://\\S+)\\}',
-    format = '$1',
-    highlight = 1,
-  },
+  { regex = '\\{(\\w+://\\S+)\\}',                 format = '$1',        highlight = 1 },
   -- Matches: a URL in angle brackets: <URL>
-  {
-    regex = '<(\\w+://\\S+)>',
-    format = '$1',
-    highlight = 1,
-  },
+  { regex = '<(\\w+://\\S+)>',                     format = '$1',        highlight = 1 },
   -- Then handle URLs not wrapped in brackets
-  {
-    -- Before
-    --regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
-    --format = '$0',
-    -- After
-    regex = '[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)',
-    format = '$1',
-    highlight = 1,
-  },
+  { regex = '[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)', format = '$1',        highlight = 1 },
   -- implicit mailto link
-  {
-    regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
-    format = 'mailto:$0',
-  },
+  { regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',     format = 'mailto:$0', highlight = 1 },
 }
 
 return config
