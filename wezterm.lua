@@ -1,3 +1,5 @@
+-- https://wezfurlong.org/wezterm/config/lua/keyassignment/
+-- https://wezfurlong.org/wezterm/config/default-keys.html
 -- https://github.com/yutkat/dotfiles/tree/main/.config/wezterm
 -- https://github.com/KevinSilvester/wezterm-config
 -- https://github.com/mrjones2014/smart-splits.nvim#wezterm
@@ -129,8 +131,16 @@ w.on('close-pane', function(window, pane)
   wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mods.alt })
 end)
 
+config.mouse_bindings = {
+  {
+    event = { Down = { streak = 3, button = 'Left' } },
+    action = w.action.SelectTextAtMouseCursor 'SemanticZone',
+    mods = 'NONE',
+  },
+}
+
 config.keys = {
-  { key = 'z',   mods = mods.alt,  action = act.TogglePaneZoomState },
+  { key = 'f',   mods = mods.alt,  action = act.TogglePaneZoomState }, -- f for "fullscreen"
   { key = 'd',   mods = mods.alt,  action = act.DisableDefaultAssignment },
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
@@ -142,21 +152,18 @@ config.keys = {
   { key = 'a',   mods = mods.alt,  action = act.ShowLauncher },
 
   -- Workspaces
-  -- Switch to the default workspace
-  { key = 'w',   mods = mods.alt,  action = act.SwitchToWorkspace { name = 'default' } },
+  { key = 'w',   mods = mods.alt,  action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 'n',   mods = mods.alt,  action = act.SwitchWorkspaceRelative(1) },
+  -- Create a new workspace with a random name and switch to it
+  { key = 'N',   mods = mods.alt,  action = act.SwitchToWorkspace },
+  { key = 'p',   mods = mods.alt,  action = act.SwitchWorkspaceRelative(-1) },
   -- Switch to a monitoring workspace, which will have `top` launched into it
   {
     key = 't',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } }
   },
-  -- Create a new workspace with a random name and switch to it
-  { key = 'n',     mods = mods.alt,       action = act.SwitchWorkspaceRelative(1) },
-  { key = 'p',     mods = mods.alt,       action = act.SwitchWorkspaceRelative(-1) },
-  -- Show the launcher in fuzzy selection mode and have it list all workspaces
-  -- and allow activating one.
   { key = 'F11',   mods = 'NONE',         action = act.ToggleFullScreen },
-  { key = 'f',     mods = mods.alt,       action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { key = 'Enter', mods = mods.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
