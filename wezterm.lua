@@ -157,6 +157,12 @@ config.keys = {
   -- Create a new workspace with a random name and switch to it
   { key = 'N',   mods = mods.alt,  action = act.SwitchToWorkspace },
   { key = 'p',   mods = mods.alt,  action = act.SwitchWorkspaceRelative(-1) },
+  -- Switch to LazyGit
+  {
+    key = 'g',
+    mods = mods.alt,
+    action = act.SwitchToWorkspace { name = 'Git', spawn = { args = { 'lazygit' } } }
+  },
   -- Switch to a monitoring workspace, which will have `top` launched into it
   {
     key = 't',
