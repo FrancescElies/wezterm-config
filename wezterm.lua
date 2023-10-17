@@ -175,6 +175,12 @@ config.keys = {
     action = act.SwitchToWorkspace { name = 'Git', spawn = { args = { 'lazygit' } } }
   },
   {
+    key = 't',
+    mods = mods.alt,
+    action = act.SwitchToWorkspace { name = 'todos', spawn = {
+      args = { 'broot', w.home_dir .. '/todos' } } }
+  },
+  {
     key = 'o',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } }
