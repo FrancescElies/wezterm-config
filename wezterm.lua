@@ -17,15 +17,6 @@ w.on('gui-startup', function(cmd)
     args = cmd.args
   end
 
-  -- Set a workspace for coding on a current project
-  -- Top pane is for the editor, bottom pane is for the build tool
-  local wez_config_dir = w.home_dir .. '/src/wezterm-config'
-  local wezconfig_tab, wezconfig_free_pane, wezconfig_window = mux.spawn_window { workspace = 'wezterm-config', cwd =
-      wez_config_dir, args = args }
-  -- kick off vim
-  -- TODO: \n not sent
-  -- wezconfig_free_pane:send_text 'nvim wezterm.lua\n'
-
   -- A workspace for work
   local work_dir = 'c:/s/eklang'
   local work_tab, work_free_pane, work_window = mux.spawn_window { workspace = 'work', cwd = work_dir, args = args }
@@ -163,6 +154,12 @@ config.keys = {
     key = 'b',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Broot', spawn = { args = { 'broot' } } }
+  },
+  {
+    key = 'c',
+    mods = mods.alt,
+    action = act.SwitchToWorkspace { name = 'Config', spawn = {
+      args = { 'nvim', w.home_dir .. '/src/wezterm-config/wezterm.lua' } } }
   },
   {
     key = 'd',
