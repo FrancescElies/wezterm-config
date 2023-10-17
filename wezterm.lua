@@ -23,7 +23,8 @@ w.on('gui-startup', function(cmd)
   local wezconfig_tab, wezconfig_free_pane, wezconfig_window = mux.spawn_window { workspace = 'wezterm-config', cwd =
       wez_config_dir, args = args }
   -- kick off vim
-  wezconfig_editor_pane:send_text 'nvim wezterm.lua\n'
+  -- TODO: \n not sent
+  -- wezconfig_free_pane:send_text 'nvim wezterm.lua\n'
 
   -- A workspace for work
   local work_dir = 'c:/s/eklang'
@@ -157,15 +158,24 @@ config.keys = {
   -- Create a new workspace with a random name and switch to it
   { key = 'N',   mods = mods.alt,  action = act.SwitchToWorkspace },
   { key = 'p',   mods = mods.alt,  action = act.SwitchWorkspaceRelative(-1) },
-  -- Switch to LazyGit
+  -- Switch to lazygit, bottom, diskonaut, broot
+  {
+    key = 'b',
+    mods = mods.alt,
+    action = act.SwitchToWorkspace { name = 'Broot', spawn = { args = { 'broot' } } }
+  },
+  {
+    key = 'd',
+    mods = mods.alt,
+    action = act.SwitchToWorkspace { name = 'Diskonaut', spawn = { args = { 'diskonaut' } } }
+  },
   {
     key = 'g',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Git', spawn = { args = { 'lazygit' } } }
   },
-  -- Switch to a monitoring workspace, which will have `top` launched into it
   {
-    key = 't',
+    key = 'o',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } }
   },
