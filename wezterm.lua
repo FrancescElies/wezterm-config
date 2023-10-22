@@ -9,29 +9,31 @@ local w = require 'wezterm'
 local act = w.action
 local mux = w.mux
 
-w.on('gui-startup', function(cmd)
-  -- allow `wezterm start -- something` to affect what we spawn
-  -- in our initial window
-  local args = { 'nu' }
-  if cmd then
-    args = cmd.args
-  end
-
-  -- A workspace for work
-  local work_dir = 'c:/s/eklang'
-  local work_tab, work_free_pane, work_window = mux.spawn_window { workspace = 'work', cwd = work_dir, args = args }
-  local work_editor_pane = work_free_pane:split { direction = 'Left', size = 0.6, cwd = work_dir, args = args }
-  work_editor_pane:send_text 'nvim readme.md\n'
-
-  -- We want to startup in the following workspace
-  mux.set_active_workspace 'work'
-end)
-
 local platform = {
   is_win = string.find(w.target_triple, 'windows') ~= nil,
   is_linux = string.find(w.target_triple, 'linux') ~= nil,
   is_mac = string.find(w.target_triple, 'apple') ~= nil,
 }
+
+w.on('gui-startup', function(cmd)
+  if platform.is_win then
+    -- allow `wezterm start -- something` to affect what we spawn
+    -- in our initial window
+    local args = { 'nu' }
+    if cmd then
+      args = cmd.args
+    end
+
+    -- A workspace for work
+    local work_dir = 'c:/s/eklang'
+    local work_tab, work_free_pane, work_window = mux.spawn_window { workspace = 'work', cwd = work_dir, args = args }
+    local work_editor_pane = work_free_pane:split { direction = 'Left', size = 0.6, cwd = work_dir, args = args }
+    work_editor_pane:send_text 'nvim readme.md\n'
+
+    -- We want to startup in the following workspace
+    mux.set_active_workspace 'work'
+  end
+end)
 
 local config = {
   debug_key_events = false,
@@ -48,10 +50,10 @@ if platform.is_win then
   }
 elseif platform.is_mac then
   w.log_info 'on mac'
-  config.default_prog = { home .. '/.cargo/bin/nu' }
+  config.default_prog = { w.home_dir .. '/.cargo/bin/nu' }
   config.launch_menu = {
     { label = 'Bash',    args = { 'bash' } },
-    { label = 'Nushell', args = { '~/.cargo/bin/nu' } },
+    { label = 'Nushell', args = { w.home_dir .. '/.cargo/bin/nu' } },
     { label = 'Zsh',     args = { 'zsh' } },
   }
 end
