@@ -19,6 +19,17 @@ local config = {
   debug_key_events = false,
 }
 
+-- https://wezfurlong.org/wezterm/faq.html?h=path#im-on-macos-and-wezterm-cannot-find-things-in-my-path
+if platform.is_mac then
+  config.set_environment_variables = {
+    PATH = table.concat({
+      w.home_dir .. '/.cargo/bin',
+      os.getenv 'PATH',
+    }, ":")
+    -- prepend the path to custom binaries
+  }
+end
+
 if platform.is_win then
   w.log_info 'on windows'
   config.default_prog = { 'nu' }
