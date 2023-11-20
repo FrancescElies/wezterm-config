@@ -15,26 +15,6 @@ local platform = {
   is_mac = string.find(w.target_triple, 'apple') ~= nil,
 }
 
-w.on('gui-startup', function(cmd)
-  if platform.is_win then
-    -- allow `wezterm start -- something` to affect what we spawn
-    -- in our initial window
-    local args = { 'nu' }
-    if cmd then
-      args = cmd.args
-    end
-
-    -- A workspace for work
-    local work_dir = 'c:/s/eklang'
-    local work_tab, work_free_pane, work_window = mux.spawn_window { workspace = 'work', cwd = work_dir, args = args }
-    local work_editor_pane = work_free_pane:split { direction = 'Left', size = 0.6, cwd = work_dir, args = args }
-    work_editor_pane:send_text 'nvim readme.md\n'
-
-    -- We want to startup in the following workspace
-    mux.set_active_workspace 'work'
-  end
-end)
-
 local config = {
   debug_key_events = false,
 }
@@ -96,7 +76,6 @@ local function is_vim(window)
   return false
 end
 
-
 local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
   if is_vim(window) then
     window:perform_action(forward_key_nvim, pane)
@@ -114,16 +93,17 @@ local move_map = {
 }
 
 for _, v in pairs(move_map) do
-  w.on(v.wez_action_name, function(window, pane)
-    wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods })
-  end)
+  w.on(v.wez_action_name,
+    function(window, pane) wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods }) end)
 end
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
-w.on('close-pane', function(window, pane)
-  wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mods.alt })
-end)
+w.on(
+  'close-pane',
+  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
+      act.SendKey { key = 'x', mods = mods.alt }) end
+)
 
 config.mouse_bindings = {
   {
@@ -155,34 +135,36 @@ config.keys = {
   {
     key = 'b',
     mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Broot', spawn = { args = { 'broot' } } }
+    action = act.SwitchToWorkspace { name = 'Broot', spawn = { args = { 'broot' } } },
   },
   {
     key = 'c',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Config', spawn = {
-      args = { 'nvim', w.home_dir .. '/src/wezterm-config/wezterm.lua' } } }
+      args = { 'nvim', w.home_dir .. '/src/wezterm-config/wezterm.lua' },
+    } },
   },
   {
     key = 'd',
     mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Diskonaut', spawn = { args = { 'diskonaut' } } }
+    action = act.SwitchToWorkspace { name = 'Diskonaut', spawn = { args = { 'diskonaut' } } },
   },
   {
     key = 'g',
     mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Git', spawn = { args = { 'lazygit' } } }
+    action = act.SwitchToWorkspace { name = 'Git', spawn = { args = { 'lazygit' } } },
   },
   {
     key = 't',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'todos', spawn = {
-      args = { 'broot', w.home_dir .. '/todos' } } }
+      args = { 'broot', w.home_dir .. '/todos' },
+    } },
   },
   {
     key = 'o',
     mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } }
+    action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } },
   },
   { key = 'F11',   mods = 'NONE',         action = act.ToggleFullScreen },
   { key = 'Enter', mods = mods.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
@@ -212,13 +194,20 @@ config.exit_behavior = 'CloseOnCleanExit'
 
 config.hyperlink_rules = {
   -- Matches: a URL in parens: (URL)
-  { regex = '\\((\\w+://\\S+)\\)',                 format = '$1',        highlight = 1 },
+  { regex = '\\((\\w+://\\S+)\\)', format = '$1', highlight = 1 },
   -- Matches: a URL in brackets: [URL]
-  { regex = '\\[(\\w+://\\S+)\\]',                 format = '$1',        highlight = 1 },
+  { regex = '\\[(\\w+://\\S+)\\]', format = '$1', highlight = 1 },
   -- Matches: a URL in curly braces: {URL}
-  { regex = '\\{(\\w+://\\S+)\\}',                 format = '$1',        highlight = 1 },
+  { regex = '\\{(\\w+://\\S+)\\}', format = '$1', highlight = 1 },
   -- Matches: a URL in angle brackets: <URL>
-  { regex = '<(\\w+://\\S+)>',                     format = '$1',        highlight = 1 },
+  { regex = '<(\\w+://\\S+)>',     format = '$1', highlight = 1 },
+
+  -- Matches:  "pullRequestId": 6571
+  {
+    regex = '"pullRequestId": (\\d+)',
+    format = 'https://mbbm-ast.visualstudio.com/AST/_git/eklang/pullrequest/$1',
+    highlight = 1,
+  },
   -- Then handle URLs not wrapped in brackets
   { regex = '[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)', format = '$1',        highlight = 1 },
   -- implicit mailto link
