@@ -114,23 +114,23 @@ config.mouse_bindings = {
 }
 
 config.keys = {
-  { key = 'f',   mods = mods.alt,  action = act.TogglePaneZoomState }, -- f for "fullscreen"
-  { key = 'd',   mods = mods.alt,  action = act.DisableDefaultAssignment },
+  { key = 'f',   mods = mods.alt,        action = act.TogglePaneZoomState }, -- f for "fullscreen"
+  { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ',   mods = mods.ctrl, action = act.SendKey { key = ' ', mods = mods.ctrl } },
+  { key = ' ',   mods = mods.ctrl,       action = act.SendKey { key = ' ', mods = mods.ctrl } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
-  { key = 'F1',  mods = 'NONE',    action = act.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE',    action = act.ShowDebugOverlay },
-  { key = 'a',   mods = mods.alt,  action = act.ShowLauncher },
+  { key = 'x',   mods = mods.shift_ctrl, action = act.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE',          action = act.ShowDebugOverlay },
+  { key = 'a',   mods = mods.alt,        action = act.ShowLauncher },
 
   -- Workspaces
-  { key = 'w',   mods = mods.alt,  action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'n',   mods = mods.alt,  action = act.SwitchWorkspaceRelative(1) },
+  { key = 'w',   mods = mods.alt,        action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 'n',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(1) },
   -- Create a new workspace with a random name and switch to it
-  { key = 'N',   mods = mods.alt,  action = act.SwitchToWorkspace },
-  { key = 'p',   mods = mods.alt,  action = act.SwitchWorkspaceRelative(-1) },
+  { key = 'N',   mods = mods.alt,        action = act.SwitchToWorkspace },
+  { key = 'p',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(-1) },
   -- Switch to lazygit, bottom, diskonaut, broot
   {
     key = 'b',
