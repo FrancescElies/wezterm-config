@@ -58,12 +58,13 @@ local mods = {
   alt_ctrl = 'ALT|CTRL',
 }
 
+-- NOTE: SUPER (CMD) is currently (25.11.2023) difficult to bind in nvim
 -- mac modifier keys
-if platform.is_mac then
-  mods.shift_alt = 'SHIFT|SUPER'
-  mods.alt = 'SUPER'
-  mods.alt_ctrl = 'SUPER|CTRL'
-end
+-- if platform.is_mac then
+--   mods.shift_alt = 'SHIFT|SUPER'
+--   mods.alt = 'SUPER'
+--   mods.alt_ctrl = 'SUPER|CTRL'
+-- end
 
 local function is_vim(window)
   local function process_is_vim(process_info)
@@ -112,8 +113,10 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on(
   'close-pane',
-  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
-      act.SendKey { key = 'x', mods = mods.alt }) end
+  function(window, pane)
+    wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
+      act.SendKey { key = 'x', mods = mods.alt })
+  end
 )
 
 config.mouse_bindings = {
