@@ -41,10 +41,10 @@ if platform.is_win then
   }
 elseif platform.is_mac then
   w.log_info 'on mac'
-  config.default_prog = { w.home_dir .. '/.cargo/bin/nu' }
+  config.default_prog = { w.home_dir .. '/bin/nu' }
   config.launch_menu = {
     { label = 'Bash',    args = { 'bash' } },
-    { label = 'Nushell', args = { w.home_dir .. '/.cargo/bin/nu' } },
+    { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
     { label = 'Zsh',     args = { 'zsh' } },
   }
 end
