@@ -6,14 +6,10 @@
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local w = require 'wezterm'
+local sessionizer = require 'sessionizer'
+local platform = require 'platform'
 local act = w.action
 local mux = w.mux
-
-local platform = {
-  is_win = string.find(w.target_triple, 'windows') ~= nil,
-  is_linux = string.find(w.target_triple, 'linux') ~= nil,
-  is_mac = string.find(w.target_triple, 'apple') ~= nil,
-}
 
 local config = {
   debug_key_events = false,
@@ -126,9 +122,11 @@ config.mouse_bindings = {
     mods = 'NONE',
   },
 }
-
 config.keys = {
-  { key = 'f',   mods = mods.alt,        action = act.TogglePaneZoomState }, -- f for "fullscreen"
+
+  -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
+  { key = 'f',   mods = mods.alt,        action = w.action_callback(sessionizer.toggle) },
+  { key = 'z',   mods = mods.alt,        action = act.TogglePaneZoomState },
   { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
@@ -184,9 +182,11 @@ config.keys = {
   { key = 'Enter', mods = mods.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
+  { key = 's',     mods = mods.alt,       action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = 'v',     mods = mods.alt,       action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = '-',     mods = mods.alt,       action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '\\',    mods = mods.alt,       action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 's',     mods = mods.alt,       action = act.PaneSelect { alphabet = '1234567890' } },
+  { key = 's',     mods = mods.shift_alt, action = act.PaneSelect { alphabet = '1234567890' } },
   { key = 'r',     mods = mods.alt,       action = act.ReloadConfiguration },
 
   -- adjust panes
