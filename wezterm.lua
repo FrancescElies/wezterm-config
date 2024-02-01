@@ -21,7 +21,7 @@ if platform.is_mac then
     PATH = table.concat({
       w.home_dir .. '/.cargo/bin',
       os.getenv 'PATH',
-    }, ":")
+    }, ':'),
     -- prepend the path to custom binaries
   }
 end
@@ -109,10 +109,8 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on(
   'close-pane',
-  function(window, pane)
-    wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
-      act.SendKey { key = 'x', mods = mods.alt })
-  end
+  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
+      act.SendKey { key = 'x', mods = mods.alt }) end
 )
 
 config.mouse_bindings = {
