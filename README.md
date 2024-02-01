@@ -1,5 +1,7 @@
 # wezterm-config
 
-Clone the repo and set environment variable `WEZTERM_CONFIG_FILE` to point to `wezterm.lua`
+Clone the repo and set symlink
 
-symlink ~/src/wezterm-config/wezterm.lua ~/.wezterm.lua
+```nu
+symlink ~/src/wezterm-config ~/.config/wezterm
+```
