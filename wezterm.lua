@@ -35,8 +35,8 @@ if platform.is_win then
     { label = 'Command Prompt',     args = { 'cmd' } },
     { label = 'Nushell',            args = { 'nu' } },
   }
-elseif platform.is_mac then
-  w.log_info 'on mac'
+else
+  w.log_info 'on mac or linux'
   config.default_prog = { w.home_dir .. '/bin/nu' }
   config.launch_menu = {
     { label = 'Bash',    args = { 'bash' } },
@@ -109,8 +109,10 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on(
   'close-pane',
-  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
-      act.SendKey { key = 'x', mods = mods.alt }) end
+  function(window, pane)
+    wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
+      act.SendKey { key = 'x', mods = mods.alt })
+  end
 )
 
 config.mouse_bindings = {
