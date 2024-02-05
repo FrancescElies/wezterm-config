@@ -4,9 +4,28 @@ local act = w.action
 
 local M = {}
 
--- TODO: make sure paths exist
-local fd = w.home_dir .. '/bin/fd'
-local srcPath = w.home_dir .. '/src'
+local home = platform.is_win and w.home_dir:gsub('\\', '/') or w.home_dir -- handles Windows backslash
+
+local function file_exists(name)
+  local f = io.open(name, 'r')
+  if f ~= nil then
+    w.log_info('exists ' .. name)
+    io.close(f)
+    return name
+  else
+    w.log_info('not exists ' .. name)
+    return false
+  end
+end
+
+-- TODO: make sure at least one path exist
+local fd = (
+  file_exists(home .. '/bin/fd')
+  or file_exists 'usr/bin/fd'
+  or file_exists(home .. '/bin/fd.exe')
+  or file_exists '/ProgramData/chocolatey/bin/fd.exe'
+)
+local srcPath = home .. '/src'
 
 M.toggle = function(window, pane)
   local projects = {}
