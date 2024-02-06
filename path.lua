@@ -26,4 +26,10 @@ M.exists = function(path)
   return false
 end
 
+--- Check if a directory exists in this path
+M.isdir = function(path)
+  -- "/" works on both Unix and Windows
+  return exists(path .. '/')
+end
+
 return M

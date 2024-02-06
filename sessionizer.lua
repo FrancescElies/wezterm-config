@@ -27,12 +27,6 @@ err_if_not(git, 'git not found')
 local srcPath = exists(home .. '/src')
 err_if_not(srcPath, srcPath .. ' not found')
 
---- Check if a directory exists in this path
-local function isdir(path)
-  -- "/" works on both Unix and Windows
-  return exists(path .. '/')
-end
-
 M.toggle = function(window, pane)
   local projects = {}
 
