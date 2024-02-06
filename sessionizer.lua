@@ -1,31 +1,37 @@
 local w = require 'wezterm'
 local platform = require 'platform'
 local act = w.action
+local path = require 'path'
+local exists = path.exists
 
 local M = {}
 
 local home = platform.is_win and w.home_dir:gsub('\\', '/') or w.home_dir -- handles Windows backslash
 
-local function file_exists(name)
-  local f = io.open(name, 'r')
-  if f ~= nil then
-    w.log_info('exists ' .. name)
-    io.close(f)
-    return name
-  else
-    w.log_info('not exists ' .. name)
-    return false
+--- If name nil or false print err_message
+---@param name string|boolean
+---@param err_message string
+local function err_if_not(name, err_message)
+  if not name then
+    w.log_error(err_message)
   end
 end
 
 -- TODO: make sure at least one path exist
-local fd = (
-  file_exists(home .. '/bin/fd')
-  or file_exists 'usr/bin/fd'
-  or file_exists(home .. '/bin/fd.exe')
-  or file_exists '/ProgramData/chocolatey/bin/fd.exe'
-)
-local srcPath = home .. '/src'
+local fd = (exists(home .. '/bin/fd') or exists 'usr/bin/fd' or exists(home .. '/bin/fd.exe') or exists '/ProgramData/chocolatey/bin/fd.exe')
+err_if_not(fd, 'fd not found')
+
+local git = (exists '/usr/bin/git' or exists '/Program Files/Git/cmd/git.exe')
+err_if_not(git, 'git not found')
+
+local srcPath = exists(home .. '/src')
+err_if_not(srcPath, srcPath .. ' not found')
+
+--- Check if a directory exists in this path
+local function isdir(path)
+  -- "/" works on both Unix and Windows
+  return exists(path .. '/')
+end
 
 M.toggle = function(window, pane)
   local projects = {}
@@ -64,7 +70,7 @@ M.toggle = function(window, pane)
     -- handle git bare repositories,
     -- assuming following name convention `myproject.git`
     if string.match(project, '%.git/$') then
-      w.log_info('found .git ' .. tostring(project))
+      w.log_info('found ' .. tostring(project) .. ' assuming bare repository (name ends with .git)')
       local success, stdout, stderr = w.run_child_process { fd, '-HI', '-td', '--max-depth=1', '.', project .. '/worktrees' }
       if success then
         for wt_line in stdout:gmatch '([^\n]*)\n?' do

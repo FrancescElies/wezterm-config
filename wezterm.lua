@@ -124,9 +124,8 @@ config.mouse_bindings = {
 }
 config.keys = {
 
-  -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
   { key = 'f',   mods = mods.alt,        action = w.action_callback(sessionizer.toggle) },
-  { key = 'z',   mods = mods.alt,        action = act.TogglePaneZoomState },
+  { key = 'u',   mods = mods.alt,        action = act.TogglePaneZoomState }, -- u: f[u]llscreen
   { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
@@ -134,32 +133,21 @@ config.keys = {
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
   { key = 'x',   mods = mods.shift_ctrl, action = act.ActivateCopyMode },
+  { key = 'c',   mods = mods.alt,        action = act.ActivateCopyMode },
   { key = 'F12', mods = 'NONE',          action = act.ShowDebugOverlay },
   { key = 'a',   mods = mods.alt,        action = act.ShowLauncher },
 
   -- Workspaces
   { key = 'w',   mods = mods.alt,        action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { key = 'n',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(1) },
+  { key = 'N',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(-1) },
+  { key = 'n',   mods = mods.alt_ctrl,   action = act.SwitchToWorkspace },
   -- Create a new workspace with a random name and switch to it
-  { key = 'N',   mods = mods.alt,        action = act.SwitchToWorkspace },
-  { key = 'p',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(-1) },
   -- Switch to lazygit, bottom, diskonaut, broot
   {
     key = 'b',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Broot', spawn = { args = { 'broot' } } },
-  },
-  {
-    key = 'c',
-    mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Config', spawn = {
-      args = { 'nvim', w.home_dir .. '/src/wezterm-config/wezterm.lua' },
-    } },
-  },
-  {
-    key = 'd',
-    mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Diskonaut', spawn = { args = { 'diskonaut' } } },
   },
   {
     key = 'g',
@@ -169,9 +157,10 @@ config.keys = {
   {
     key = 't',
     mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'todos', spawn = {
-      args = { 'broot', w.home_dir .. '/todos' },
-    } },
+    action = act.SwitchToWorkspace {
+      name = 'todos',
+      spawn = { args = { 'broot', w.home_dir .. '/zettelkasten' } },
+    },
   },
   {
     key = 'o',
