@@ -124,7 +124,7 @@ config.keys = {
 
   { key = 'f',   mods = mods.alt,        action = w.action_callback(sessionizer.toggle) },
   { key = 'u',   mods = mods.alt,        action = act.TogglePaneZoomState }, -- u: f[u]llscreen
-  { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },
+  -- { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
   { key = ' ',   mods = mods.ctrl,       action = act.SendKey { key = ' ', mods = mods.ctrl } },
