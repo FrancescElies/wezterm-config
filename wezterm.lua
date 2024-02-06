@@ -109,10 +109,8 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on(
   'close-pane',
-  function(window, pane)
-    wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
-      act.SendKey { key = 'x', mods = mods.alt })
-  end
+  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
+      act.SendKey { key = 'x', mods = mods.alt }) end
 )
 
 config.mouse_bindings = {
@@ -145,11 +143,14 @@ config.keys = {
   -- Create a new workspace with a random name and switch to it
   -- Switch to lazygit, bottom, diskonaut, broot
   {
+    -- cargo-binstall broot
     key = 'b',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Broot', spawn = { args = { 'broot' } } },
   },
   {
+    -- brew install lazygit
+    -- go install github.com/jesseduffield/lazygit@latest
     key = 'g',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Git', spawn = { args = { 'lazygit' } } },
@@ -163,6 +164,7 @@ config.keys = {
     },
   },
   {
+    -- cargo-binstall bottom
     key = 'o',
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } },
