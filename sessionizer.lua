@@ -52,7 +52,7 @@ local folders = {
   srcPath .. '/other',
 }
 
-M.toggle = function(window, pane)
+M.start = function(window, pane)
   local projects = {}
 
   -- assumes  ~/src/www, ~/src/work to exist
