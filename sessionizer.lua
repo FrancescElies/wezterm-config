@@ -2,14 +2,13 @@ local w = require 'wezterm'
 local platform = require 'platform'
 local act = w.action
 local path = require 'path'
-local exists = path.exists
 
 local M = {}
 
 local home = platform.is_win and w.home_dir:gsub('\\', '/') or w.home_dir -- handles Windows backslash
 
 --- If name nil or false print err_message
----@param name string|boolean
+---@param name string|boolean|nil
 ---@param err_message string
 local function err_if_not(name, err_message)
   if not name then
@@ -18,38 +17,61 @@ local function err_if_not(name, err_message)
 end
 
 -- TODO: make sure at least one path exist
-local fd = (exists(home .. '/bin/fd') or exists 'usr/bin/fd' or exists(home .. '/bin/fd.exe') or exists '/ProgramData/chocolatey/bin/fd.exe')
+local fd = (
+  path.file_exists(home .. '/bin/fd')
+  or path.file_exists 'usr/bin/fd'
+  or path.file_exists(home .. '/bin/fd.exe')
+  or path.file_exists '/ProgramData/chocolatey/bin/fd.exe'
+)
 err_if_not(fd, 'fd not found')
 
-local git = (exists '/usr/bin/git' or exists '/Program Files/Git/cmd/git.exe')
+local git = (path.file_exists '/usr/bin/git' or path.file_exists '/Program Files/Git/cmd/git.exe')
 err_if_not(git, 'git not found')
 
-local srcPath = exists(home .. '/src')
+local srcPath = home .. '/src'
 err_if_not(srcPath, srcPath .. ' not found')
+
+--- Merge numeric tables
+---@param t1 table
+---@param t2 table
+---@return table
+local function merge_tables(t1, t2)
+  local result = {}
+  for index, value in ipairs(t1) do
+    result[index] = value
+  end
+  for index, value in ipairs(t2) do
+    result[#t1 + index] = value
+  end
+  return result
+end
+
+local folders = {
+  srcPath,
+  srcPath .. '/work',
+  srcPath .. '/other',
+}
 
 M.toggle = function(window, pane)
   local projects = {}
 
   -- assumes  ~/src/www, ~/src/work to exist
   -- ~/src
-  --  ├──kickstart.nvim       # toplevel config stuff
-  --  ├──nushell-config
+  --  ├──nushell-config       # toplevel config stuff
   --  ├──wezterm-config
   --  ├──work                 # work stuff
   --    └──work/project.git   # git bare clones marked with .git at the end
   --  │ └───31 unlisted
-  --  └──www                  # 3rd party project
+  --  └──other                # 3rd party project
   --     └──103 unlisted
-  local success, stdout, stderr = w.run_child_process {
-    fd,
-    '-HI',
-    '-td',
-    '--max-depth=1',
-    '.',
-    srcPath,
-    srcPath .. '/work',
-    srcPath .. '/www',
-  }
+  local cmd = merge_tables({ fd, '-HI', '-td', '--max-depth=1', '.' }, folders)
+  w.log_info 'cmd: '
+  w.log_info(cmd)
+
+  for _, value in ipairs(cmd) do
+    w.log_info(value)
+  end
+  local success, stdout, stderr = w.run_child_process(cmd)
 
   if not success then
     w.log_error('Failed to run fd: ' .. stderr)

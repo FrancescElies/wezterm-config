@@ -2,9 +2,12 @@ local w = require 'wezterm'
 
 local M = {}
 
---- path if file or directory exists false otherwise
----@param path string
-M.exists = function(path)
+--- path if file or directory exists nil otherwise
+---@param path string|nil
+M.file_exists = function(path)
+  if path == nil then
+    return nil
+  end
   local f = io.open(path, 'r')
   -- io.open won't work for directories, but works for symlinks
   if f ~= nil then
@@ -12,24 +15,7 @@ M.exists = function(path)
     io.close(f)
     return path
   end
-
-  -- This won't work for symlinks, but works for directories
-  local ok, _, code = os.rename(path, path)
-  if not ok then
-    if code == 13 then
-      w.log_info(path .. ' directory found')
-      -- Permission denied, but it exists
-      return path
-    end
-  end
-
-  return false
-end
-
---- Check if a directory exists in this path
-M.isdir = function(path)
-  -- "/" works on both Unix and Windows
-  return exists(path .. '/')
+  return nil
 end
 
 return M
