@@ -140,8 +140,8 @@ config.keys = {
   -- Workspaces
   { key = 'w',   mods = mods.alt,        action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { key = 'n',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(1) },
-  { key = 'N',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(-1) },
-  { key = 'n',   mods = mods.alt_ctrl,   action = act.SwitchToWorkspace },
+  { key = 'p',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(-1) },
+  { key = 'N',   mods = mods.alt,        action = act.SwitchToWorkspace },
   -- Create a new workspace with a random name and switch to it
   -- Switch to lazygit, bottom, diskonaut, broot
   {
