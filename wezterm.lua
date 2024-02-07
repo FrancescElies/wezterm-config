@@ -30,18 +30,18 @@ if platform.is_win then
   w.log_info 'on windows'
   config.default_prog = { 'nu' }
   config.launch_menu = {
-    { label = 'PowerShell Core', args = { 'pwsh' } },
+    { label = 'PowerShell Core',    args = { 'pwsh' } },
     { label = 'PowerShell Desktop', args = { 'powershell' } },
-    { label = 'Command Prompt', args = { 'cmd' } },
-    { label = 'Nushell', args = { 'nu' } },
+    { label = 'Command Prompt',     args = { 'cmd' } },
+    { label = 'Nushell',            args = { 'nu' } },
   }
 else
   w.log_info 'on mac or linux'
   config.default_prog = { w.home_dir .. '/bin/nu' }
   config.launch_menu = {
-    { label = 'Bash', args = { 'bash' } },
+    { label = 'Bash',    args = { 'bash' } },
     { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
-    { label = 'Zsh', args = { 'zsh' } },
+    { label = 'Zsh',     args = { 'zsh' } },
   }
 end
 
@@ -94,21 +94,23 @@ end
 
 -- keep in sync with nvim wezterm.lua
 local move_map = {
-  { wez_action_name = 'move-left', wez_action = act.ActivatePaneDirection 'Left', key = 'h', mods = mods.alt },
+  { wez_action_name = 'move-left',  wez_action = act.ActivatePaneDirection 'Left',  key = 'h', mods = mods.alt },
   { wez_action_name = 'move-right', wez_action = act.ActivatePaneDirection 'Right', key = 'l', mods = mods.alt },
-  { wez_action_name = 'move-up', wez_action = act.ActivatePaneDirection 'Up', key = 'k', mods = mods.alt },
-  { wez_action_name = 'move-down', wez_action = act.ActivatePaneDirection 'Down', key = 'j', mods = mods.alt },
+  { wez_action_name = 'move-up',    wez_action = act.ActivatePaneDirection 'Up',    key = 'k', mods = mods.alt },
+  { wez_action_name = 'move-down',  wez_action = act.ActivatePaneDirection 'Down',  key = 'j', mods = mods.alt },
 }
 
 for _, v in pairs(move_map) do
-  w.on(v.wez_action_name, function(window, pane) wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods }) end)
+  w.on(v.wez_action_name,
+    function(window, pane) wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods }) end)
 end
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on(
   'close-pane',
-  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mods.alt }) end
+  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
+      act.SendKey { key = 'x', mods = mods.alt }) end
 )
 
 config.mouse_bindings = {
@@ -120,24 +122,24 @@ config.mouse_bindings = {
 }
 config.keys = {
 
-  { key = 'f', mods = mods.alt, action = w.action_callback(sessionizer.start) },
-  { key = 'u', mods = mods.alt, action = act.TogglePaneZoomState }, -- u: f[u]llscreen
+  { key = 'f',   mods = mods.alt,        action = act.TogglePaneZoomState }, -- u: [f]ullscreen
   -- { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ', mods = mods.ctrl, action = act.SendKey { key = ' ', mods = mods.ctrl } },
+  { key = ' ',   mods = mods.ctrl,       action = act.SendKey { key = ' ', mods = mods.ctrl } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
-  { key = 'x', mods = mods.shift_ctrl, action = act.ActivateCopyMode },
-  { key = 'c', mods = mods.alt, action = act.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-  { key = 'a', mods = mods.alt, action = act.ShowLauncher },
+  { key = 'x',   mods = mods.shift_ctrl, action = act.ActivateCopyMode },
+  { key = 'c',   mods = mods.alt,        action = act.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE',          action = act.ShowDebugOverlay },
+  { key = 'a',   mods = mods.alt,        action = act.ShowLauncher },
 
   -- Workspaces
-  { key = 'w', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'n', mods = mods.alt, action = act.SwitchWorkspaceRelative(1) },
-  { key = 'p', mods = mods.alt, action = act.SwitchWorkspaceRelative(-1) },
-  { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace },
+  { key = 'w',   mods = mods.alt,        action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 'W',   mods = mods.alt,        action = w.action_callback(sessionizer.start) },
+  { key = 'n',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(1) },
+  { key = 'p',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(-1) },
+  { key = 'N',   mods = mods.alt,        action = act.SwitchToWorkspace },
   -- Create a new workspace with a random name and switch to it
   -- Switch to lazygit, bottom, diskonaut, broot
   {
@@ -167,29 +169,29 @@ config.keys = {
     mods = mods.alt,
     action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } },
   },
-  { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
-  { key = 'Enter', mods = mods.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'F11',   mods = 'NONE',         action = act.ToggleFullScreen },
+  { key = 'Enter', mods = mods.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
-  { key = 's', mods = mods.alt, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = 'v', mods = mods.alt, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = '-', mods = mods.alt, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = '\\', mods = mods.alt, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 's', mods = mods.shift_alt, action = act.PaneSelect { alphabet = '1234567890' } },
-  { key = 'r', mods = mods.alt, action = act.ReloadConfiguration },
+  { key = 's',     mods = mods.alt,       action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = 'v',     mods = mods.alt,       action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = '-',     mods = mods.alt,       action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = '\\',    mods = mods.alt,       action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 's',     mods = mods.shift_alt, action = act.PaneSelect { alphabet = '1234567890' } },
+  { key = 'r',     mods = mods.alt,       action = act.ReloadConfiguration },
 
   -- adjust panes
-  { key = 'h', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'h',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k',     mods = mods.shift_alt, action = act.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
-  { key = 'h', mods = mods.alt, action = w.action { EmitEvent = 'move-left' } },
-  { key = 'l', mods = mods.alt, action = w.action { EmitEvent = 'move-right' } },
-  { key = 'j', mods = mods.alt, action = w.action { EmitEvent = 'move-down' } },
-  { key = 'k', mods = mods.alt, action = w.action { EmitEvent = 'move-up' } },
-  { key = 'x', mods = mods.alt, action = w.action { EmitEvent = 'close-pane' } },
+  { key = 'h',     mods = mods.alt,       action = w.action { EmitEvent = 'move-left' } },
+  { key = 'l',     mods = mods.alt,       action = w.action { EmitEvent = 'move-right' } },
+  { key = 'j',     mods = mods.alt,       action = w.action { EmitEvent = 'move-down' } },
+  { key = 'k',     mods = mods.alt,       action = w.action { EmitEvent = 'move-up' } },
+  { key = 'x',     mods = mods.alt,       action = w.action { EmitEvent = 'close-pane' } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
@@ -203,7 +205,7 @@ config.hyperlink_rules = {
   -- Matches: a URL in curly braces: {URL}
   { regex = '\\{(\\w+://\\S+)\\}', format = '$1', highlight = 1 },
   -- Matches: a URL in angle brackets: <URL>
-  { regex = '<(\\w+://\\S+)>', format = '$1', highlight = 1 },
+  { regex = '<(\\w+://\\S+)>',     format = '$1', highlight = 1 },
 
   -- Matches:  "pullRequestId": 6571
   {
@@ -212,9 +214,9 @@ config.hyperlink_rules = {
     highlight = 1,
   },
   -- Then handle URLs not wrapped in brackets
-  { regex = '[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)', format = '$1', highlight = 1 },
+  { regex = '[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)', format = '$1',        highlight = 1 },
   -- implicit mailto link
-  { regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b', format = 'mailto:$0', highlight = 1 },
+  { regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',     format = 'mailto:$0', highlight = 1 },
 }
 
 return config
