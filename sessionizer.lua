@@ -1,11 +1,14 @@
 local w = require 'wezterm'
 local platform = require 'platform'
 local act = w.action
-local path = require 'path'
 
 local M = {}
 
-local home = platform.is_win and w.home_dir:gsub('\\', '/') or w.home_dir -- handles Windows backslash
+--- Converts Windows backslash to forwardslash
+---@param path string
+local function normalize_path(path) return platform.is_win and path:gsub('\\', '/') or path end
+
+local home = normalize_path(w.home_dir)
 
 --- If name nil or false print err_message
 ---@param name string|boolean|nil
@@ -15,21 +18,47 @@ local function err_if_not(name, err_message)
     w.log_error(err_message)
   end
 end
+--
+--- path if file or directory exists nil otherwise
+---@param path string
+local function file_exists(path)
+  if path == nil then
+    return nil
+  end
+  local f = io.open(path, 'r')
+  -- io.open won't work to check if directories exist,
+  -- but works for symlinks and regular files
+  if f ~= nil then
+    w.log_info(path .. ' file or symlink found')
+    io.close(f)
+    return path
+  end
+  return nil
+end
 
--- TODO: make sure at least one path exist
+-------------------------------------------------------
+-- PATHS
+--
 local fd = (
-  path.file_exists(home .. '/bin/fd')
-  or path.file_exists 'usr/bin/fd'
-  or path.file_exists(home .. '/bin/fd.exe')
-  or path.file_exists '/ProgramData/chocolatey/bin/fd.exe'
+  file_exists(home .. '/bin/fd')
+  or file_exists 'usr/bin/fd'
+  or file_exists(home .. '/bin/fd.exe')
+  or file_exists '/ProgramData/chocolatey/bin/fd.exe'
 )
 err_if_not(fd, 'fd not found')
 
-local git = (path.file_exists '/usr/bin/git' or path.file_exists '/Program Files/Git/cmd/git.exe')
+local git = (file_exists '/usr/bin/git' or file_exists '/Program Files/Git/cmd/git.exe')
 err_if_not(git, 'git not found')
 
 local srcPath = home .. '/src'
 err_if_not(srcPath, srcPath .. ' not found')
+
+local search_folders = {
+  srcPath,
+  srcPath .. '/work',
+  srcPath .. '/other',
+}
+-------------------------------------------------------
 
 --- Merge numeric tables
 ---@param t1 table
@@ -46,12 +75,6 @@ local function merge_tables(t1, t2)
   return result
 end
 
-local folders = {
-  srcPath,
-  srcPath .. '/work',
-  srcPath .. '/other',
-}
-
 M.start = function(window, pane)
   local projects = {}
 
@@ -59,12 +82,14 @@ M.start = function(window, pane)
   -- ~/src
   --  ├──nushell-config       # toplevel config stuff
   --  ├──wezterm-config
-  --  ├──work                 # work stuff
-  --    └──work/project.git   # git bare clones marked with .git at the end
+  --  ├──work                    # work stuff
+  --    ├──work/project.git      # git bare clones marked with .git at the end
+  --    ├──work/project-bugfix   # worktree of project.git
+  --    ├──work/project-feature  # worktree of project.git
   --  │ └───31 unlisted
   --  └──other                # 3rd party project
   --     └──103 unlisted
-  local cmd = merge_tables({ fd, '-HI', '-td', '--max-depth=1', '.' }, folders)
+  local cmd = merge_tables({ fd, '-HI', '-td', '--max-depth=1', '.' }, search_folders)
   w.log_info 'cmd: '
   w.log_info(cmd)
 
@@ -79,7 +104,7 @@ M.start = function(window, pane)
   end
 
   for line in stdout:gmatch '([^\n]*)\n?' do
-    local project = platform.is_win and line:gsub('\\', '/') or line -- handles Windows backslash
+    local project = normalize_path(line)
     local label = project
     local id = project
 
@@ -87,20 +112,12 @@ M.start = function(window, pane)
     -- assuming following name convention `myproject.git`
     if string.match(project, '%.git/$') then
       w.log_info('found ' .. tostring(project) .. ' assuming bare repository (name ends with .git)')
-      local success, stdout, stderr = w.run_child_process { fd, '-HI', '-td', '--max-depth=1', '.', project .. '/worktrees' }
-      if success then
-        for wt_line in stdout:gmatch '([^\n]*)\n?' do
-          local wt_project = platform.is_win and wt_line:gsub('\\', '/') or wt_line -- handles Windows backslash
-          local wt_label = wt_project
-          local wt_id = wt_project
-          table.insert(projects, { label = tostring(wt_label), id = tostring(wt_id) })
-        end
-      else
-        w.log_error('Failed to run fd: ' .. stderr)
-      end
+      -- do nothing
+      -- assuming git worktree checkout occurring outside e.g.
+      -- git worktree add -b emergency-fix ../emergency-fix master
+    else
+      table.insert(projects, { label = tostring(label), id = tostring(id) })
     end
-
-    table.insert(projects, { label = tostring(label), id = tostring(id) })
   end
 
   window:perform_action(
