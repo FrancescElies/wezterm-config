@@ -107,17 +107,7 @@ M.start = function(window, pane)
     local project = normalize_path(line)
     local label = project
     local id = project
-
-    -- handle git bare repositories,
-    -- assuming following name convention `myproject.git`
-    if string.match(project, '%.git/$') then
-      w.log_info('found ' .. tostring(project) .. ' assuming bare repository (name ends with .git)')
-      -- do nothing
-      -- assuming git worktree checkout occurring outside e.g.
-      -- git worktree add -b emergency-fix ../emergency-fix master
-    else
-      table.insert(projects, { label = tostring(label), id = tostring(id) })
-    end
+    table.insert(projects, { label = tostring(label), id = tostring(id) })
   end
 
   window:perform_action(
