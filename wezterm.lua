@@ -122,7 +122,7 @@ config.mouse_bindings = {
 }
 config.keys = {
 
-  { key = 'f',   mods = mods.alt,        action = act.TogglePaneZoomState }, -- u: [f]ullscreen
+  { key = 'z',   mods = mods.alt,        action = act.TogglePaneZoomState },
   -- { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
@@ -136,7 +136,7 @@ config.keys = {
 
   -- Workspaces
   { key = 'w',   mods = mods.alt,        action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'W',   mods = mods.alt,        action = w.action_callback(sessionizer.start) },
+  { key = 'f',   mods = mods.alt,        action = w.action_callback(sessionizer.start) },
   { key = 'n',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(1) },
   { key = 'p',   mods = mods.alt,        action = act.SwitchWorkspaceRelative(-1) },
   { key = 'N',   mods = mods.alt,        action = act.SwitchToWorkspace },
@@ -173,8 +173,6 @@ config.keys = {
   { key = 'Enter', mods = mods.alt,       action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
-  { key = 's',     mods = mods.alt,       action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = 'v',     mods = mods.alt,       action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = '-',     mods = mods.alt,       action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '\\',    mods = mods.alt,       action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 's',     mods = mods.shift_alt, action = act.PaneSelect { alphabet = '1234567890' } },
