@@ -41,8 +41,11 @@ end
 --
 local fd = (
   file_exists(home .. '/bin/fd')
+  or file_exists(home .. '.cargo/bin/fd')
   or file_exists 'usr/bin/fd'
+  -- windows
   or file_exists(home .. '/bin/fd.exe')
+  or file_exists(home .. '.cargo/bin/fd.exe')
   or file_exists '/ProgramData/chocolatey/bin/fd.exe'
 )
 err_if_not(fd, 'fd not found')
