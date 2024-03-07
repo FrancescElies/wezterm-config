@@ -7,9 +7,12 @@
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local w = require 'wezterm'
 local sessionizer = require 'sessionizer'
+local utils = require 'utils'
 local platform = require 'platform'
 local act = w.action
 local mux = w.mux
+
+local file_exists = utils.file_exists
 
 local config = {
   debug_key_events = false,
@@ -27,6 +30,15 @@ if platform.is_mac then
   }
 end
 
+local home = utils.normalize_path(w.home_dir)
+local nushell = (
+  file_exists(home .. '/bin/nu')
+  or file_exists(home .. '/.cargo/bin/nu')
+  -- windows
+  or file_exists(home .. '/bin/nu.exe')
+  or file_exists(home .. '/.cargo/bin/nu.exe')
+)
+
 if platform.is_win then
   w.log_info 'on windows'
   config.default_prog = { 'nu' }
@@ -41,7 +53,7 @@ else
   config.default_prog = { w.home_dir .. '/bin/nu' }
   config.launch_menu = {
     { label = 'Bash',    args = { 'bash' } },
-    { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
+    { label = 'Nushell', args = { nushell } },
     { label = 'Zsh',     args = { 'zsh' } },
   }
 end
@@ -110,8 +122,10 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on(
   'close-pane',
-  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
-      act.SendKey { key = 'x', mods = mods.alt }) end
+  function(window, pane)
+    wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false },
+      act.SendKey { key = 'x', mods = mods.alt })
+  end
 )
 
 config.mouse_bindings = {

@@ -1,40 +1,15 @@
 local w = require 'wezterm'
 local platform = require 'platform'
+local utils = require 'utils'
 local act = w.action
 
 local M = {}
 
---- Converts Windows backslash to forwardslash
----@param path string
-local function normalize_path(path) return platform.is_win and path:gsub('\\', '/') or path end
+local file_exists = utils.file_exists
+local normalize_path = utils.normalize_path
+local err_if_not = utils.err_if_not
 
 local home = normalize_path(w.home_dir)
-
---- If name nil or false print err_message
----@param name string|boolean|nil
----@param err_message string
-local function err_if_not(name, err_message)
-  if not name then
-    w.log_error(err_message)
-  end
-end
---
---- path if file or directory exists nil otherwise
----@param path string
-local function file_exists(path)
-  if path == nil then
-    return nil
-  end
-  local f = io.open(path, 'r')
-  -- io.open won't work to check if directories exist,
-  -- but works for symlinks and regular files
-  if f ~= nil then
-    w.log_info(path .. ' file or symlink found')
-    io.close(f)
-    return path
-  end
-  return nil
-end
 
 -------------------------------------------------------
 -- PATHS
@@ -63,21 +38,6 @@ local search_folders = {
 }
 -------------------------------------------------------
 
---- Merge numeric tables
----@param t1 table
----@param t2 table
----@return table
-local function merge_tables(t1, t2)
-  local result = {}
-  for index, value in ipairs(t1) do
-    result[index] = value
-  end
-  for index, value in ipairs(t2) do
-    result[#t1 + index] = value
-  end
-  return result
-end
-
 M.start = function(window, pane)
   local projects = {}
 
@@ -92,7 +52,7 @@ M.start = function(window, pane)
   --  │ └───31 unlisted
   --  └──other                # 3rd party project
   --     └──103 unlisted
-  local cmd = merge_tables({ fd, '-HI', '-td', '--max-depth=1', '.' }, search_folders)
+  local cmd = utils.merge_tables({ fd, '-HI', '-td', '--max-depth=1', '.' }, search_folders)
   w.log_info 'cmd: '
   w.log_info(cmd)
 
