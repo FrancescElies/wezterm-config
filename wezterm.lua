@@ -3,6 +3,7 @@
 -- https://github.com/yutkat/dotfiles/tree/main/.config/wezterm
 -- https://github.com/KevinSilvester/wezterm-config
 -- https://github.com/mrjones2014/smart-splits.nvim#wezterm
+-- https://github.com/wez/wezterm/discussions/2329
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local w = require 'wezterm'
