@@ -38,7 +38,7 @@ end
 ---@param t1 table
 ---@param t2 table
 ---@return table
-M.merge_tagles = function(t1, t2)
+M.merge_tables = function(t1, t2)
   local result = {}
   for index, value in ipairs(t1) do
     result[index] = value
