@@ -43,19 +43,19 @@ local nushell = (
 
 if platform.is_win then
   w.log_info 'on windows'
-  config.default_prog = { 'nu' }
+  config.default_prog = { w.home_dir .. '/bin/nu' }
   config.launch_menu = {
     { label = 'PowerShell Core', args = { 'pwsh' } },
     { label = 'PowerShell Desktop', args = { 'powershell' } },
     { label = 'Command Prompt', args = { 'cmd' } },
-    { label = 'Nushell', args = { 'nu' } },
+    { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
   }
 else
   w.log_info 'on mac or linux'
   config.default_prog = { w.home_dir .. '/bin/nu' }
   config.launch_menu = {
     { label = 'Bash', args = { 'bash' } },
-    { label = 'Nushell', args = { nushell } },
+    { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
     { label = 'Zsh', args = { 'zsh' } },
   }
 end
