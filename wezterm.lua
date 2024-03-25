@@ -10,10 +10,11 @@ local w = require 'wezterm'
 local sessionizer = require 'sessionizer'
 local utils = require 'utils'
 local platform = require 'platform'
-local act = w.action
+local a = w.action
 local mux = w.mux
 
 local file_exists = utils.file_exists
+local todos_dir = w.home_dir .. '/zettelkasten'
 
 local config = {
   debug_key_events = false,
@@ -110,22 +111,19 @@ end
 
 -- keep in sync with nvim wezterm.lua
 local move_map = {
-  { wez_action_name = 'move-left', wez_action = act.ActivatePaneDirection 'Left', key = 'h', mods = mods.alt },
-  { wez_action_name = 'move-right', wez_action = act.ActivatePaneDirection 'Right', key = 'l', mods = mods.alt },
-  { wez_action_name = 'move-up', wez_action = act.ActivatePaneDirection 'Up', key = 'k', mods = mods.alt },
-  { wez_action_name = 'move-down', wez_action = act.ActivatePaneDirection 'Down', key = 'j', mods = mods.alt },
+  { wez_action_name = 'move-left', wez_action = a.ActivatePaneDirection 'Left', key = 'h', mods = mods.alt },
+  { wez_action_name = 'move-right', wez_action = a.ActivatePaneDirection 'Right', key = 'l', mods = mods.alt },
+  { wez_action_name = 'move-up', wez_action = a.ActivatePaneDirection 'Up', key = 'k', mods = mods.alt },
+  { wez_action_name = 'move-down', wez_action = a.ActivatePaneDirection 'Down', key = 'j', mods = mods.alt },
 }
 
 for _, v in pairs(move_map) do
-  w.on(v.wez_action_name, function(window, pane) wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods }) end)
+  w.on(v.wez_action_name, function(window, pane) wez_nvim_action(window, pane, v.wez_action, a.SendKey { key = v.key, mods = v.mods }) end)
 end
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
-w.on(
-  'close-pane',
-  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mods.alt }) end
-)
+w.on('close-pane', function(window, pane) wez_nvim_action(window, pane, a.CloseCurrentPane { confirm = false }, a.SendKey { key = 'x', mods = mods.alt }) end)
 
 config.mouse_bindings = {
   {
@@ -136,66 +134,52 @@ config.mouse_bindings = {
 }
 config.keys = {
 
-  { key = 'z', mods = mods.alt, action = act.TogglePaneZoomState },
+  { key = 'z', mods = mods.alt, action = a.TogglePaneZoomState },
   -- { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ', mods = mods.ctrl, action = act.SendKey { key = ' ', mods = mods.ctrl } },
+  { key = ' ', mods = mods.ctrl, action = a.SendKey { key = ' ', mods = mods.ctrl } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
-  { key = 'x', mods = mods.shift_ctrl, action = act.ActivateCopyMode },
-  { key = 'c', mods = mods.alt, action = act.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-  { key = 'a', mods = mods.alt, action = act.ShowLauncher },
+  { key = 'x', mods = mods.shift_ctrl, action = a.ActivateCopyMode },
+  { key = 'c', mods = mods.alt, action = a.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE', action = a.ShowDebugOverlay },
+  { key = 'a', mods = mods.alt, action = a.ShowLauncher },
 
   -- Workspaces
-  { key = 's', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 's', mods = mods.alt, action = a.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { key = 'f', mods = mods.alt, action = w.action_callback(sessionizer.start) },
-  { key = 'n', mods = mods.alt, action = act.SwitchWorkspaceRelative(1) },
-  { key = 'p', mods = mods.alt, action = act.SwitchWorkspaceRelative(-1) },
-  { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace },
-  -- Create a new workspace with a random name and switch to it
-  -- Switch to lazygit, bottom, diskonaut, broot
-  {
-    -- cargo-binstall broot
-    key = 'b',
-    mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Broot', spawn = { args = { 'broot' } } },
-  },
-  {
-    -- brew install lazygit
-    -- go install github.com/jesseduffield/lazygit@latest
-    key = 'g',
-    mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Git', spawn = { args = { 'lazygit' } } },
-  },
-  {
-    key = 't',
-    mods = mods.alt,
-    action = act.SwitchToWorkspace {
-      name = 'todos',
-      spawn = { args = { 'broot', w.home_dir .. '/zettelkasten' } },
-    },
-  },
-  {
-    -- cargo-binstall bottom
-    key = 'o',
-    mods = mods.alt,
-    action = act.SwitchToWorkspace { name = 'Top', spawn = { args = { 'btm' } } },
-  },
-  { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
-  { key = 'Enter', mods = mods.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'n', mods = mods.alt, action = a.SwitchWorkspaceRelative(1) },
+  { key = 'p', mods = mods.alt, action = a.SwitchWorkspaceRelative(-1) },
+  { key = 'N', mods = mods.alt, action = a.SwitchToWorkspace },
+
+  -- Launch cli apps
+  -- vertical splits
+  { key = 'b', mods = mods.alt, action = a.SplitVertical { args = { 'broot' } } },
+  { key = 'g', mods = mods.alt, action = a.SplitVertical { args = { 'lazygit' } } },
+  { key = 't', mods = mods.alt, action = a.SplitVertical { args = { 'broot', todos_dir } } },
+  { key = 'o', mods = mods.alt, action = a.SplitVertical { args = { 'btm' } } },
+  { key = 'd', mods = mods.alt, action = a.SplitVertical { args = { 'diskonaut' } } },
+  -- horizontal splits
+  { key = 'b', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot' } } },
+  { key = 'g', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
+  { key = 't', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot', todos_dir } } },
+  { key = 'o', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'btm' } } },
+  { key = 'd', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'diskonaut' } } },
+
+  { key = 'F11', mods = 'NONE', action = a.ToggleFullScreen },
+  { key = 'Enter', mods = mods.alt, action = a.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
-  { key = '-', mods = mods.alt, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = '\\', mods = mods.alt, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 'r', mods = mods.alt, action = act.ReloadConfiguration },
+  { key = '-', mods = mods.alt, action = a { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = '\\', mods = mods.alt, action = a { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 'r', mods = mods.alt, action = a.ReloadConfiguration },
 
   -- adjust panes
-  { key = 'h', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k', mods = mods.shift_alt, action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'h', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
   { key = 'h', mods = mods.alt, action = w.action { EmitEvent = 'move-left' } },
