@@ -18,7 +18,6 @@ local file_exists = utils.file_exists
 local config = {
   debug_key_events = false,
   font_size = 12,
-  font = w.font 'Fira Code',
 }
 
 -- https://wezfurlong.org/wezterm/faq.html?h=path#im-on-macos-and-wezterm-cannot-find-things-in-my-path
