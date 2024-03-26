@@ -17,8 +17,9 @@ local file_exists = utils.file_exists
 local todos_dir = w.home_dir .. '/zettelkasten'
 
 local config = {
+  hide_tab_bar_if_only_one_tab = true,
   debug_key_events = false,
-  font_size = 12,
+  font_size = 10,
   -- no need to specify fon
   -- font = w.font 'Fira Code',
 }
