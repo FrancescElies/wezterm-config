@@ -14,7 +14,7 @@ local a = w.action
 local mux = w.mux
 
 local file_exists = utils.file_exists
-local todos_dir = w.home_dir .. '/zettelkasten'
+local todos_dir = w.home_dir .. '/src/zettelkasten'
 
 local config = {
   hide_tab_bar_if_only_one_tab = true,
@@ -155,17 +155,15 @@ config.keys = {
   { key = 'N', mods = mods.alt, action = a.SwitchToWorkspace },
 
   -- Launch cli apps
-  -- vertical splits
   { key = 'b', mods = mods.alt, action = a.SplitVertical { args = { 'broot' } } },
-  { key = 'g', mods = mods.alt, action = a.SplitVertical { args = { 'lazygit' } } },
-  { key = 't', mods = mods.alt, action = a.SplitVertical { args = { 'broot', todos_dir } } },
-  { key = 'o', mods = mods.alt, action = a.SplitVertical { args = { 'btm' } } },
-  { key = 'd', mods = mods.alt, action = a.SplitVertical { args = { 'diskonaut' } } },
-  -- horizontal splits
   { key = 'b', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot' } } },
+  { key = 'g', mods = mods.alt, action = a.SplitVertical { args = { 'lazygit' } } },
   { key = 'g', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
+  { key = 't', mods = mods.alt, action = a.SplitVertical { args = { 'broot', todos_dir } } },
   { key = 't', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot', todos_dir } } },
+  { key = 'o', mods = mods.alt, action = a.SplitVertical { args = { 'btm' } } },
   { key = 'o', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'btm' } } },
+  { key = 'd', mods = mods.alt, action = a.SplitVertical { args = { 'diskonaut' } } },
   { key = 'd', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'diskonaut' } } },
 
   { key = 'F11', mods = 'NONE', action = a.ToggleFullScreen },
