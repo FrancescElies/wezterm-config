@@ -126,13 +126,14 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on('close-pane', function(window, pane) wez_nvim_action(window, pane, a.CloseCurrentPane { confirm = false }, a.SendKey { key = 'x', mods = mods.alt }) end)
 
-config.mouse_bindings = {
-  {
-    event = { Down = { streak = 3, button = 'Left' } },
-    action = w.action.SelectTextAtMouseCursor 'SemanticZone',
-    mods = 'NONE',
-  },
-}
+-- config.mouse_bindings = {
+--   {
+--     event = { Down = { streak = 3, button = 'Left' } },
+--     action = w.action.SelectTextAtMouseCursor 'SemanticZone',
+--     mods = 'NONE',
+--   },
+-- }
+
 config.keys = {
 
   { key = 'z', mods = mods.alt, action = a.TogglePaneZoomState },
