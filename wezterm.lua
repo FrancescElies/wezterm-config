@@ -148,25 +148,32 @@ config.keys = {
   { key = 'a', mods = mods.alt, action = a.ShowLauncher },
 
   -- Workspaces
-  { key = 's', mods = mods.alt, action = a.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'f', mods = mods.alt, action = w.action_callback(sessionizer.start) },
+  { key = 'w', mods = mods.alt, action = a.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 's', mods = mods.alt, action = w.action_callback(sessionizer.start) },
   { key = 'n', mods = mods.alt, action = a.SwitchWorkspaceRelative(1) },
   { key = 'p', mods = mods.alt, action = a.SwitchWorkspaceRelative(-1) },
   { key = 'N', mods = mods.alt, action = a.SwitchToWorkspace },
 
-  -- Launch cli apps
-  { key = 'b', mods = mods.alt, action = a.SplitVertical { args = { 'broot' } } },
-  { key = 'b', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot' } } },
+  -- Cli apps
+  -- [f]ind (broot)
+  { key = 'f', mods = mods.alt, action = a.SplitVertical { args = { 'broot' } } },
+  { key = 'f', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot' } } },
+  -- lagy[g]it
   { key = 'g', mods = mods.alt, action = a.SplitVertical { args = { 'lazygit' } } },
   { key = 'g', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
+  -- [t]odos
   { key = 't', mods = mods.alt, action = a.SplitVertical { args = { 'broot', todos_dir } } },
   { key = 't', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot', todos_dir } } },
+  --b[o]ttom
   { key = 'o', mods = mods.alt, action = a.SplitVertical { args = { 'btm' } } },
   { key = 'o', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'btm' } } },
-  { key = 'd', mods = mods.alt, action = a.SplitVertical { args = { 'diskonaut' } } },
-  { key = 'd', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'diskonaut' } } },
+  -- d[i]skonaut
+  { key = 'i', mods = mods.alt, action = a.SplitVertical { args = { 'diskonaut' } } },
+  { key = 'i', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'diskonaut' } } },
 
+  -- Window
   { key = 'F11', mods = 'NONE', action = a.ToggleFullScreen },
+
   { key = 'Enter', mods = mods.alt, action = a.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
@@ -186,6 +193,7 @@ config.keys = {
   { key = 'j', mods = mods.alt, action = w.action { EmitEvent = 'move-down' } },
   { key = 'k', mods = mods.alt, action = w.action { EmitEvent = 'move-up' } },
   { key = 'x', mods = mods.alt, action = w.action { EmitEvent = 'close-pane' } },
+  { key = 'd', mods = mods.alt, action = w.action { EmitEvent = 'close-pane' } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
