@@ -14,16 +14,27 @@ local home = normalize_path(w.home_dir)
 -------------------------------------------------------
 -- PATHS
 --
-local fd = (
-  file_exists(home .. '/bin/fd')
-  or file_exists(home .. '/.cargo/bin/fd')
-  or file_exists 'usr/bin/fd'
-  -- windows
-  or file_exists(home .. '/bin/fd.exe')
-  or file_exists(home .. '/.cargo/bin/fd.exe')
-  or file_exists '/ProgramData/chocolatey/bin/fd.exe'
-)
-err_if_not(fd, 'fd not found')
+
+--- Find exececutable in typical locations
+---@param bin_name string
+---@return string
+local function find_executable(bin_name)
+  local bin = (
+    file_exists(home .. '/bin/' .. bin_name)
+    or file_exists(home .. '/.cargo/bin/' .. bin_name)
+    or file_exists('usr/bin/' .. bin_name)
+    -- windows
+    or file_exists(home .. '/bin/' .. bin_name .. '.exe')
+    or file_exists(home .. '/.cargo/bin/' .. bin_name .. '.exe')
+    or file_exists '/ProgramData/chocolatey/bin/' .. bin_name .. '.exe'
+  )
+  err_if_not(bin, bin_name .. ' not found')
+
+  return bin
+end
+
+-- local broot = find_executable 'broot'
+local fd = find_executable 'fd'
 
 local git = (file_exists '/usr/bin/git' or file_exists '/Program Files/Git/cmd/git.exe')
 err_if_not(git, 'git not found')
@@ -81,6 +92,7 @@ M.start = function(window, pane)
         else
           w.log_info('Selected ' .. label)
           win:perform_action(act.SwitchToWorkspace { name = id, spawn = { cwd = label } }, pane)
+          -- win:perform_action(act.SwitchToWorkspace { name = id, spawn = { cwd = label, args = { broot } } }, pane)
         end
       end),
       fuzzy = true,
