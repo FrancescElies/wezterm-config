@@ -6,9 +6,10 @@ local M = {}
 ---@param path string
 M.file_exists = function(path)
   if path == nil then
-    w.log_warn(path .. ' NOT found')
+    -- w.log_warn(path .. ' NOT found')
     return nil
   end
+
   local f = io.open(path, 'r')
   -- io.open won't work to check if directories exist,
   -- but works for symlinks and regular files
@@ -17,7 +18,8 @@ M.file_exists = function(path)
     io.close(f)
     return path
   end
-  w.log_warn(path .. ' NOT found')
+
+  -- w.log_warn(path .. ' NOT found')
   return nil
 end
 
