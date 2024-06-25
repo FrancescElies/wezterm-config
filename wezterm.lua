@@ -126,13 +126,32 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on('close-pane', function(window, pane) wez_nvim_action(window, pane, a.CloseCurrentPane { confirm = false }, a.SendKey { key = 'x', mods = mods.alt }) end)
 
--- config.mouse_bindings = {
---   {
---     event = { Down = { streak = 3, button = 'Left' } },
---     action = w.action.SelectTextAtMouseCursor 'SemanticZone',
---     mods = 'NONE',
---   },
--- }
+config.mouse_bindings = {
+  -- https://dystroy.org/blog/from-terminator-to-wezterm/
+  -- Disable the default click behavior
+  {
+    event = { Up = { streak = 1, button = 'Left' } },
+    mods = 'NONE',
+    action = w.action.DisableDefaultAssignment,
+  },
+  -- Ctrl-click will open the link under the mouse cursor
+  {
+    event = { Up = { streak = 1, button = 'Left' } },
+    mods = 'CTRL',
+    action = w.action.OpenLinkAtMouseCursor,
+  },
+  -- Disable the Ctrl-click down event to stop programs from seeing it when a URL is clicked
+  {
+    event = { Down = { streak = 1, button = 'Left' } },
+    mods = 'CTRL',
+    action = w.action.Nop,
+  },
+  {
+    event = { Down = { streak = 3, button = 'Left' } },
+    action = w.action.SelectTextAtMouseCursor 'SemanticZone',
+    mods = 'NONE',
+  },
+}
 
 config.keys = {
 
