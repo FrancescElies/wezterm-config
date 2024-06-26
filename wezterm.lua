@@ -126,6 +126,12 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 w.on('close-pane', function(window, pane) wez_nvim_action(window, pane, a.CloseCurrentPane { confirm = false }, a.SendKey { key = 'x', mods = mods.alt }) end)
 
+-- Styling Inactive Panes
+config.inactive_pane_hsb = {
+  saturation = 0.8, -- smaller values can make it appear more washed out
+  brightness = 0.7, -- dims or increases the perceived amount of light
+}
+
 config.mouse_bindings = {
   -- https://dystroy.org/blog/from-terminator-to-wezterm/
   -- Disable the default click behavior
