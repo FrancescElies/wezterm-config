@@ -24,6 +24,10 @@ local config = {
   -- font = w.font 'Fira Code',
 }
 
+w.on('gui-startup', function()
+  local tab, pane, window = mux.spawn_window {}
+  window:gui_window():maximize()
+end)
 -- https://wezfurlong.org/wezterm/faq.html?h=path#im-on-macos-and-wezterm-cannot-find-things-in-my-path
 if platform.is_mac then
   config.set_environment_variables = {
@@ -133,30 +137,30 @@ config.inactive_pane_hsb = {
 }
 
 config.mouse_bindings = {
-  -- https://dystroy.org/blog/from-terminator-to-wezterm/
-  -- Disable the default click behavior
-  {
-    event = { Up = { streak = 1, button = 'Left' } },
-    mods = 'NONE',
-    action = w.action.DisableDefaultAssignment,
-  },
-  -- Ctrl-click will open the link under the mouse cursor
-  {
-    event = { Up = { streak = 1, button = 'Left' } },
-    mods = 'CTRL',
-    action = w.action.OpenLinkAtMouseCursor,
-  },
-  -- Disable the Ctrl-click down event to stop programs from seeing it when a URL is clicked
-  {
-    event = { Down = { streak = 1, button = 'Left' } },
-    mods = 'CTRL',
-    action = w.action.Nop,
-  },
-  {
-    event = { Down = { streak = 3, button = 'Left' } },
-    action = w.action.SelectTextAtMouseCursor 'SemanticZone',
-    mods = 'NONE',
-  },
+  --   -- https://dystroy.org/blog/from-terminator-to-wezterm/
+  --   -- Disable the default click behavior
+  --   {
+  --     event = { Up = { streak = 1, button = 'Left' } },
+  --     mods = 'NONE',
+  --     action = w.action.DisableDefaultAssignment,
+  --   },
+  --   -- Ctrl-click will open the link under the mouse cursor
+  --   {
+  --     event = { Up = { streak = 1, button = 'Left' } },
+  --     mods = 'CTRL',
+  --     action = w.action.OpenLinkAtMouseCursor,
+  --   },
+  --   -- Disable the Ctrl-click down event to stop programs from seeing it when a URL is clicked
+  --   {
+  --     event = { Down = { streak = 1, button = 'Left' } },
+  --     mods = 'CTRL',
+  --     action = w.action.Nop,
+  --   },
+  --   {
+  --     event = { Down = { streak = 3, button = 'Left' } },
+  --     action = w.action.SelectTextAtMouseCursor 'SemanticZone',
+  --     mods = 'NONE',
+  --   },
 }
 
 config.keys = {
@@ -235,10 +239,10 @@ config.hyperlink_rules = {
   -- Matches: a URL in angle brackets: <URL>
   { regex = '<(\\w+://\\S+)>', format = '$1', highlight = 1 },
 
-  -- Matches:  "pullRequestId": 6571
+  -- Matches:  numbers
   {
-    regex = '"pullRequestId": (\\d+)',
-    format = 'https://mbbm-ast.visualstudio.com/AST/_git/eklang/pullrequest/$1',
+    regex = '(\\d+)',
+    format = 'https://mbbm-ast.visualstudio.com/AST/_workitems/edit/$1',
     highlight = 1,
   },
   -- Then handle URLs not wrapped in brackets
