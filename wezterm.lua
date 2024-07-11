@@ -89,6 +89,7 @@ local mods = {
 -- end
 
 local function is_vim(window)
+  w.log_info 'is vim?'
   local function process_is_vim(process_info)
     w.log_info('process: ' .. process_info.name)
     return string.find(process_info.name, 'nvim')
@@ -97,14 +98,32 @@ local function is_vim(window)
   local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
   for i = 1, 10, 1 do
     if p == nil then
+      w.log_info 'parent is nil'
       return false
     end
 
     if process_is_vim(p) then
       return true
     end
+
+    -- quick and dirty 2 level deep check children process for nvim
+    w.log_info 'p.children: '
+    for child_pid, child in pairs(p.children) do
+      w.log_info('child of ' .. p.name .. ': child.pid=' .. child_pid .. 'child.name=' .. child.name)
+      if process_is_vim(child) then
+        return true
+      end
+      for cchild_pid, cchild in pairs(child.children) do
+        w.log_info('child of ' .. child.name .. ': child.pid=' .. cchild_pid .. 'child.name=' .. cchild.name)
+        if process_is_vim(cchild) then
+          return true
+        end
+      end
+    end
+
+    -- TODO: needed?
     -- check parent process in the next iteration
-    p = w.procinfo.get_info_for_pid(p.ppid)
+    -- p = w.procinfo.get_info_for_pid(p.ppid)
   end
 
   return false
