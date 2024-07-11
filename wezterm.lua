@@ -21,9 +21,12 @@ local config = {
   debug_key_events = false,
   -- font_size = 12,
   -- font = w.font 'JetBrains Mono',
-  -- color_scheme = 'AdventureTime',
-  color_scheme = 'rose-pine',
 }
+-- config.color_scheme = 'AdventureTime'
+config.color_scheme = 'rose-pine'
+-- config.color_scheme = 'Dracula (Gogh)'
+-- config.color_scheme = 'Gruvbox (Gogh)'
+-- config.color_scheme = 'Gruvbox Dark (Gogh)'
 
 w.on('gui-startup', function()
   local tab, pane, window = mux.spawn_window {}
