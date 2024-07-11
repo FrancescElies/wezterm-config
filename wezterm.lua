@@ -206,6 +206,14 @@ config.keys = {
   { key = 'k', mods = mods.alt, action = w.action { EmitEvent = 'move-up' } },
   { key = 'x', mods = mods.alt, action = w.action { EmitEvent = 'close-pane' } },
   { key = 'd', mods = mods.alt, action = w.action { EmitEvent = 'close-pane' } },
+
+  -- Cli apps
+  -- lagy[g]it
+  { key = 'g', mods = mods.alt, action = a.SplitVertical { args = { 'lazygit' } } },
+  -- [t]odos
+  { key = 't', mods = mods.alt, action = a.SwitchToWorkspace { name = 'todos', spawn = { args = { 'broot', todos_dir } } } },
+  --b[o]ttom
+  { key = 'o', mods = mods.alt, action = a.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
