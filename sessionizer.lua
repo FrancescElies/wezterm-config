@@ -22,7 +22,8 @@ local function find_executable(bin_name)
   local bin = (
     file_exists(home .. '/bin/' .. bin_name)
     or file_exists(home .. '/.cargo/bin/' .. bin_name)
-    or file_exists('usr/bin/' .. bin_name)
+    or file_exists('/usr/bin/' .. bin_name)
+    or file_exists('/opt/homebrew/bin/' .. bin_name)
     -- windows
     or file_exists(home .. '/bin/' .. bin_name .. '.exe')
     or file_exists(home .. '/.cargo/bin/' .. bin_name .. '.exe')
@@ -33,6 +34,7 @@ local function find_executable(bin_name)
   return bin
 end
 
+local nvim = find_executable 'nvim'
 local fd = find_executable 'fd'
 
 local git = (file_exists '/usr/bin/git' or file_exists '/Program Files/Git/cmd/git.exe')
@@ -90,7 +92,17 @@ M.start = function(window, pane)
           w.log_info 'Cancelled'
         else
           w.log_info('Selected ' .. label)
-          win:perform_action(act.SwitchToWorkspace { name = id, spawn = { cwd = label, args = { 'broot' } } }, pane)
+          win:perform_action(
+            act.SwitchToWorkspace {
+              name = id,
+              spawn = {
+                cwd = label,
+                args = { 'broot' },
+                set_environment_variables = { EDITOR = nvim },
+              },
+            },
+            pane
+          )
         end
       end),
       fuzzy = true,
