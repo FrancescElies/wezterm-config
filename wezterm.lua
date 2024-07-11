@@ -68,11 +68,11 @@ end
 
 -- default modifier keys
 local mods = {
-  shift_ctrl = 'SHIFT|CTRL',
-  shift_alt = 'SHIFT|ALT',
-  alt = 'ALT',
   ctrl = 'CTRL',
-  alt_ctrl = 'ALT|CTRL',
+  ctrl_shift = 'SHIFT|CTRL',
+  ctrl_alt = 'ALT|CTRL',
+  alt = 'ALT',
+  alt_shift = 'SHIFT|ALT',
 }
 
 -- NOTE: SUPER (CMD) is currently (25.11.2023) difficult to bind in nvim
@@ -171,10 +171,10 @@ config.keys = {
   { key = ' ', mods = mods.ctrl, action = a.SendKey { key = ' ', mods = mods.ctrl } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
-  { key = 'x', mods = mods.shift_ctrl, action = a.ActivateCopyMode },
   { key = 'c', mods = mods.alt, action = a.ActivateCopyMode },
   { key = 'F12', mods = 'NONE', action = a.ShowDebugOverlay },
   { key = 'a', mods = mods.alt, action = a.ShowLauncher },
+  { key = 'p', mods = mods.alt_shift, action = a.ActivateCommandPalette },
 
   -- Workspaces
   { key = 'w', mods = mods.alt, action = a.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
@@ -194,10 +194,10 @@ config.keys = {
   { key = 'r', mods = mods.alt, action = a.ReloadConfiguration },
 
   -- adjust panes
-  { key = 'h', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k', mods = mods.shift_alt, action = a.AdjustPaneSize { 'Up', 3 } },
+  { key = 'h', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
   { key = 'h', mods = mods.alt, action = w.action { EmitEvent = 'move-left' } },
