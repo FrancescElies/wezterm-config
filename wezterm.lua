@@ -209,7 +209,7 @@ config.keys = {
 
   -- Cli apps
   -- lagy[g]it
-  { key = 'g', mods = mods.alt, action = a.SplitVertical { args = { 'lazygit' } } },
+  { key = 'g', mods = mods.alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
   -- [t]odos
   { key = 't', mods = mods.alt, action = a.SwitchToWorkspace { name = 'todos', spawn = { args = { 'broot', todos_dir } } } },
   --b[o]ttom
