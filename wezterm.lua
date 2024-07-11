@@ -19,9 +19,8 @@ local todos_dir = w.home_dir .. '/src/zettelkasten'
 local config = {
   hide_tab_bar_if_only_one_tab = true,
   debug_key_events = false,
-  font_size = 10,
-  -- no need to specify fon
-  -- font = w.font 'Fira Code',
+  -- font_size = 12,
+  -- font = w.font 'JetBrains Mono',
 }
 
 w.on('gui-startup', function()
