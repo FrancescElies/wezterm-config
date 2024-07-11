@@ -97,8 +97,8 @@ M.start = function(window, pane)
               name = id,
               spawn = {
                 cwd = label,
-                args = { 'broot' },
-                set_environment_variables = { EDITOR = nvim },
+                args = { 'nu', '-e', 'broot' },
+                -- set_environment_variables = { EDITOR = nvim },
               },
             },
             pane
