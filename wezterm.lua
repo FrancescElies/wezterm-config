@@ -21,6 +21,8 @@ local config = {
   debug_key_events = false,
   -- font_size = 12,
   -- font = w.font 'JetBrains Mono',
+  -- color_scheme = 'AdventureTime',
+  color_scheme = 'rose-pine',
 }
 
 w.on('gui-startup', function()
