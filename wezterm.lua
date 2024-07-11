@@ -184,23 +184,6 @@ config.keys = {
   { key = 'p', mods = mods.alt, action = a.SwitchWorkspaceRelative(-1) },
   { key = 'N', mods = mods.alt, action = a.SwitchToWorkspace },
 
-  -- Cli apps
-  -- [f]ind (broot)
-  { key = 'f', mods = mods.alt, action = a.SplitVertical { args = { 'broot' } } },
-  { key = 'f', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot' } } },
-  -- lagy[g]it
-  { key = 'g', mods = mods.alt, action = a.SplitVertical { args = { 'lazygit' } } },
-  { key = 'g', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
-  -- [t]odos
-  { key = 't', mods = mods.alt, action = a.SplitVertical { args = { 'broot', todos_dir } } },
-  { key = 't', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'broot', todos_dir } } },
-  --b[o]ttom
-  { key = 'o', mods = mods.alt, action = a.SplitVertical { args = { 'btm' } } },
-  { key = 'o', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'btm' } } },
-  -- d[i]skonaut
-  { key = 'i', mods = mods.alt, action = a.SplitVertical { args = { 'diskonaut' } } },
-  { key = 'i', mods = mods.shift_alt, action = a.SplitHorizontal { args = { 'diskonaut' } } },
-
   -- Window
   { key = 'F11', mods = 'NONE', action = a.ToggleFullScreen },
 
