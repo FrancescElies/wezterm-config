@@ -90,40 +90,39 @@ local mods = {
 
 local function is_vim(window)
   w.log_info 'is vim?'
-  local function process_is_vim(process_info)
-    w.log_info('process: ' .. process_info.name)
-    return string.find(process_info.name, 'nvim')
-  end
+
+  local function process_is_vim(process_info) return string.find(process_info.name, 'nvim') end
   -- check current process
   local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
   for i = 1, 10, 1 do
-    if p == nil then
-      w.log_info 'parent is nil'
-      return false
-    end
-
     if process_is_vim(p) then
       return true
     end
 
     -- quick and dirty 2 level deep check children process for nvim
-    w.log_info 'p.children: '
+    -- NOTE: this covers the case where nvim is started from broot
     for child_pid, child in pairs(p.children) do
-      w.log_info('child of ' .. p.name .. ': child.pid=' .. child_pid .. 'child.name=' .. child.name)
+      w.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
       if process_is_vim(child) then
         return true
       end
-      for cchild_pid, cchild in pairs(child.children) do
-        w.log_info('child of ' .. child.name .. ': child.pid=' .. cchild_pid .. 'child.name=' .. cchild.name)
-        if process_is_vim(cchild) then
-          return true
-        end
-      end
+      -- for grandchild_pid, grandchild in pairs(child.children) do
+      --   w.log_info('child of ' .. child.name .. ': name=' .. grandchild.name .. ' pid=' .. grandchild_pid)
+      --   if process_is_vim(grandchild) then
+      --     return true
+      --   end
+      -- end
     end
 
-    -- TODO: needed?
-    -- check parent process in the next iteration
-    -- p = w.procinfo.get_info_for_pid(p.ppid)
+    -- TODO: check parent processes needed? check windows
+    local pp = w.procinfo.get_info_for_pid(p.ppid)
+    if pp == nil then
+      w.log_info 'parent is nil'
+      return false
+    else
+      w.log_info('parent of ' .. p.name .. ': name=' .. pp.name .. ' pid=' .. pp.pid)
+      p = pp
+    end
   end
 
   return false
