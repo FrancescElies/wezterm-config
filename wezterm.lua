@@ -254,12 +254,12 @@ config.keys = {
   { key = 'k', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
-  { key = 'h', mods = mods.alt, action = w.action { EmitEvent = 'move-left' } },
-  { key = 'l', mods = mods.alt, action = w.action { EmitEvent = 'move-right' } },
-  { key = 'j', mods = mods.alt, action = w.action { EmitEvent = 'move-down' } },
-  { key = 'k', mods = mods.alt, action = w.action { EmitEvent = 'move-up' } },
-  { key = 'x', mods = mods.alt, action = w.action { EmitEvent = 'close-pane' } },
-  { key = 'd', mods = mods.alt, action = w.action { EmitEvent = 'close-pane' } },
+  { key = 'h', mods = mods.alt, action = a { EmitEvent = 'move-left' } },
+  { key = 'l', mods = mods.alt, action = a { EmitEvent = 'move-right' } },
+  { key = 'j', mods = mods.alt, action = a { EmitEvent = 'move-down' } },
+  { key = 'k', mods = mods.alt, action = a { EmitEvent = 'move-up' } },
+  { key = 'x', mods = mods.alt, action = a { EmitEvent = 'close-pane' } },
+  { key = 'd', mods = mods.alt, action = a { EmitEvent = 'close-pane' } },
 
   -- Cli apps
   -- lagy[g]it
