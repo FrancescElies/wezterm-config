@@ -52,24 +52,42 @@ local nushell = (
   or file_exists(home .. '/.cargo/bin/nu.exe')
 )
 
+local launch_menu = {}
 if platform.is_win then
   w.log_info 'on windows'
   config.default_prog = { w.home_dir .. '/bin/nu' }
-  config.launch_menu = {
+  launch_menu = {
     { label = 'PowerShell Core', args = { 'pwsh' } },
     { label = 'PowerShell Desktop', args = { 'powershell' } },
     { label = 'Command Prompt', args = { 'cmd' } },
     { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
   }
+  -- Find installed visual studio version(s) and add their compilation
+  -- environment command prompts to the menu
+  w.log_info 'Finding installed visual studio version'
+  for _, vsvers in pairs(w.glob('Microsoft Visual Studio/20*', 'C:/Program Files (x86)')) do
+    w.log_info(vsvers)
+    local year = vsvers:gsub('Microsoft Visual Studio/', '')
+    table.insert(launch_menu, {
+      label = 'x64 Native Tools VS ' .. year,
+      args = {
+        'cmd.exe',
+        '/k',
+        'C:/Program Files (x86)/' .. vsvers .. '/BuildTools/VC/Auxiliary/Build/vcvars64.bat',
+      },
+    })
+  end
+  w.log_info 'End of visual studio version'
 else
   w.log_info 'on mac or linux'
   config.default_prog = { w.home_dir .. '/bin/nu' }
-  config.launch_menu = {
+  launch_menu = {
     { label = 'Bash', args = { 'bash' } },
     { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
     { label = 'Zsh', args = { 'zsh' } },
   }
 end
+config.launch_menu = launch_menu
 
 -- default modifier keys
 local mods = {
