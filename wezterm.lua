@@ -264,7 +264,9 @@ config.keys = {
   -- Cli apps
   -- lagy[g]it
   { key = 'g', mods = mods.alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
-  -- [t]odos
+  -- [f]iles and folders, alt-x to close pane, ctrl-c to go back to shell
+  { key = 'f', mods = mods.alt, action = a.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
+
   {
     key = 't',
     mods = mods.alt,

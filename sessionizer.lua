@@ -96,7 +96,8 @@ M.start = function(window, pane)
               name = id,
               spawn = {
                 cwd = label,
-                args = { 'nu', '-e', 'br' },
+                -- args = { 'nu', '-e', 'br' },
+                args = { 'nu' },
               },
             },
             pane
