@@ -206,6 +206,19 @@ config.keys = {
   { key = 'p', mods = mods.alt, action = a.SwitchWorkspaceRelative(-1) },
   { key = 'N', mods = mods.alt, action = a.SwitchToWorkspace },
 
+  -- open config file
+  {
+    key = ',',
+    mods = mods.alt,
+    action = a.SwitchToWorkspace {
+      name = 'wezterm-config',
+      spawn = {
+        cwd = os.getenv 'WEZTERM_CONFIG_DIR',
+        args = { 'nu', '-e', 'nvim $env.WEZTERM_CONFIG_FILE' },
+      },
+    },
+  },
+
   -- Window
   { key = 'F11', mods = 'NONE', action = a.ToggleFullScreen },
 
