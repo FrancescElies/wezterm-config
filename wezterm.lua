@@ -14,7 +14,7 @@ local a = w.action
 local mux = w.mux
 
 local file_exists = utils.file_exists
-local todos_dir = w.home_dir .. '/src/zettelkasten'
+local zettelkasten = w.home_dir .. '/src/zettelkasten/'
 
 local config = {
   hide_tab_bar_if_only_one_tab = true,
@@ -265,7 +265,17 @@ config.keys = {
   -- lagy[g]it
   { key = 'g', mods = mods.alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
   -- [t]odos
-  { key = 't', mods = mods.alt, action = a.SwitchToWorkspace { name = 'todos', spawn = { args = { 'broot', todos_dir } } } },
+  {
+    key = 't',
+    mods = mods.alt,
+    action = a.SwitchToWorkspace {
+      name = 'todos',
+      spawn = {
+        cwd = zettelkasten,
+        args = { 'nu', '-e', 'nvim ' .. zettelkasten .. 'todos.md' },
+      },
+    },
+  },
   --b[o]ttom
   { key = 'o', mods = mods.alt, action = a.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }
