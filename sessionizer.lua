@@ -34,7 +34,6 @@ local function find_executable(bin_name)
   return bin
 end
 
-local nvim = find_executable 'nvim'
 local fd = find_executable 'fd'
 
 local git = (file_exists '/usr/bin/git' or file_exists '/Program Files/Git/cmd/git.exe')
@@ -98,7 +97,6 @@ M.start = function(window, pane)
               spawn = {
                 cwd = label,
                 args = { 'nu', '-e', 'br' },
-                -- set_environment_variables = { EDITOR = nvim },
               },
             },
             pane
