@@ -218,15 +218,15 @@ config.keys = {
   { key = 'c', mods = mods.alt, action = act.ActivateCopyMode },
   { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
   { key = 'd', mods = mods.alt, action = act.ShowDebugOverlay },
-  { key = 'l', mods = mods.alt_shift, action = act.ShowLauncher },
-  { key = 'p', mods = mods.alt_shift, action = act.ActivateCommandPalette },
+  { key = 'P', mods = mods.alt_shift, action = act.ActivateCommandPalette },
 
   -- Workspaces
-  { key = 'w', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 's', mods = mods.alt, action = wezterm.action_callback(sessionizer.start) },
-  { key = 'n', mods = mods.alt, action = act.SwitchWorkspaceRelative(1) },
-  { key = 'p', mods = mods.alt, action = act.SwitchWorkspaceRelative(-1) },
-  { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace },
+  { key = 'w', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- [w]indow
+  { key = 's', mods = mods.alt, action = wezterm.action_callback(sessionizer.start) }, -- [s]witch to workspace
+  { key = 'n', mods = mods.alt, action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
+  { key = 'p', mods = mods.alt, action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
+  { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace }, -- [n]ew
+  { key = 'F', mods = mods.alt_shift, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
 
   -- open config file
   {
@@ -281,7 +281,7 @@ config.keys = {
       },
     },
   },
-  --b[o]ttom
+  --m[o]nitoring
   { key = 'o', mods = mods.alt, action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }
 
