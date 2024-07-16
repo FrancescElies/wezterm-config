@@ -6,15 +6,15 @@
 -- https://github.com/wez/wezterm/discussions/2329
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
-local w = require 'wezterm'
+local wezterm = require 'wezterm'
 local sessionizer = require 'sessionizer'
 local utils = require 'utils'
 local platform = require 'platform'
-local a = w.action
-local mux = w.mux
+local act = wezterm.action
+local mux = wezterm.mux
 
 local file_exists = utils.file_exists
-local zettelkasten = w.home_dir .. '/src/zettelkasten/'
+local zettelkasten = wezterm.home_dir .. '/src/zettelkasten/'
 
 local config = {
   hide_tab_bar_if_only_one_tab = true,
@@ -28,7 +28,7 @@ local config = {
 -- config.color_scheme = 'Gruvbox (Gogh)'
 -- config.color_scheme = 'Gruvbox Dark (Gogh)'
 
-w.on('gui-startup', function()
+wezterm.on('gui-startup', function()
   local tab, pane, window = mux.spawn_window {}
   window:gui_window():maximize()
 end)
@@ -36,14 +36,14 @@ end)
 if platform.is_mac then
   config.set_environment_variables = {
     PATH = table.concat({
-      w.home_dir .. '/.cargo/bin',
+      wezterm.home_dir .. '/.cargo/bin',
       os.getenv 'PATH',
     }, ':'),
     -- prepend the path to custom binaries
   }
 end
 
-local home = utils.normalize_path(w.home_dir)
+local home = utils.normalize_path(wezterm.home_dir)
 local nushell = (
   file_exists(home .. '/bin/nu')
   or file_exists(home .. '/.cargo/bin/nu')
@@ -54,19 +54,19 @@ local nushell = (
 
 local launch_menu = {}
 if platform.is_win then
-  w.log_info 'on windows'
-  config.default_prog = { w.home_dir .. '/bin/nu' }
+  wezterm.log_info 'on windows'
+  config.default_prog = { wezterm.home_dir .. '/bin/nu' }
   launch_menu = {
     { label = 'PowerShell Core', args = { 'pwsh' } },
     { label = 'PowerShell Desktop', args = { 'powershell' } },
     { label = 'Command Prompt', args = { 'cmd' } },
-    { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
+    { label = 'Nushell', args = { wezterm.home_dir .. '/bin/nu' } },
   }
   -- Find installed visual studio version(s) and add their compilation
   -- environment command prompts to the menu
-  w.log_info 'Finding installed visual studio version'
-  for _, vsvers in pairs(w.glob('Microsoft Visual Studio/20*', 'C:/Program Files (x86)')) do
-    w.log_info(vsvers)
+  wezterm.log_info 'Finding installed visual studio version'
+  for _, vsvers in pairs(wezterm.glob('Microsoft Visual Studio/20*', 'C:/Program Files (x86)')) do
+    wezterm.log_info(vsvers)
     local year = vsvers:gsub('Microsoft Visual Studio/', '')
     table.insert(launch_menu, {
       label = 'x64 Native Tools VS ' .. year,
@@ -77,13 +77,13 @@ if platform.is_win then
       },
     })
   end
-  w.log_info 'End of visual studio version'
+  wezterm.log_info 'End of visual studio version'
 else
-  w.log_info 'on mac or linux'
-  config.default_prog = { w.home_dir .. '/bin/nu' }
+  wezterm.log_info 'on mac or linux'
+  config.default_prog = { wezterm.home_dir .. '/bin/nu' }
   launch_menu = {
     { label = 'Bash', args = { 'bash' } },
-    { label = 'Nushell', args = { w.home_dir .. '/bin/nu' } },
+    { label = 'Nushell', args = { wezterm.home_dir .. '/bin/nu' } },
     { label = 'Zsh', args = { 'zsh' } },
   }
 end
@@ -107,7 +107,7 @@ local mods = {
 -- end
 
 local function is_vim(window)
-  w.log_info 'is vim?'
+  wezterm.log_info 'is vim?'
 
   local function process_is_vim(process_info) return string.find(process_info.name, 'nvim') end
   -- check current process
@@ -120,7 +120,7 @@ local function is_vim(window)
     -- quick and dirty 2 level deep check children process for nvim
     -- NOTE: this covers the case where nvim is started from broot
     for child_pid, child in pairs(p.children) do
-      w.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
+      wezterm.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
       if process_is_vim(child) then
         return true
       end
@@ -133,12 +133,12 @@ local function is_vim(window)
     end
 
     -- TODO: check parent processes needed? check windows
-    local pp = w.procinfo.get_info_for_pid(p.ppid)
+    local pp = wezterm.procinfo.get_info_for_pid(p.ppid)
     if pp == nil then
-      w.log_info 'parent is nil'
+      wezterm.log_info 'parent is nil'
       return false
     else
-      w.log_info('parent of ' .. p.name .. ': name=' .. pp.name .. ' pid=' .. pp.pid)
+      wezterm.log_info('parent of ' .. p.name .. ': name=' .. pp.name .. ' pid=' .. pp.pid)
       p = pp
     end
   end
@@ -156,19 +156,22 @@ end
 
 -- keep in sync with nvim wezterm.lua
 local move_map = {
-  { wez_action_name = 'move-left', wez_action = a.ActivatePaneDirection 'Left', key = 'h', mods = mods.alt },
-  { wez_action_name = 'move-right', wez_action = a.ActivatePaneDirection 'Right', key = 'l', mods = mods.alt },
-  { wez_action_name = 'move-up', wez_action = a.ActivatePaneDirection 'Up', key = 'k', mods = mods.alt },
-  { wez_action_name = 'move-down', wez_action = a.ActivatePaneDirection 'Down', key = 'j', mods = mods.alt },
+  { wez_action_name = 'move-left', wez_action = act.ActivatePaneDirection 'Left', key = 'h', mods = mods.alt },
+  { wez_action_name = 'move-right', wez_action = act.ActivatePaneDirection 'Right', key = 'l', mods = mods.alt },
+  { wez_action_name = 'move-up', wez_action = act.ActivatePaneDirection 'Up', key = 'k', mods = mods.alt },
+  { wez_action_name = 'move-down', wez_action = act.ActivatePaneDirection 'Down', key = 'j', mods = mods.alt },
 }
 
 for _, v in pairs(move_map) do
-  w.on(v.wez_action_name, function(window, pane) wez_nvim_action(window, pane, v.wez_action, a.SendKey { key = v.key, mods = v.mods }) end)
+  wezterm.on(v.wez_action_name, function(window, pane) wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods }) end)
 end
 
 -- you can add other actions, this unifies the way in which panes and windows are closed
 -- (you'll need to bind <A-x> -> <C-w>q)
-w.on('close-pane', function(window, pane) wez_nvim_action(window, pane, a.CloseCurrentPane { confirm = false }, a.SendKey { key = 'x', mods = mods.alt }) end)
+wezterm.on(
+  'close-pane',
+  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mods.alt }) end
+)
 
 -- Styling Inactive Panes
 config.inactive_pane_hsb = {
@@ -205,30 +208,31 @@ config.mouse_bindings = {
 
 config.keys = {
 
-  { key = 'z', mods = mods.alt, action = a.TogglePaneZoomState },
+  { key = 'z', mods = mods.alt, action = act.TogglePaneZoomState },
   -- { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ', mods = mods.ctrl, action = a.SendKey { key = ' ', mods = mods.ctrl } },
+  { key = ' ', mods = mods.ctrl, action = act.SendKey { key = ' ', mods = mods.ctrl } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
-  { key = 'c', mods = mods.alt, action = a.ActivateCopyMode },
-  { key = 'F12', mods = 'NONE', action = a.ShowDebugOverlay },
-  { key = 'a', mods = mods.alt, action = a.ShowLauncher },
-  { key = 'p', mods = mods.alt_shift, action = a.ActivateCommandPalette },
+  { key = 'c', mods = mods.alt, action = act.ActivateCopyMode },
+  { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
+  { key = 'd', mods = mods.alt, action = act.ShowDebugOverlay },
+  { key = 'l', mods = mods.alt_shift, action = act.ShowLauncher },
+  { key = 'p', mods = mods.alt_shift, action = act.ActivateCommandPalette },
 
   -- Workspaces
-  { key = 'w', mods = mods.alt, action = a.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 's', mods = mods.alt, action = w.action_callback(sessionizer.start) },
-  { key = 'n', mods = mods.alt, action = a.SwitchWorkspaceRelative(1) },
-  { key = 'p', mods = mods.alt, action = a.SwitchWorkspaceRelative(-1) },
-  { key = 'N', mods = mods.alt, action = a.SwitchToWorkspace },
+  { key = 'w', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 's', mods = mods.alt, action = wezterm.action_callback(sessionizer.start) },
+  { key = 'n', mods = mods.alt, action = act.SwitchWorkspaceRelative(1) },
+  { key = 'p', mods = mods.alt, action = act.SwitchWorkspaceRelative(-1) },
+  { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace },
 
   -- open config file
   {
     key = ',',
     mods = mods.alt,
-    action = a.SwitchToWorkspace {
+    action = act.SwitchToWorkspace {
       name = 'wezterm-config',
       spawn = {
         cwd = os.getenv 'WEZTERM_CONFIG_DIR',
@@ -238,39 +242,38 @@ config.keys = {
   },
 
   -- Window
-  { key = 'F11', mods = 'NONE', action = a.ToggleFullScreen },
+  { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
-  { key = 'Enter', mods = mods.alt, action = a.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'Enter', mods = mods.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
-  { key = '-', mods = mods.alt, action = a { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = '\\', mods = mods.alt, action = a { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 'r', mods = mods.alt, action = a.ReloadConfiguration },
+  { key = '-', mods = mods.alt, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = '\\', mods = mods.alt, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 'r', mods = mods.alt, action = act.ReloadConfiguration },
 
   -- adjust panes
-  { key = 'h', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k', mods = mods.alt_shift, action = a.AdjustPaneSize { 'Up', 3 } },
+  { key = 'h', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
-  { key = 'h', mods = mods.alt, action = a { EmitEvent = 'move-left' } },
-  { key = 'l', mods = mods.alt, action = a { EmitEvent = 'move-right' } },
-  { key = 'j', mods = mods.alt, action = a { EmitEvent = 'move-down' } },
-  { key = 'k', mods = mods.alt, action = a { EmitEvent = 'move-up' } },
-  { key = 'x', mods = mods.alt, action = a { EmitEvent = 'close-pane' } },
-  { key = 'd', mods = mods.alt, action = a { EmitEvent = 'close-pane' } },
+  { key = 'h', mods = mods.alt, action = act { EmitEvent = 'move-left' } },
+  { key = 'l', mods = mods.alt, action = act { EmitEvent = 'move-right' } },
+  { key = 'j', mods = mods.alt, action = act { EmitEvent = 'move-down' } },
+  { key = 'k', mods = mods.alt, action = act { EmitEvent = 'move-up' } },
+  { key = 'x', mods = mods.alt, action = act { EmitEvent = 'close-pane' } },
 
   -- Cli apps
   -- lagy[g]it
-  { key = 'g', mods = mods.alt, action = a.SplitHorizontal { args = { 'lazygit' } } },
+  { key = 'g', mods = mods.alt, action = act.SplitHorizontal { args = { 'lazygit' } } },
   -- [f]iles and folders, alt-x to close pane, ctrl-c to go back to shell
-  { key = 'f', mods = mods.alt, action = a.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
+  { key = 'f', mods = mods.alt, action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
 
   {
     key = 't',
     mods = mods.alt,
-    action = a.SwitchToWorkspace {
+    action = act.SwitchToWorkspace {
       name = 'todos',
       spawn = {
         cwd = zettelkasten,
@@ -279,7 +282,7 @@ config.keys = {
     },
   },
   --b[o]ttom
-  { key = 'o', mods = mods.alt, action = a.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
+  { key = 'o', mods = mods.alt, action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
