@@ -23,7 +23,7 @@ local config = {
   -- font = w.font 'JetBrains Mono',
 }
 -- config.color_scheme = 'AdventureTime'
--- config.color_scheme = 'rose-pine'
+config.color_scheme = 'rose-pine'
 -- config.color_scheme = 'Dracula (Gogh)'
 -- config.color_scheme = 'Gruvbox (Gogh)'
 -- config.color_scheme = 'Gruvbox Dark (Gogh)'
@@ -175,8 +175,8 @@ wezterm.on(
 
 -- Styling Inactive Panes
 config.inactive_pane_hsb = {
-  saturation = 0.2, -- smaller values can make it appear more washed out
-  brightness = 0.9, -- dims or increases the perceived amount of light
+  saturation = 0.3, -- smaller values can make it appear more washed out
+  brightness = 0.8, -- dims or increases the perceived amount of light
 }
 
 config.mouse_bindings = {
