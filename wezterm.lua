@@ -15,9 +15,12 @@ local mux = wezterm.mux
 
 local file_exists = utils.file_exists
 local zettelkasten = wezterm.home_dir .. '/src/zettelkasten/'
+-- Troubleshooting
+-- https://wezfurlong.org/wezterm/troubleshooting.html
 
 local config = {
   hide_tab_bar_if_only_one_tab = true,
+  -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
   debug_key_events = false,
   -- font_size = 12,
   -- font = w.font 'JetBrains Mono',
