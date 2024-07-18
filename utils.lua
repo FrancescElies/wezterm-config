@@ -14,7 +14,7 @@ M.file_exists = function(path)
   -- io.open won't work to check if directories exist,
   -- but works for symlinks and regular files
   if f ~= nil then
-    w.log_info(path .. ' file or symlink found')
+    -- w.log_info(path .. ' file or symlink found')
     io.close(f)
     return path
   end

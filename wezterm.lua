@@ -57,7 +57,7 @@ local nushell = (
 
 local launch_menu = {}
 if platform.is_win then
-  wezterm.log_info 'on windows'
+  -- wezterm.log_info 'on windows'
   config.default_prog = { wezterm.home_dir .. '/bin/nu' }
   launch_menu = {
     { label = 'PowerShell Core', args = { 'pwsh' } },
@@ -65,24 +65,8 @@ if platform.is_win then
     { label = 'Command Prompt', args = { 'cmd' } },
     { label = 'Nushell', args = { wezterm.home_dir .. '/bin/nu' } },
   }
-  -- Find installed visual studio version(s) and add their compilation
-  -- environment command prompts to the menu
-  wezterm.log_info 'Finding installed visual studio version'
-  for _, vsvers in pairs(wezterm.glob('Microsoft Visual Studio/20*', 'C:/Program Files (x86)')) do
-    wezterm.log_info(vsvers)
-    local year = vsvers:gsub('Microsoft Visual Studio/', '')
-    table.insert(launch_menu, {
-      label = 'x64 Native Tools VS ' .. year,
-      args = {
-        'cmd.exe',
-        '/k',
-        'C:/Program Files (x86)/' .. vsvers .. '/BuildTools/VC/Auxiliary/Build/vcvars64.bat',
-      },
-    })
-  end
-  wezterm.log_info 'End of visual studio version'
 else
-  wezterm.log_info 'on mac or linux'
+  -- wezterm.log_info 'on mac or linux'
   config.default_prog = { wezterm.home_dir .. '/bin/nu' }
   launch_menu = {
     { label = 'Bash', args = { 'bash' } },
@@ -110,7 +94,7 @@ local mods = {
 -- end
 
 local function is_vim(window)
-  wezterm.log_info 'is vim?'
+  -- wezterm.log_info 'is vim?'
 
   local function process_is_vim(process_info) return string.find(process_info.name, 'nvim') end
   -- check current process
@@ -123,7 +107,7 @@ local function is_vim(window)
     -- quick and dirty 2 level deep check children process for nvim
     -- NOTE: this covers the case where nvim is started from broot
     for child_pid, child in pairs(p.children) do
-      wezterm.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
+      -- wezterm.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
       if process_is_vim(child) then
         return true
       end
@@ -138,10 +122,10 @@ local function is_vim(window)
     -- TODO: check parent processes needed? check windows
     local pp = wezterm.procinfo.get_info_for_pid(p.ppid)
     if pp == nil then
-      wezterm.log_info 'parent is nil'
+      -- wezterm.log_info 'parent is nil'
       return false
     else
-      wezterm.log_info('parent of ' .. p.name .. ': name=' .. pp.name .. ' pid=' .. pp.pid)
+      -- wezterm.log_info('parent of ' .. p.name .. ': name=' .. pp.name .. ' pid=' .. pp.pid)
       p = pp
     end
   end

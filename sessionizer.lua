@@ -64,12 +64,6 @@ M.start = function(window, pane)
   --  └──other                # 3rd party project
   --     └──103 unlisted
   local cmd = utils.merge_tables({ fd, '-HI', '-td', '--max-depth=1', '.' }, search_folders)
-  w.log_info 'cmd: '
-  w.log_info(cmd)
-
-  for _, value in ipairs(cmd) do
-    w.log_info(value)
-  end
   local success, stdout, stderr = w.run_child_process(cmd)
 
   if not success then
