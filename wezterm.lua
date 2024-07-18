@@ -26,7 +26,7 @@ local config = {
 config.debug_key_events = false
 
 if platform.is_win then
-  config.font_size = 11
+  config.font_size = 10
 elseif platform.is_mac then
   config.font_size = 12
 else
