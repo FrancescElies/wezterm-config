@@ -223,6 +223,12 @@ config.keys = {
   { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace }, -- [n]ew
   { key = 'F', mods = mods.alt_shift, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
 
+  -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
+  -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
+  -- OSC 133 escapes allow marking regions of output as Output (from the commands that you run), Input (that you type) and Prompt ("chrome" from your shell).
+  -- { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
+  -- { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
+
   -- open config file
   {
     key = ',',
