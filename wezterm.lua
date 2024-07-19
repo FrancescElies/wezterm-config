@@ -18,10 +18,9 @@ local zettelkasten = wezterm.home_dir .. '/src/zettelkasten/'
 -- Troubleshooting
 -- https://wezfurlong.org/wezterm/troubleshooting.html
 
-local config = {
-  hide_tab_bar_if_only_one_tab = true,
-  -- font = w.font 'JetBrains Mono',
-}
+local config = {}
+
+config.hide_tab_bar_if_only_one_tab = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
 
