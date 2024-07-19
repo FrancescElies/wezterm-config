@@ -33,7 +33,7 @@ else
 end
 
 -- config.color_scheme = 'AdventureTime'
-config.color_scheme = 'rose-pine'
+-- config.color_scheme = 'rose-pine'
 -- config.color_scheme = 'Dracula (Gogh)'
 -- config.color_scheme = 'Gruvbox (Gogh)'
 -- config.color_scheme = 'Gruvbox Dark (Gogh)'
