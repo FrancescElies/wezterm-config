@@ -90,8 +90,10 @@ M.start = function(window, pane)
               name = id,
               spawn = {
                 cwd = label,
-                -- args = { 'nu', '-e', 'br' },
-                args = { 'nu' },
+                -- (1) opens broot directly
+                args = { 'nu', '-e', 'br' },
+                -- (2) just open shell
+                -- args = { 'nu' },
               },
             },
             pane
