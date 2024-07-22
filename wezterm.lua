@@ -101,42 +101,36 @@ local mods = {
 -- end
 
 local function is_vim(window)
-  -- wezterm.log_info 'is vim?'
+  wezterm.log_info 'is vim?'
 
-  local function process_is_vim(process_info) return string.find(process_info.name, 'nvim') end
   -- check current process
   local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
-  for i = 1, 10, 1 do
-    if process_is_vim(p) then
+
+  if p == nil then
+    wezterm.log_info 'get_foreground_process_info nil'
+    return false
+  end
+
+  if string.find(p.name, 'nvim') then
+    return true
+  end
+
+  -- quick and dirty check without recursion, 2 level children check for nvim
+  for child_pid, child in pairs(p.children) do
+    wezterm.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
+    if string.find(child.name, 'nvim') then
       return true
     end
-
-    -- quick and dirty 2 level deep check children process for nvim
     -- NOTE: this covers the case where nvim is started from broot
-    for child_pid, child in pairs(p.children) do
-      -- wezterm.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
-      if process_is_vim(child) then
+    for grandchild_pid, grandchild in pairs(child.children) do
+      wezterm.log_info('child of ' .. child.name .. ': name=' .. grandchild.name .. ' pid=' .. grandchild_pid)
+      if string.find(grandchild.name, 'nvim') then
         return true
       end
-      -- for grandchild_pid, grandchild in pairs(child.children) do
-      --   w.log_info('child of ' .. child.name .. ': name=' .. grandchild.name .. ' pid=' .. grandchild_pid)
-      --   if process_is_vim(grandchild) then
-      --     return true
-      --   end
-      -- end
-    end
-
-    -- TODO: check parent processes needed? check windows
-    local pp = wezterm.procinfo.get_info_for_pid(p.ppid)
-    if pp == nil then
-      -- wezterm.log_info 'parent is nil'
-      return false
-    else
-      -- wezterm.log_info('parent of ' .. p.name .. ': name=' .. pp.name .. ' pid=' .. pp.pid)
-      p = pp
     end
   end
 
+  wezterm.log_info 'endof - is vim?'
   return false
 end
 
