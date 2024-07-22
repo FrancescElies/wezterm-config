@@ -100,46 +100,61 @@ local mods = {
 --   mods.alt_ctrl = 'SUPER|CTRL'
 -- end
 
-local function is_vim(window)
-  wezterm.log_info 'is vim?'
+local function is_nvim(process) return string.find(process.name, 'nvim') end
 
-  -- check current process
-  local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
-
-  if p == nil then
-    wezterm.log_info 'get_foreground_process_info nil'
-    return false
-  end
-
-  if string.find(p.name, 'nvim') then
-    wezterm.log_info('get_foreground_process_info' .. p.name)
-    return true
-  end
-
-  wezterm.log_info 'check children'
+local function children_has_nvim(proc)
+  wezterm.log_info('check children for', proc.name)
   -- quick and dirty check without recursion, 2 level children check for nvim
-  for child_pid, child in pairs(p.children) do
-    wezterm.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
-    if string.find(child.name, 'nvim') then
+  for child_pid, child in pairs(proc.children) do
+    wezterm.log_info('child of ' .. proc.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
+    if is_nvim(child) then
       return true
     end
     -- NOTE: this covers the case where nvim is started from broot
     for grandchild_pid, grandchild in pairs(child.children) do
       wezterm.log_info('child of ' .. child.name .. ': name=' .. grandchild.name .. ' pid=' .. grandchild_pid)
-      if string.find(grandchild.name, 'nvim') then
+      if is_nvim(grandchild) then
         return true
       end
     end
   end
+end
 
-  wezterm.log_info 'endof - is vim?'
-  return false
+local function parent_has_nvim(proc)
+  local parent_proc = wezterm.procinfo.get_info_for_pid(proc.ppid)
+  if parent_proc == nil then
+    wezterm.log_info('parent of', proc.name, 'is nil')
+    return false
+  end
+
+  wezterm.log_info('parent of', proc.name, 'is', parent_proc.name)
+  if is_nvim(parent_proc) then
+    return true
+  else
+    return parent_has_nvim(parent_proc)
+  end
+end
+
+local function window_has_nvim(window)
+  wezterm.log_info 'window_has_nvim?'
+
+  -- check current process
+  local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
+
+  if is_nvim(p) then
+    wezterm.log_info('get_foreground_process_info' .. p.name)
+    return true
+  end
+
+  return parent_has_nvim(p) or children_has_nvim(p)
 end
 
 local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
-  if is_vim(window) then
+  if window_has_nvim(window) then
+    wezterm.log_info 'window is nvim'
     window:perform_action(forward_key_nvim, pane)
   else
+    wezterm.log_info 'windows not nvim'
     window:perform_action(action_wez, pane)
   end
 end
