@@ -112,9 +112,11 @@ local function is_vim(window)
   end
 
   if string.find(p.name, 'nvim') then
+    wezterm.log_info('get_foreground_process_info' .. p.name)
     return true
   end
 
+  wezterm.log_info 'check children'
   -- quick and dirty check without recursion, 2 level children check for nvim
   for child_pid, child in pairs(p.children) do
     wezterm.log_info('child of ' .. p.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
