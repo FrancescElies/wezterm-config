@@ -180,7 +180,7 @@ wezterm.on(
 
 -- Styling Inactive Panes
 config.inactive_pane_hsb = {
-  saturation = 0.3, -- smaller values can make it appear more washed out
+  saturation = 0.5, -- smaller values can make it appear more washed out
   brightness = 0.8, -- dims or increases the perceived amount of light
 }
 
