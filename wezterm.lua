@@ -213,6 +213,7 @@ config.mouse_bindings = {
 
 config.keys = {
 
+  { key = '0', mods = mods.alt, action = wezterm.action.ResetFontSize },
   { key = 'z', mods = mods.alt, action = act.TogglePaneZoomState },
   -- { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },  -- don't remember why
 
@@ -226,8 +227,8 @@ config.keys = {
   { key = 'P', mods = mods.alt_shift, action = act.ActivateCommandPalette },
 
   -- Workspaces
-  { key = 'w', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- [w]indow
-  { key = 's', mods = mods.alt, action = wezterm.action_callback(sessionizer.start) }, -- [s]witch to workspace
+  { key = 'o', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open Workspace
+  { key = 'o', mods = mods.alt_shift, action = wezterm.action_callback(sessionizer.start) }, -- open project
   { key = 'n', mods = mods.alt, action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
   { key = 'p', mods = mods.alt, action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
   { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace }, -- [n]ew
@@ -258,9 +259,12 @@ config.keys = {
   { key = 'Enter', mods = mods.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
+  -- show the pane selection mode, but have it swap the active and selected panes
+  { key = 's', mods = mods.alt, action = act.PaneSelect { mode = 'SwapWithActive' } },
   { key = '-', mods = mods.alt, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '\\', mods = mods.alt, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 'r', mods = mods.alt, action = act.ReloadConfiguration },
+  { key = 'r', mods = mods.alt, action = act.RotatePanes 'CounterClockwise' },
+  { key = 'r', mods = mods.alt_shift, action = act.RotatePanes 'Clockwise' },
 
   -- adjust panes
   { key = 'h', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Left', 3 } },
@@ -293,7 +297,7 @@ config.keys = {
     },
   },
   --m[o]nitoring
-  { key = 'o', mods = mods.alt, action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
+  { key = 'm', mods = mods.alt, action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
