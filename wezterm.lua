@@ -100,9 +100,13 @@ local mods = {
 --   mods.alt_ctrl = 'SUPER|CTRL'
 -- end
 
-local function is_nvim(process) return string.find(process.name, 'nvim') end
+local function is_nvim(process) return string.find((process or {}).name or 'no-process', 'nvim') end
 
 local function children_has_nvim(proc)
+  if proc == nil then
+    return false
+  end
+
   wezterm.log_info('check children for', proc.name)
   -- quick and dirty check without recursion, 2 level children check for nvim
   for child_pid, child in pairs(proc.children) do
@@ -121,6 +125,10 @@ local function children_has_nvim(proc)
 end
 
 local function parent_has_nvim(proc)
+  if proc == nil then
+    return false
+  end
+
   local parent_proc = wezterm.procinfo.get_info_for_pid(proc.ppid)
   if parent_proc == nil then
     wezterm.log_info('parent of', proc.name, 'is nil')
@@ -221,18 +229,18 @@ config.keys = {
   { key = ' ', mods = mods.ctrl, action = act.SendKey { key = ' ', mods = mods.ctrl } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
-  { key = 'c', mods = mods.alt, action = act.ActivateCopyMode },
   { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
   { key = 'd', mods = mods.alt, action = act.ShowDebugOverlay },
-  { key = 'P', mods = mods.alt_shift, action = act.ActivateCommandPalette },
+  { key = 'c', mods = mods.alt, action = act.ActivateCommandPalette }, -- [c]ommands
+  { key = 'C', mods = mods.alt_shift, action = act.ActivateCopyMode }, -- [C]opy
+  { key = 'f', mods = mods.alt, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
 
-  -- Workspaces
-  { key = 'o', mods = mods.alt, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open Workspace
-  { key = 'o', mods = mods.alt_shift, action = wezterm.action_callback(sessionizer.start) }, -- open project
-  { key = 'n', mods = mods.alt, action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
-  { key = 'p', mods = mods.alt, action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
-  { key = 'N', mods = mods.alt, action = act.SwitchToWorkspace }, -- [n]ew
-  { key = 'F', mods = mods.alt_shift, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
+  -- Workspaces (alt + shift)
+  { key = 'A', mods = mods.alt_shift, action = act.SwitchToWorkspace }, -- [a]dd new one
+  { key = 'N', mods = mods.alt_shift, action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
+  { key = 'P', mods = mods.alt_shift, action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
+  { key = 'W', mods = mods.alt_shift, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open Workspace
+  { key = 'S', mods = mods.alt_shift, action = wezterm.action_callback(sessionizer.start) }, -- open new session
 
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
@@ -277,13 +285,18 @@ config.keys = {
   { key = 'l', mods = mods.alt, action = act { EmitEvent = 'move-right' } },
   { key = 'j', mods = mods.alt, action = act { EmitEvent = 'move-down' } },
   { key = 'k', mods = mods.alt, action = act { EmitEvent = 'move-up' } },
-  { key = 'x', mods = mods.alt, action = act { EmitEvent = 'close-pane' } },
+  { key = 'x', mods = mods.alt, action = act { EmitEvent = 'close-pane' } }, -- close pane
+  { key = 'X', mods = mods.alt_shift, action = act.CloseCurrentPane { confirm = false } }, -- forced close pane
+  { key = 'n', mods = mods.alt, action = act.ActivatePaneDirection 'Next' },
+  { key = 'p', mods = mods.alt, action = act.ActivatePaneDirection 'Prev' },
 
   -- Cli apps
   -- lagy[g]it
-  { key = 'g', mods = mods.alt, action = act.SplitHorizontal { args = { 'lazygit' } } },
-  -- [f]iles and folders, alt-x to close pane, ctrl-c to go back to shell
-  { key = 'f', mods = mods.alt, action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
+  { key = 'g', mods = mods.alt, action = act.SplitHorizontal { args = { 'nu', '-e', 'lazygit' } } },
+  { key = 'G', mods = mods.alt, action = act.SplitVertical { args = { 'nu', '-e', 'lazygit' } } },
+  -- open broot, alt-x to close pane, ctrl-c to go back to shell
+  { key = 'b', mods = mods.alt, action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
+  { key = 'B', mods = mods.alt, action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },
 
   {
     key = 't',
