@@ -39,7 +39,7 @@ end
 -- config.color_scheme = 'Gruvbox Dark (Gogh)'
 
 wezterm.on('gui-startup', function()
-  local tab, pane, window = mux.spawn_window {}
+  local _, _, window = mux.spawn_window {}
   window:gui_window():maximize()
 end)
 -- https://wezfurlong.org/wezterm/faq.html?h=path#im-on-macos-and-wezterm-cannot-find-things-in-my-path
@@ -52,15 +52,6 @@ if platform.is_mac then
     -- prepend the path to custom binaries
   }
 end
-
-local home = utils.normalize_path(wezterm.home_dir)
-local nushell = (
-  file_exists(home .. '/bin/nu')
-  or file_exists(home .. '/.cargo/bin/nu')
-  -- windows
-  or file_exists(home .. '/bin/nu.exe')
-  or file_exists(home .. '/.cargo/bin/nu.exe')
-)
 
 local launch_menu = {}
 if platform.is_win then
@@ -254,13 +245,13 @@ config.keys = {
   { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 'r', mods = 'ALT', action = act.RotatePanes 'CounterClockwise' },
-  { key = 'r', mods = 'ALT|SHIFT', action = act.RotatePanes 'Clockwise' },
+  { key = 'R', mods = 'ALT|SHIFT', action = act.RotatePanes 'Clockwise' },
 
   -- adjust panes
-  { key = 'h', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'H', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'L', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'J', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'K', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
   { key = 'h', mods = 'ALT', action = act { EmitEvent = 'move-left' } },
