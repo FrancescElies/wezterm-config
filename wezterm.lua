@@ -83,23 +83,6 @@ else
 end
 config.launch_menu = launch_menu
 
--- default modifier keys
-local mods = {
-  ctrl = 'CTRL',
-  ctrl_shift = 'SHIFT|CTRL',
-  ctrl_alt = 'ALT|CTRL',
-  alt = 'ALT',
-  alt_shift = 'SHIFT|ALT',
-}
-
--- NOTE: SUPER (CMD) is currently (25.11.2023) difficult to bind in nvim
--- mac modifier keys
--- if platform.is_mac then
---   mods.shift_alt = 'SHIFT|SUPER'
---   mods.alt = 'SUPER'
---   mods.alt_ctrl = 'SUPER|CTRL'
--- end
-
 local function is_nvim(process) return string.find((process or {}).name or 'no-process', 'nvim') end
 
 local function children_has_nvim(proc)
@@ -169,10 +152,10 @@ end
 
 -- keep in sync with nvim wezterm.lua
 local move_map = {
-  { wez_action_name = 'move-left', wez_action = act.ActivatePaneDirection 'Left', key = 'h', mods = mods.alt },
-  { wez_action_name = 'move-right', wez_action = act.ActivatePaneDirection 'Right', key = 'l', mods = mods.alt },
-  { wez_action_name = 'move-up', wez_action = act.ActivatePaneDirection 'Up', key = 'k', mods = mods.alt },
-  { wez_action_name = 'move-down', wez_action = act.ActivatePaneDirection 'Down', key = 'j', mods = mods.alt },
+  { wez_action_name = 'move-left', wez_action = act.ActivatePaneDirection 'Left', key = 'h', mods = 'ALT' },
+  { wez_action_name = 'move-right', wez_action = act.ActivatePaneDirection 'Right', key = 'l', mods = 'ALT' },
+  { wez_action_name = 'move-up', wez_action = act.ActivatePaneDirection 'Up', key = 'k', mods = 'ALT' },
+  { wez_action_name = 'move-down', wez_action = act.ActivatePaneDirection 'Down', key = 'j', mods = 'ALT' },
 }
 
 for _, v in pairs(move_map) do
@@ -183,7 +166,7 @@ end
 -- (you'll need to bind <A-x> -> <C-w>q)
 wezterm.on(
   'close-pane',
-  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = mods.alt }) end
+  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = 'ALT' }) end
 )
 
 -- Styling Inactive Panes
@@ -221,26 +204,25 @@ config.mouse_bindings = {
 
 config.keys = {
 
-  { key = '0', mods = mods.alt, action = wezterm.action.ResetFontSize },
-  { key = 'z', mods = mods.alt, action = act.TogglePaneZoomState },
-  -- { key = 'd',   mods = mods.alt,        action = act.DisableDefaultAssignment },  -- don't remember why
+  { key = '0', mods = 'ALT', action = wezterm.action.ResetFontSize },
+  { key = 'z', mods = 'ALT', action = act.TogglePaneZoomState },
+  -- { key = 'd',   mods = 'ALT',        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
-  { key = ' ', mods = mods.ctrl, action = act.SendKey { key = ' ', mods = mods.ctrl } },
+  { key = ' ', mods = 'CTRL', action = act.SendKey { key = ' ', mods = 'CTRL' } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
   { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-  { key = 'd', mods = mods.alt, action = act.ShowDebugOverlay },
-  { key = 'c', mods = mods.alt, action = act.ActivateCommandPalette }, -- [c]ommands
-  { key = 'C', mods = mods.alt_shift, action = act.ActivateCopyMode }, -- [C]opy
-  { key = 'f', mods = mods.alt, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
+  { key = 'd', mods = 'ALT', action = act.ShowDebugOverlay },
+  { key = 'c', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
+  { key = 'C', mods = 'ALT|SHIFT', action = act.ActivateCopyMode }, -- [C]opy
+  { key = 'f', mods = 'ALT', action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
 
   -- Workspaces (alt + shift)
-  { key = 'A', mods = mods.alt_shift, action = act.SwitchToWorkspace }, -- [a]dd new one
-  { key = 'N', mods = mods.alt_shift, action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
-  { key = 'P', mods = mods.alt_shift, action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
-  { key = 'W', mods = mods.alt_shift, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open Workspace
-  { key = 'S', mods = mods.alt_shift, action = wezterm.action_callback(sessionizer.start) }, -- open new session
+  { key = 'W', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open or create new [w]orkspace
+  { key = 'N', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
+  { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
+  { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(sessionizer.start) }, -- open new session
 
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
@@ -251,7 +233,7 @@ config.keys = {
   -- open config file
   {
     key = ',',
-    mods = mods.alt,
+    mods = 'ALT',
     action = act.SwitchToWorkspace {
       name = 'wezterm-config',
       spawn = {
@@ -264,43 +246,43 @@ config.keys = {
   -- Window
   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
-  { key = 'Enter', mods = mods.alt, action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- Panes
   -- show the pane selection mode, but have it swap the active and selected panes
-  { key = 's', mods = mods.alt, action = act.PaneSelect { mode = 'SwapWithActive' } },
-  { key = '-', mods = mods.alt, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = '\\', mods = mods.alt, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 'r', mods = mods.alt, action = act.RotatePanes 'CounterClockwise' },
-  { key = 'r', mods = mods.alt_shift, action = act.RotatePanes 'Clockwise' },
+  { key = 's', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } },
+  { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 'r', mods = 'ALT', action = act.RotatePanes 'CounterClockwise' },
+  { key = 'r', mods = 'ALT|SHIFT', action = act.RotatePanes 'Clockwise' },
 
   -- adjust panes
-  { key = 'h', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k', mods = mods.alt_shift, action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'h', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Up', 3 } },
 
   -- move between neovim and wezterm panes
-  { key = 'h', mods = mods.alt, action = act { EmitEvent = 'move-left' } },
-  { key = 'l', mods = mods.alt, action = act { EmitEvent = 'move-right' } },
-  { key = 'j', mods = mods.alt, action = act { EmitEvent = 'move-down' } },
-  { key = 'k', mods = mods.alt, action = act { EmitEvent = 'move-up' } },
-  { key = 'x', mods = mods.alt, action = act { EmitEvent = 'close-pane' } }, -- close pane
-  { key = 'X', mods = mods.alt_shift, action = act.CloseCurrentPane { confirm = false } }, -- forced close pane
-  { key = 'n', mods = mods.alt, action = act.ActivatePaneDirection 'Next' },
-  { key = 'p', mods = mods.alt, action = act.ActivatePaneDirection 'Prev' },
+  { key = 'h', mods = 'ALT', action = act { EmitEvent = 'move-left' } },
+  { key = 'l', mods = 'ALT', action = act { EmitEvent = 'move-right' } },
+  { key = 'j', mods = 'ALT', action = act { EmitEvent = 'move-down' } },
+  { key = 'k', mods = 'ALT', action = act { EmitEvent = 'move-up' } },
+  { key = 'x', mods = 'ALT', action = act { EmitEvent = 'close-pane' } }, -- close pane
+  { key = 'X', mods = 'ALT|SHIFT', action = act.CloseCurrentPane { confirm = false } }, -- forced close pane
+  { key = 'n', mods = 'ALT', action = act.ActivatePaneDirection 'Next' },
+  { key = 'p', mods = 'ALT', action = act.ActivatePaneDirection 'Prev' },
 
   -- Cli apps
   -- lagy[g]it
-  { key = 'g', mods = mods.alt, action = act.SplitHorizontal { args = { 'nu', '-e', 'lazygit' } } },
-  { key = 'G', mods = mods.alt, action = act.SplitVertical { args = { 'nu', '-e', 'lazygit' } } },
+  { key = 'g', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'lazygit' } } },
+  { key = 'G', mods = 'ALT', action = act.SplitVertical { args = { 'nu', '-e', 'lazygit' } } },
   -- open broot, alt-x to close pane, ctrl-c to go back to shell
-  { key = 'b', mods = mods.alt, action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
-  { key = 'B', mods = mods.alt, action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },
+  { key = 'b', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
+  { key = 'B', mods = 'ALT', action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },
 
   {
     key = 't',
-    mods = mods.alt,
+    mods = 'ALT',
     action = act.SwitchToWorkspace {
       name = 'todos',
       spawn = {
@@ -309,9 +291,10 @@ config.keys = {
       },
     },
   },
+
   {
     key = 'K',
-    mods = mods.alt_shift,
+    mods = 'ALT|SHIFT',
     action = act.SwitchToWorkspace {
       name = 'wezterm-keys',
       spawn = {
@@ -320,7 +303,7 @@ config.keys = {
     },
   },
   --m[o]nitoring
-  { key = 'm', mods = mods.alt, action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
+  { key = 'm', mods = 'ALT', action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
