@@ -309,6 +309,16 @@ config.keys = {
       },
     },
   },
+  {
+    key = 'K',
+    mods = mods.alt_shift,
+    action = act.SwitchToWorkspace {
+      name = 'wezterm-keys',
+      spawn = {
+        args = { 'nu', '-e', 'wezterm show-keys | nvim ' },
+      },
+    },
+  },
   --m[o]nitoring
   { key = 'm', mods = mods.alt, action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }
