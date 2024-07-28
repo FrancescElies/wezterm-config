@@ -7,7 +7,7 @@
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local wezterm = require 'wezterm'
-local sessionizer = require 'sessionizer'
+local workspace_sessionizer = require 'workspace_sessionizer'
 local utils = require 'utils'
 local platform = require 'platform'
 local act = wezterm.action
@@ -222,7 +222,7 @@ config.keys = {
   { key = 'W', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open or create new [w]orkspace
   { key = 'N', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
   { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
-  { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(sessionizer.start) }, -- open new session
+  { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- open new session
 
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
