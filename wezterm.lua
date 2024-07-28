@@ -259,7 +259,7 @@ config.keys = {
   { key = 'j', mods = 'ALT', action = act { EmitEvent = 'move-down' } },
   { key = 'k', mods = 'ALT', action = act { EmitEvent = 'move-up' } },
   { key = 'x', mods = 'ALT', action = act { EmitEvent = 'close-pane' } }, -- close pane
-  { key = 'X', mods = 'ALT|SHIFT', action = act.CloseCurrentPane { confirm = false } }, -- forced close pane
+  { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } }, -- forced close pane
   { key = 'n', mods = 'ALT', action = act.ActivatePaneDirection 'Next' },
   { key = 'p', mods = 'ALT', action = act.ActivatePaneDirection 'Prev' },
 
