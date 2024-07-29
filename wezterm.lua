@@ -13,7 +13,6 @@ local platform = require 'platform'
 local act = wezterm.action
 local mux = wezterm.mux
 
-local file_exists = utils.file_exists
 local zettelkasten = wezterm.home_dir .. '/src/zettelkasten/'
 -- Troubleshooting
 -- https://wezfurlong.org/wezterm/troubleshooting.html
@@ -203,14 +202,22 @@ config.keys = {
   { key = ' ', mods = 'CTRL', action = act.SendKey { key = ' ', mods = 'CTRL' } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
+
+  -- Main bidings
   { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
+  { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
+  { key = 'c', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
   { key = 'd', mods = 'ALT', action = act.ShowDebugOverlay },
-  { key = 'c', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
-  { key = 'C', mods = 'ALT|SHIFT', action = act.ActivateCopyMode }, -- [C]opy
   { key = 'f', mods = 'ALT', action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
+  { key = 'r', mods = 'ALT|SHIFT', action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
+  { key = 'R', mods = 'ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
+  { key = 's', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } }, -- [s]wap pane with another one
 
   -- Workspaces (alt + shift)
   { key = 'W', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open or create new [w]orkspace
+  { key = 'F', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- [fuzzy] open or create new [w]orkspace
   { key = 'N', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
   { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
   { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- open new session
@@ -238,14 +245,6 @@ config.keys = {
   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
   { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
-
-  -- Panes
-  -- show the pane selection mode, but have it swap the active and selected panes
-  { key = 's', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } },
-  { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 'r', mods = 'ALT', action = act.RotatePanes 'CounterClockwise' },
-  { key = 'R', mods = 'ALT|SHIFT', action = act.RotatePanes 'Clockwise' },
 
   -- adjust panes
   { key = 'H', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Left', 3 } },

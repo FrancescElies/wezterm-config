@@ -1,19 +1,24 @@
-# `ALT` centric wezterm config
+# An `ALT+key` centric wezterm config
 
-A wezterm config organized around the `ALT` key
+Wezterm gives you tmux like capabilities on windows too, this wezterm config is organized
+around the `ALT+key` where key is one of the following:
 
-- [f]ind in pane
-- wezterm [c]ommand
-- [C]opy mode
-- typical [hjkl] for moving around (add `SHIFT` resizing instead)
-- [s]wap pane
-- [-\\] split vertical and horizontal pane
-- [r]otate panes clockwise (add `SHIFT` for counter clockwise)
-- lazy[g]it in split pane (add `SHIFT` for vertical split)
-- [b]root in split pane (add `SHIFT` for vertical split)
+- typical `hjkl` for moving around (add `SHIFT` for resizing instead)
+- wezterm `a`ction (command palette)
+- `f`ind inside pane
+- `c`opy mode
+- `x` or `q`uits current pane, `x`additionally checks if is nvim pane and closes that instead.
+- `s`wap pane
+- `-\\` split vertical and horizontal pane
+- `r`otate panes clockwise (add `SHIFT` for counter clockwise)
+- open lazy`g`it in split pane (add `SHIFT` for vertical split)
+- open `b`root in split pane (add `SHIFT` for vertical split)
 
+## Workspaces
 Workspace related bindings are under `ALT+SHIFT`:
 
-- fuzzy switch or create new [w]orkspace,
-- [n]ext worskpace and [p]revious workspace
-- new [s]ession (workspace from existing project)
+- `f`uzzy switch or create new `w`orkspace,
+- `n`ext worskpace and `p`revious workspace
+- new `s`ession (creates a workspace from existing project under `~/src`)
+
+There is more than just this, but the above is what you might need most of the time.
