@@ -1,9 +1,10 @@
 # An `ALT+key` centric wezterm config
 
-Wezterm gives you tmux like capabilities on windows too, this wezterm config is organized
-around the `ALT+key` where key is one of the following:
+Wezterm gives you cross platform tmux like capabilities (  and  too).
 
-- typical `hjkl` for moving around (add `SHIFT` for resizing instead)
+This wezterm config is organized around the `ALT+key` where key is one of the following:
+
+- typical `hjkl` for moving around between splits (add `SHIFT` for resizing instead)
 - wezterm `a`ction (command palette)
 - `f`ind inside pane
 - `c`opy mode
