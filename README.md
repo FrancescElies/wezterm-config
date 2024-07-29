@@ -12,6 +12,7 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 - `s`wap pane
 - `-\\` split vertical and horizontal pane
 - `r`otate panes clockwise (add `SHIFT` for counter clockwise)
+- insert `u`nicode character (e.g. insert an emoji)
 - open lazy`g`it in split pane (add `SHIFT` for vertical split)
 - open `b`root in split pane (add `SHIFT` for vertical split)
 

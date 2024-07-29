@@ -214,6 +214,7 @@ config.keys = {
   { key = 'r', mods = 'ALT|SHIFT', action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
   { key = 'R', mods = 'ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
   { key = 's', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } }, -- [s]wap pane with another one
+  { key = 'u', mods = 'ALT', action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
 
   -- Workspaces (alt + shift)
   { key = 'W', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open or create new [w]orkspace
