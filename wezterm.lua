@@ -282,16 +282,9 @@ config.keys = {
       },
     },
   },
-  {
-    key = 'E', -- wezterm k[e]y bindings
-    mods = 'ALT|SHIFT',
-    action = act.SwitchToWorkspace {
-      name = 'wezterm-keys',
-      spawn = {
-        args = { 'nu', '-e', 'wezterm show-keys | nvim ' },
-      },
-    },
-  },
+
+  -- wezterm k[e]y bindings
+  { key = 'e', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'wezterm show-keys | nvim ' } } },
   --m[o]nitoring
   { key = 'm', mods = 'ALT', action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }

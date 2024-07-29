@@ -8,6 +8,7 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 - wezterm `a`ction (command palette)
 - `f`ind inside pane
 - `c`opy mode
+- show all k`e`y bindings
 - `q`uit current pane
 - `x` closes current nvim pane or terminal pane
 - `s`wap pane
