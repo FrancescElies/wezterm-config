@@ -217,12 +217,15 @@ config.keys = {
   { key = 'u', mods = 'ALT', action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
 
   -- Workspaces (alt + shift)
-  { key = 'W', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- open or create new [w]orkspace
+  { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
+  { key = 'A', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace }, -- [a]dd a new workspace with a random name and switch to it
   { key = 'F', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- [fuzzy] open or create new [w]orkspace
   { key = 'N', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
   { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
   { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- open new session
 
+  { key = 'O', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnBottom },
+  { key = 'T', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnTop },
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
   -- OSC 133 escapes allow marking regions of output as Output (from the commands that you run), Input (that you type) and Prompt ("chrome" from your shell).

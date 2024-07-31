@@ -22,8 +22,17 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 
 Workspace related bindings are under `ALT+SHIFT`:
 
-- `f`uzzy switch or create new `w`orkspace,
+- `f`uzzy switch
+- `a`dd a new workspace,
+- go to `d`efault workspace,
 - `n`ext worskpace and `p`revious workspace
 - new `s`ession: creates a workspace from existing project under `~/src`
+
+## Window
+
+Window related bindings are under `ALT+SHIFT`:
+
+- Always on `t`op
+- Always on b`o`ttom
 
 There is more than just this, but the above is what you might need most of the time.
