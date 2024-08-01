@@ -15,13 +15,16 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 - `s`wap pane
 - `-`for vertical split and `\` for horizontal split pane
 - `r`otate panes clockwise (add `CTRL` for counter clockwise)
+
+Open commonly used programs quickly `ALT+key`:
+
 - insert `u`nicode character (e.g. insert an emoji)
 - open lazy`g`it in split pane (add `CTRL` for vertical split)
 - open `b`root in split pane (add `CTRL` for vertical split)
 
 ## Workspaces
 
-Workspace related bindings are under `ALT+SHIFT`:
+Workspace related bindings are under `ALT+SHIFT+key`:
 
 - `A`dd a new workspace,
 - go to `D`efault workspace,
@@ -31,7 +34,7 @@ Workspace related bindings are under `ALT+SHIFT`:
 
 ## Window
 
-Window related bindings are under `ALT+SHIFT`:
+Window related bindings are under `ALT+SHIFT+key`:
 
 - Always on `T`op
 - Always on b`O`ttom
