@@ -212,7 +212,7 @@ config.keys = {
   { key = 'd', mods = 'ALT', action = act.ShowDebugOverlay },
   { key = 'f', mods = 'ALT', action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
   { key = 'r', mods = 'ALT|SHIFT', action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
-  { key = 'R', mods = 'ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
+  { key = 'r', mods = 'CTRL|ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
   { key = 's', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } }, -- [s]wap pane with another one
   { key = 'u', mods = 'ALT', action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
 
@@ -269,10 +269,10 @@ config.keys = {
   -- Cli apps
   -- lagy[g]it
   { key = 'g', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'lazygit' } } },
-  { key = 'G', mods = 'ALT', action = act.SplitVertical { args = { 'nu', '-e', 'lazygit' } } },
+  { key = 'g', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-e', 'lazygit' } } },
   -- open broot, alt-x to close pane, ctrl-c to go back to shell
   { key = 'b', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
-  { key = 'B', mods = 'ALT', action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },
+  { key = 'b', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },
 
   {
     key = 't',
