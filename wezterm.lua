@@ -17,8 +17,13 @@ local zettelkasten = wezterm.home_dir .. '/src/zettelkasten/'
 -- Troubleshooting
 -- https://wezfurlong.org/wezterm/troubleshooting.html
 
+-- Allow working with both the current release and the nightly
 local config = {}
+if wezterm.config_builder then
+  config = wezterm.config_builder()
+end
 
+config.disable_default_key_bindings = true
 config.hide_tab_bar_if_only_one_tab = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
