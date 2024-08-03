@@ -273,8 +273,8 @@ config.keys = {
 
   -- Cli apps
   -- lagy[g]it
-  { key = 'g', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-c', 'lazygit' } } },
-  { key = 'g', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-c', 'lazygit' } } },
+  { key = 'g', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'lazygit' } } },
+  { key = 'g', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-e', 'lazygit' } } },
   -- open broot, alt-x to close pane, ctrl-c to go back to shell
   { key = 'b', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
   { key = 'b', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },

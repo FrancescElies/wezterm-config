@@ -8,6 +8,7 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 - `n`ext and `p`revious pane
 - wezterm `a`ction (command palette)
 - `f`ind inside pane
+- show `d`ebug layer
 - `c`opy mode
 - show all k`e`y bindings
 - `q`uit current pane
