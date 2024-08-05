@@ -23,7 +23,7 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
-config.disable_default_key_bindings = true
+-- config.disable_default_key_bindings = true
 config.hide_tab_bar_if_only_one_tab = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
