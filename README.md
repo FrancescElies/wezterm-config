@@ -29,7 +29,7 @@ Workspace related bindings are under `ALT+SHIFT+key`:
 
 - `A`dd a new workspace,
 - go to `D`efault workspace,
-- `F`uzzy switch
+- go to open `W`orkspace
 - new `S`ession: creates a workspace from existing project under `~/src`
 - `N`ext and `P`revious workspace
 
