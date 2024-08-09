@@ -78,92 +78,6 @@ else
 end
 config.launch_menu = launch_menu
 
-local function is_nvim(process) return string.find((process or {}).name or 'no-process', 'nvim') end
-
-local function children_has_nvim(proc)
-  if proc == nil then
-    return false
-  end
-
-  wezterm.log_info('check children for', proc.name)
-  -- quick and dirty check without recursion, 2 level children check for nvim
-  for child_pid, child in pairs(proc.children) do
-    wezterm.log_info('child of ' .. proc.name .. ': name=' .. child.name .. ' pid=' .. child_pid)
-    if is_nvim(child) then
-      return true
-    end
-    -- NOTE: this covers the case where nvim is started from broot
-    for grandchild_pid, grandchild in pairs(child.children) do
-      wezterm.log_info('child of ' .. child.name .. ': name=' .. grandchild.name .. ' pid=' .. grandchild_pid)
-      if is_nvim(grandchild) then
-        return true
-      end
-    end
-  end
-end
-
-local function parent_has_nvim(proc)
-  if proc == nil then
-    return false
-  end
-
-  local parent_proc = wezterm.procinfo.get_info_for_pid(proc.ppid)
-  if parent_proc == nil then
-    wezterm.log_info('parent of', proc.name, 'is nil')
-    return false
-  end
-
-  wezterm.log_info('parent of', proc.name, 'is', parent_proc.name)
-  if is_nvim(parent_proc) then
-    return true
-  else
-    return parent_has_nvim(parent_proc)
-  end
-end
-
-local function window_has_nvim(window)
-  wezterm.log_info 'window_has_nvim?'
-
-  -- check current process
-  local p = mux.get_window(window:window_id()):active_pane():get_foreground_process_info()
-
-  if is_nvim(p) then
-    wezterm.log_info('get_foreground_process_info' .. p.name)
-    return true
-  end
-
-  return parent_has_nvim(p) or children_has_nvim(p)
-end
-
-local function wez_nvim_action(window, pane, action_wez, forward_key_nvim)
-  if window_has_nvim(window) then
-    wezterm.log_info 'window is nvim'
-    window:perform_action(forward_key_nvim, pane)
-  else
-    wezterm.log_info 'windows not nvim'
-    window:perform_action(action_wez, pane)
-  end
-end
-
--- keep in sync with nvim wezterm.lua
-local move_map = {
-  { wez_action_name = 'move-left', wez_action = act.ActivatePaneDirection 'Left', key = 'h', mods = 'ALT' },
-  { wez_action_name = 'move-right', wez_action = act.ActivatePaneDirection 'Right', key = 'l', mods = 'ALT' },
-  { wez_action_name = 'move-up', wez_action = act.ActivatePaneDirection 'Up', key = 'k', mods = 'ALT' },
-  { wez_action_name = 'move-down', wez_action = act.ActivatePaneDirection 'Down', key = 'j', mods = 'ALT' },
-}
-
-for _, v in pairs(move_map) do
-  wezterm.on(v.wez_action_name, function(window, pane) wez_nvim_action(window, pane, v.wez_action, act.SendKey { key = v.key, mods = v.mods }) end)
-end
-
--- you can add other actions, this unifies the way in which panes and windows are closed
--- (you'll need to bind <A-x> -> <C-w>q)
-wezterm.on(
-  'close-pane',
-  function(window, pane) wez_nvim_action(window, pane, act.CloseCurrentPane { confirm = false }, act.SendKey { key = 'x', mods = 'ALT' }) end
-)
-
 -- Styling Inactive Panes
 config.inactive_pane_hsb = {
   saturation = 0.5, -- smaller values can make it appear more washed out
@@ -261,13 +175,14 @@ config.keys = {
   { key = 'J', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Down', 3 } },
   { key = 'K', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Up', 3 } },
 
-  -- move between neovim and wezterm panes
-  { key = 'h', mods = 'ALT', action = act { EmitEvent = 'move-left' } },
-  { key = 'l', mods = 'ALT', action = act { EmitEvent = 'move-right' } },
-  { key = 'j', mods = 'ALT', action = act { EmitEvent = 'move-down' } },
-  { key = 'k', mods = 'ALT', action = act { EmitEvent = 'move-up' } },
-  { key = 'x', mods = 'ALT', action = act { EmitEvent = 'close-pane' } }, -- close pane
+  { key = 'h', mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
+  { key = 'j', mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
+  { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
+  { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
+
+  { key = 'x', mods = 'ALT', action = act.CloseCurrentPane { confirm = true } }, -- forced close pane
   { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } }, -- forced close pane
+
   { key = 'n', mods = 'ALT', action = act.ActivatePaneDirection 'Next' },
   { key = 'p', mods = 'ALT', action = act.ActivatePaneDirection 'Prev' },
 

@@ -15,7 +15,7 @@ local home = normalize_path(w.home_dir)
 -- PATHS
 --
 
---- Find exececutable in typical locations
+--- Find executable in typical locations
 ---@param bin_name string
 ---@return string
 local function find_executable(bin_name)
