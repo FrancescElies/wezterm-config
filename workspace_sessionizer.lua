@@ -45,6 +45,7 @@ err_if_not(srcPath, srcPath .. ' not found')
 local search_folders = {
   srcPath,
   srcPath .. '/work',
+  srcPath .. '/work/ekl',
   srcPath .. '/oss',
 }
 -------------------------------------------------------
