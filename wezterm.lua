@@ -23,18 +23,18 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
+-- https://wezfurlong.org/wezterm/config/fonts.html
+-- https://www.jetbrains.com/lp/mono/
+-- https://github.com/microsoft/cascadia-code
+-- https://github.com/tonsky/FiraCode
+-- https://github.com/adobe-fonts/source-code-pro
+
+config.font_size = 12
+
 -- config.disable_default_key_bindings = true
 config.hide_tab_bar_if_only_one_tab = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
-
-if platform.is_win then
-  config.font_size = 10
-elseif platform.is_mac then
-  config.font_size = 12
-else
-  config.font_size = 12
-end
 
 -- config.color_scheme = 'AdventureTime'
 -- config.color_scheme = 'rose-pine'
