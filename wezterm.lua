@@ -51,6 +51,7 @@ if platform.is_mac then
   config.set_environment_variables = {
     PATH = table.concat({
       wezterm.home_dir .. '/.cargo/bin',
+      wezterm.home_dir .. '/bin',
       os.getenv 'PATH',
     }, ':'),
     -- prepend the path to custom binaries
