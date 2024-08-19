@@ -12,14 +12,6 @@
             "keys": "ctrl+c"
         },
         {
-            "command":
-            {
-                "action": "splitPane",
-                "split": "down"
-            },
-            "keys": "alt+minus"
-        },
-        {
             "command": "unbound",
             "keys": "ctrl+shift+w"
         },
@@ -189,9 +181,19 @@
             "command":
             {
                 "action": "splitPane",
-                "split": "right"
+                "split": "right",
+                 "splitMode": "duplicate"
             },
             "keys": "alt+\\"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "split": "down"
+                "splitMode": "duplicate"
+            },
+            "keys": "alt+minus"
         },
         {
             "command":
