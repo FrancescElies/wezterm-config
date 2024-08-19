@@ -216,6 +216,10 @@
                 "direction": "up"
             },
             "keys": "alt+k"
+        },
+        {
+            "command": "togglePaneZoom",
+            "keys": "alt+z"
         }
     ],
     "copyFormatting": "none",
