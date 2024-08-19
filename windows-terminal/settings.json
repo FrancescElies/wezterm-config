@@ -108,6 +108,10 @@
             "keys": "alt+x"
         },
         {
+            "command": "closePane",
+            "keys": "alt+q"
+        },
+        {
             "command": 
             {
                 "action": "openSettings",
