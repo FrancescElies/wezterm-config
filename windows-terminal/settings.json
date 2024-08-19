@@ -1,16 +1,8 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions":
+    "actions": 
     [
-        {
-            "command":
-            {
-                "action": "copy",
-                "singleLine": false
-            },
-            "keys": "ctrl+c"
-        },
         {
             "command": "unbound",
             "keys": "ctrl+shift+w"
@@ -76,11 +68,35 @@
             "keys": "alt+shift+plus"
         },
         {
+            "command": "unbound",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "down"
+            },
+            "keys": "alt+minus"
+        },
+        {
+            "command": 
+            {
+                "action": "copy",
+                "singleLine": false
+            },
+            "keys": "ctrl+c"
+        },
+        {
             "command": "paste",
             "keys": "ctrl+v"
         },
         {
-            "command":
+            "command": "find",
+            "keys": "alt+f"
+        },
+        {
+            "command": 
             {
                 "action": "resizePane",
                 "direction": "left"
@@ -88,23 +104,11 @@
             "keys": "alt+shift+h"
         },
         {
-            "command": "find",
-            "keys": "ctrl+shift+f"
-        },
-        {
             "command": "closePane",
             "keys": "alt+x"
         },
         {
-            "command":
-            {
-                "action": "moveFocus",
-                "direction": "previous"
-            },
-            "keys": "alt+o"
-        },
-        {
-            "command":
+            "command": 
             {
                 "action": "openSettings",
                 "target": "settingsUI"
@@ -112,14 +116,22 @@
             "keys": "alt+shift+comma"
         },
         {
-            "command":
+            "command": 
             {
                 "action": "nextTab"
             },
             "keys": "alt+shift+n"
         },
         {
-            "command":
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "previous"
+            },
+            "keys": "alt+o"
+        },
+        {
+            "command": 
             {
                 "action": "resizePane",
                 "direction": "right"
@@ -127,7 +139,7 @@
             "keys": "alt+shift+l"
         },
         {
-            "command":
+            "command": 
             {
                 "action": "resizePane",
                 "direction": "up"
@@ -135,7 +147,7 @@
             "keys": "alt+shift+k"
         },
         {
-            "command":
+            "command": 
             {
                 "action": "resizePane",
                 "direction": "down"
@@ -143,18 +155,18 @@
             "keys": "alt+shift+j"
         },
         {
-            "command":
+            "command": "resetFontSize",
+            "keys": "alt+0"
+        },
+        {
+            "command": 
             {
                 "action": "newTab"
             },
             "keys": "alt+shift+a"
         },
         {
-            "command": "resetFontSize",
-            "keys": "alt+0"
-        },
-        {
-            "command":
+            "command": 
             {
                 "action": "openSettings",
                 "target": "settingsFile"
@@ -162,7 +174,7 @@
             "keys": "alt+comma"
         },
         {
-            "command":
+            "command": 
             {
                 "action": "moveFocus",
                 "direction": "right"
@@ -170,7 +182,7 @@
             "keys": "alt+l"
         },
         {
-            "command":
+            "command": 
             {
                 "action": "moveFocus",
                 "direction": "left"
@@ -178,25 +190,7 @@
             "keys": "alt+h"
         },
         {
-            "command":
-            {
-                "action": "splitPane",
-                "split": "right",
-                 "splitMode": "duplicate"
-            },
-            "keys": "alt+\\"
-        },
-        {
-            "command":
-            {
-                "action": "splitPane",
-                "split": "down"
-                "splitMode": "duplicate"
-            },
-            "keys": "alt+minus"
-        },
-        {
-            "command":
+            "command": 
             {
                 "action": "moveFocus",
                 "direction": "down"
@@ -204,7 +198,15 @@
             "keys": "alt+j"
         },
         {
-            "command":
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "right"
+            },
+            "keys": "alt+\\"
+        },
+        {
+            "command": 
             {
                 "action": "moveFocus",
                 "direction": "up"
@@ -215,16 +217,16 @@
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{aab79973-318f-43b6-a9bc-b4096493753f}",
-    "newTabMenu":
+    "newTabMenu": 
     [
         {
             "type": "remainingProfiles"
         }
     ],
-    "profiles":
+    "profiles": 
     {
         "defaults": {},
-        "list":
+        "list": 
         [
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
@@ -263,19 +265,19 @@
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "font":
+                "commandline": "nu.exe",
+                "font": 
                 {
                     "face": "Cascadia Code"
                 },
-                "hidden": false,
                 "guid": "{aab79973-318f-43b6-a9bc-b4096493753f}",
+                "hidden": false,
                 "name": "Nushell",
-                "commandline": "nu.exe",
                 "startingDirectory": "%USERPROFILE%"
             }
         ]
     },
-    "schemes":
+    "schemes": 
     [
         {
             "background": "#0C0C0C",
