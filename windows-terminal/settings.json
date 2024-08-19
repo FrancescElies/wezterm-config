@@ -1,240 +1,60 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": 
+    "actions":
     [
-        {
-            "command": "unbound",
-            "keys": "ctrl+shift+w"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+tab"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+shift+left"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+shift+right"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+shift+up"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+shift+down"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+0"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+shift+comma"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+comma"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+shift+t"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+right"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+left"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+down"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+alt+left"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+shift+minus"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+shift+plus"
-        },
-        {
-            "command": "unbound",
-            "keys": "ctrl+shift+f"
-        },
-        {
-            "command": 
-            {
-                "action": "splitPane",
-                "split": "down"
-            },
-            "keys": "alt+minus"
-        },
-        {
-            "command": 
-            {
-                "action": "copy",
-                "singleLine": false
-            },
-            "keys": "ctrl+c"
-        },
-        {
-            "command": "paste",
-            "keys": "ctrl+v"
-        },
-        {
-            "command": "find",
-            "keys": "alt+f"
-        },
-        {
-            "command": 
-            {
-                "action": "resizePane",
-                "direction": "left"
-            },
-            "keys": "alt+shift+h"
-        },
-        {
-            "command": "closePane",
-            "keys": "alt+x"
-        },
-        {
-            "command": "closePane",
-            "keys": "alt+q"
-        },
-        {
-            "command": 
-            {
-                "action": "openSettings",
-                "target": "settingsUI"
-            },
-            "keys": "alt+shift+comma"
-        },
-        {
-            "command": 
-            {
-                "action": "nextTab"
-            },
-            "keys": "alt+shift+n"
-        },
-        {
-            "command": 
-            {
-                "action": "moveFocus",
-                "direction": "previous"
-            },
-            "keys": "alt+o"
-        },
-        {
-            "command": 
-            {
-                "action": "resizePane",
-                "direction": "right"
-            },
-            "keys": "alt+shift+l"
-        },
-        {
-            "command": 
-            {
-                "action": "resizePane",
-                "direction": "up"
-            },
-            "keys": "alt+shift+k"
-        },
-        {
-            "command": 
-            {
-                "action": "resizePane",
-                "direction": "down"
-            },
-            "keys": "alt+shift+j"
-        },
-        {
-            "command": "resetFontSize",
-            "keys": "alt+0"
-        },
-        {
-            "command": 
-            {
-                "action": "newTab"
-            },
-            "keys": "alt+shift+a"
-        },
-        {
-            "command": 
-            {
-                "action": "openSettings",
-                "target": "settingsFile"
-            },
-            "keys": "alt+comma"
-        },
-        {
-            "command": 
-            {
-                "action": "moveFocus",
-                "direction": "right"
-            },
-            "keys": "alt+l"
-        },
-        {
-            "command": 
-            {
-                "action": "moveFocus",
-                "direction": "left"
-            },
-            "keys": "alt+h"
-        },
-        {
-            "command": 
-            {
-                "action": "moveFocus",
-                "direction": "down"
-            },
-            "keys": "alt+j"
-        },
-        {
-            "command": 
-            {
-                "action": "splitPane",
-                "split": "right"
-            },
-            "keys": "alt+\\"
-        },
-        {
-            "command": 
-            {
-                "action": "moveFocus",
-                "direction": "up"
-            },
-            "keys": "alt+k"
-        },
-        {
-            "command": "togglePaneZoom",
-            "keys": "alt+z"
-        }
+        { "command": "closePane", "keys": "alt+q" },
+        { "command": "closePane", "keys": "alt+x" },
+        { "command": "find", "keys": "alt+f" },
+        { "command": "paste", "keys": "ctrl+v" },
+        { "command": "resetFontSize", "keys": "alt+0" },
+        { "command": "togglePaneZoom", "keys": "alt+z" }
+        { "command": { "action": "copy", "singleLine": false }, "keys": "ctrl+c" },
+        { "command": { "action": "moveFocus", "direction": "down" }, "keys": "alt+j" },
+        { "command": { "action": "moveFocus", "direction": "left" }, "keys": "alt+h" },
+        { "command": { "action": "moveFocus", "direction": "previous" }, "keys": "alt+o" },
+        { "command": { "action": "moveFocus", "direction": "right" }, "keys": "alt+l" },
+        { "command": { "action": "moveFocus", "direction": "up" }, "keys": "alt+k" },
+        { "command": { "action": "newTab" }, "keys": "alt+shift+a" },
+        { "command": { "action": "nextTab" }, "keys": "alt+shift+n" },
+        { "command": { "action": "openSettings", "target": "settingsFile" }, "keys": "alt+comma" },
+        { "command": { "action": "openSettings", "target": "settingsUI" }, "keys": "alt+shift+comma" },
+        { "command": { "action": "resizePane", "direction": "down" }, "keys": "alt+shift+j" },
+        { "command": { "action": "resizePane", "direction": "left" }, "keys": "alt+shift+h" },
+        { "command": { "action": "resizePane", "direction": "right" }, "keys": "alt+shift+l" },
+        { "command": { "action": "resizePane", "direction": "up" }, "keys": "alt+shift+k" },
+        { "command": { "action": "splitPane", "split": "down" }, "keys": "alt+minus" },
+        { "command": { "action": "splitPane", "split": "right" }, "keys": "alt+\\" },
+        { "command": "unbound", "keys": "ctrl+shift+w" },
+        { "command": "unbound", "keys": "ctrl+tab" },
+        { "command": "unbound", "keys": "alt+shift+left" },
+        { "command": "unbound", "keys": "alt+shift+right" },
+        { "command": "unbound", "keys": "alt+shift+up" },
+        { "command": "unbound", "keys": "alt+shift+down" },
+        { "command": "unbound", "keys": "ctrl+0" },
+        { "command": "unbound", "keys": "ctrl+shift+comma" },
+        { "command": "unbound", "keys": "ctrl+comma" },
+        { "command": "unbound", "keys": "ctrl+shift+t" },
+        { "command": "unbound", "keys": "alt+right" },
+        { "command": "unbound", "keys": "alt+left" },
+        { "command": "unbound", "keys": "alt+down" },
+        { "command": "unbound", "keys": "ctrl+alt+left" },
+        { "command": "unbound", "keys": "alt+shift+minus" },
+        { "command": "unbound", "keys": "alt+shift+plus" },
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{aab79973-318f-43b6-a9bc-b4096493753f}",
-    "newTabMenu": 
+    "newTabMenu":
     [
         {
             "type": "remainingProfiles"
         }
     ],
-    "profiles": 
+    "profiles":
     {
         "defaults": {},
-        "list": 
+        "list":
         [
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
@@ -274,7 +94,7 @@
             },
             {
                 "commandline": "nu.exe",
-                "font": 
+                "font":
                 {
                     "face": "Cascadia Code"
                 },
@@ -285,7 +105,7 @@
             }
         ]
     },
-    "schemes": 
+    "schemes":
     [
         {
             "background": "#0C0C0C",
