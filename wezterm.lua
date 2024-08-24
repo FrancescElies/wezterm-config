@@ -12,6 +12,8 @@ local utils = require 'utils'
 local platform = require 'platform'
 local act = wezterm.action
 local mux = wezterm.mux
+local io = require 'io'
+local os = require 'os'
 
 local zettelkasten = wezterm.home_dir .. '/src/zettelkasten/'
 -- Troubleshooting
@@ -85,6 +87,34 @@ config.inactive_pane_hsb = {
   brightness = 0.8, -- dims or increases the perceived amount of light
 }
 
+-- https://wezfurlong.org/wezterm/config/lua/wezterm/on.html#custom-events
+wezterm.on('trigger-nvim-with-scrollback', function(window, pane)
+  -- Retrieve the text from the pane
+  local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+
+  -- Create a temporary file to pass to vim
+  local name = os.tmpname()
+  local f = io.open(name, 'w+')
+  if f == nil then
+    wezterm.log_error('failed to open ' .. name)
+    return
+  end
+  f:write(text)
+  f:flush()
+  f:close()
+
+  window:perform_action(act.SplitHorizontal { args = { 'nvim', name } }, pane)
+
+  -- Wait "enough" time for vim to read the file before we remove it.
+  -- The window creation and process spawn are asynchronous wrt. running
+  -- this script and are not awaitable, so we just pick a number.
+  --
+  -- Note: We don't strictly need to remove this file, but it is nice
+  -- to avoid cluttering up the temporary directory.
+  wezterm.sleep_ms(1000)
+  os.remove(name)
+end)
+
 config.mouse_bindings = {
   --   -- https://dystroy.org/blog/from-terminator-to-wezterm/
   --   -- Disable the default click behavior
@@ -144,7 +174,7 @@ config.keys = {
   { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
   { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- open new session
 
-  { key = 'O', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnBottom },
+  { key = 'B', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnBottom },
   { key = 'T', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnTop },
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
@@ -207,8 +237,7 @@ config.keys = {
     },
   },
 
-  -- wezterm k[e]y bindings
-  { key = 'e', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'wezterm show-keys | nvim ' } } },
+  { key = 'e', mods = 'ALT', action = act.EmitEvent 'trigger-nvim-with-scrollback' },
   --m[o]nitoring
   { key = 'm', mods = 'ALT', action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
 }

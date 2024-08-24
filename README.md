@@ -10,7 +10,7 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 - `f`ind inside pane
 - show `d`ebug layer
 - `c`opy mode
-- show all k`e`y bindings
+- `e`dit in nvim visible area and entire scrollback of the active pane
 - `q`uit current pane
 - `x` closes current nvim pane or terminal pane
 - `s`wap pane
@@ -38,6 +38,6 @@ Workspace related bindings are under `ALT+SHIFT+key`:
 Window related bindings are under `ALT+SHIFT+key`:
 
 - Always on `T`op
-- Always on b`O`ttom
+- Always on `B`ottom
 
 There is more than just this, but the above is what you might need most of the time.
