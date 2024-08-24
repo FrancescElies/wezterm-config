@@ -23,7 +23,7 @@ M.file_exists = function(path)
   return nil
 end
 
---- Converts Windows backslash to forwardslash
+--- Converts Windows backslash to forward-slash
 ---@param path string
 M.normalize_path = function(path) return platform.is_win and path:gsub('\\', '/') or path end
 
