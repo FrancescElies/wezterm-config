@@ -22,6 +22,8 @@ Open commonly used programs quickly `ALT+key`:
 - insert `u`nicode character (e.g. insert an emoji)
 - open lazy`g`it in split pane (add `CTRL` for vertical split)
 - open `b`root in split pane (add `CTRL` for vertical split)
+- open `t`odos in split pane (add `CTRL` for vertical split)
+- open `m`onitoring (bottom) in split pane (add `CTRL` for vertical split)
 
 ## Workspaces
 

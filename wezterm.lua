@@ -225,21 +225,13 @@ config.keys = {
   { key = 'b', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
   { key = 'b', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },
 
-  {
-    key = 't',
-    mods = 'ALT',
-    action = act.SwitchToWorkspace {
-      name = 'todos',
-      spawn = {
-        cwd = zettelkasten,
-        args = { 'nu', '-e', 'nvim ' .. zettelkasten .. 'todos.md' },
-      },
-    },
-  },
+  { key = 't', mods = 'ALT', action = act.SplitVertical { cwd = zettelkasten, args = { 'nu', '-e', 'nvim ' .. zettelkasten .. 'todos.md' } } },
+  { key = 't', mods = 'CTRL|ALT', action = act.SplitVertical { cwd = zettelkasten, args = { 'nu', '-e', 'nvim ' .. zettelkasten .. 'todos.md' } } },
 
   { key = 'e', mods = 'ALT', action = act.EmitEvent 'trigger-nvim-with-scrollback' },
   --m[o]nitoring
-  { key = 'm', mods = 'ALT', action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'btm' } } } },
+  { key = 'm', mods = 'ALT', action = act.SplitVertical { args = { 'btm' } } },
+  { key = 'm', mods = 'CTRL|ALT', action = act.SplitHorizontal { args = { 'btm' } } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
