@@ -103,7 +103,7 @@ wezterm.on('trigger-nvim-with-scrollback', function(window, pane)
   f:flush()
   f:close()
 
-  window:perform_action(act.SplitHorizontal { args = { 'nvim', name } }, pane)
+  window:perform_action(act.SplitHorizontal { args = { 'nu', '-e', 'nvim ' .. name } }, pane)
 
   -- Wait "enough" time for vim to read the file before we remove it.
   -- The window creation and process spawn are asynchronous wrt. running
@@ -135,11 +135,11 @@ config.mouse_bindings = {
   --     mods = 'CTRL',
   --     action = w.action.Nop,
   --   },
-  --   {
-  --     event = { Down = { streak = 3, button = 'Left' } },
-  --     action = w.action.SelectTextAtMouseCursor 'SemanticZone',
-  --     mods = 'NONE',
-  --   },
+  {
+    event = { Down = { streak = 3, button = 'Left' } },
+    action = wezterm.action.SelectTextAtMouseCursor 'SemanticZone',
+    mods = 'NONE',
+  },
 }
 
 config.keys = {
