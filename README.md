@@ -17,14 +17,15 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 - `s`wap pane
 - `-`for vertical split and `\` for horizontal split pane
 - `r`otate panes clockwise (add `CTRL` for counter clockwise)
-
-Open commonly used programs quickly `ALT+key`:
-
 - insert `u`nicode character (e.g. insert an emoji)
-- open lazy`g`it in split pane (add `CTRL` for vertical split)
-- open `b`root in split pane (add `CTRL` for vertical split)
-- open `t`odos in split pane (add `CTRL` for vertical split)
-- open `m`onitoring (bottom) in split pane (add `CTRL` for vertical split)
+
+Quickly open commonly used programs in split pane with `ALT+key` or
+`CTRL+ALT+key` for a vertical split pane:
+
+- open lazy`g`it in split pane
+- open `b`root in split pane
+- open `t`odos in split pane
+- open `m`onitoring (bottom) in split pane
 
 ## Workspaces
 
