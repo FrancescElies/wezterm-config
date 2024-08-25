@@ -4,7 +4,7 @@ Wezterm gives you a cross-platform terminal and multiplexer with tmux like
 capabilities that works on linux, mac and windows.
 
 This wezterm config is organized around the `ALT+key` where key is one of the following:
-
+- `-`for vertical split and `\` for horizontal split pane
 - `h j k l` for moving between splits (add `SHIFT` for resizing instead)
 - `n`ext and `p`revious pane
 - wezterm `a`ction (command palette)
@@ -15,7 +15,6 @@ This wezterm config is organized around the `ALT+key` where key is one of the fo
 - `q`uit current pane
 - `x` closes current nvim pane or terminal pane
 - `s`wap pane
-- `-`for vertical split and `\` for horizontal split pane
 - `r`otate panes clockwise (add `CTRL` for counter clockwise)
 - insert `u`nicode character (e.g. insert an emoji)
 
