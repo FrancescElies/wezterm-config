@@ -1,6 +1,7 @@
 # An `ALT+key` centric wezterm config
 
-Wezterm gives you cross platform tmux like capabilities (linux, mac and windows too).
+Wezterm gives you a cross-platform terminal and multiplexer with tmux like
+capabilities that works on linux, mac and windows.
 
 This wezterm config is organized around the `ALT+key` where key is one of the following:
 
