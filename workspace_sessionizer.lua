@@ -4,26 +4,23 @@ local utils = require 'utils'
 local M = {}
 
 local normalize_path = utils.normalize_path
-local err_if_not = utils.err_if_not
 
 local home = normalize_path(wezterm.home_dir)
 
-local srcPath = home .. '/src'
-err_if_not(srcPath, srcPath .. ' not found')
-
 local folders_to_search = {
-  srcPath,
-  srcPath .. '/work',
-  srcPath .. '/work/ekl',
-  srcPath .. '/oss',
+  home .. '/src',
+  home .. '/src/work',
+  home .. '/src/work/ekl',
+  home .. '/src/oss',
 }
 -------------------------------------------------------
 
 M.start = function(window, pane)
   local projects = {}
 
-  for _, a_folder in ipairs(folders_to_search) do
-    for _, project in pairs(wezterm.glob(a_folder .. '/*')) do
+  for _, folder in ipairs(folders_to_search) do
+    wezterm.log_info(folder)
+    for _, project in pairs(wezterm.glob(folder .. '/*')) do
       project = normalize_path(project)
       table.insert(projects, { label = project, id = project })
     end
@@ -33,9 +30,9 @@ M.start = function(window, pane)
     wezterm.action.InputSelector {
       action = wezterm.action_callback(function(win, _, id, label)
         if not id and not label then
-          wezterm.log_info 'Cancelled'
+          wezterm.log_info 'Select Project cancelled'
         else
-          wezterm.log_info('Selected ' .. label)
+          wezterm.log_info('Selected project: ' .. label)
           win:perform_action(
             wezterm.action.SwitchToWorkspace {
               name = id,
