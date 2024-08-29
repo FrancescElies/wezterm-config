@@ -1,9 +1,11 @@
 local wezterm = require 'wezterm'
-local utils = require 'utils'
 
 local M = {}
 
-local normalize_path = utils.normalize_path
+local function normalize_path(path)
+  local is_win = string.find(wezterm.target_triple, 'windows') ~= nil
+  return is_win and path:gsub('\\', '/') or path
+end
 
 local home = normalize_path(wezterm.home_dir)
 
