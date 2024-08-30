@@ -13,11 +13,12 @@ General actions:
 
 Managing panes:
 
-- `-`for vertical split and `\` for horizontal split pane
+- `v`ertical split or alternavtively `-`
+- `h`orizontal split or `\`
 - `h j k l` for moving between splits (add `SHIFT` for resizing instead)
 - `x` closes current pane, use `q`uit to close without asking
 - `n`ext and `p`revious pane
-- `s`wap pane
+- s`w`ap pane
 - `r`otate panes clockwise (add `CTRL` for counter clockwise)
 
 Inside a pane:

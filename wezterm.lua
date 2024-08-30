@@ -156,14 +156,16 @@ config.keys = {
   -- Main bidings
   { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
   { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = 'v', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 's', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
   { key = 'c', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
   { key = 'd', mods = 'ALT', action = act.ShowDebugOverlay },
   { key = 'f', mods = 'ALT', action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
   { key = 'r', mods = 'ALT', action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
   { key = 'r', mods = 'CTRL|ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
-  { key = 's', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } }, -- [s]wap pane with another one
+  { key = 'w', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } }, -- [s]wap pane with another one
   { key = 'u', mods = 'ALT', action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
 
   -- Workspaces (alt + shift)
