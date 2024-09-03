@@ -20,6 +20,7 @@ Managing panes:
 - `n`ext and `p`revious pane
 - s`w`ap pane
 - `r`otate panes clockwise (add `CTRL` for counter clockwise)
+- `z`oom in/out pane
 
 Inside a pane:
 
