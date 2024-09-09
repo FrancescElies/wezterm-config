@@ -250,11 +250,11 @@ config.hyperlink_rules = {
   { regex = '<(\\w+://\\S+)>', format = '$1', highlight = 1 },
 
   -- Matches:  numbers
-  {
-    regex = '(\\d+)',
-    format = 'https://mbbm-ast.visualstudio.com/AST/_workitems/edit/$1',
-    highlight = 1,
-  },
+  -- {
+  --   regex = '(\\d+)',
+  --   format = 'https://mbbm-ast.visualstudio.com/AST/_workitems/edit/$1',
+  --   highlight = 1,
+  -- },
   -- Then handle URLs not wrapped in brackets
   { regex = '[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)', format = '$1', highlight = 1 },
   -- implicit mailto link
