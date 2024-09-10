@@ -14,7 +14,7 @@ General actions:
 Managing panes:
 
 - `v`ertical split or alternavtively `-`
-- `h`orizontal split or `\`
+- horizontal `s`plit or `\`
 - `h j k l` for moving between splits (add `SHIFT` for resizing instead)
 - `x` closes current pane, use `q`uit to close without asking
 - `n`ext and `p`revious pane
