@@ -83,8 +83,8 @@ config.launch_menu = launch_menu
 
 -- Styling Inactive Panes
 config.inactive_pane_hsb = {
-  saturation = 0.5, -- smaller values can make it appear more washed out
-  brightness = 0.8, -- dims or increases the perceived amount of light
+  saturation = 0.9, -- smaller values can make it appear more washed out
+  brightness = 0.7, -- dims or increases the perceived amount of light
 }
 
 -- https://wezfurlong.org/wezterm/config/lua/wezterm/on.html#custom-events
