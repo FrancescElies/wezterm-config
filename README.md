@@ -11,7 +11,8 @@ Among other things it can run a wezterm `a`ction (command palette),  `\`
 `SHIFT` for resizing instead), `q`uit pane, s`w`ap panes, `z`oom in/out pane
 
 Inside a pane you can `f`ind text, open visible area in `e`ditor,
-e`x`ecute`T`ab to run a command in a separate tab.
+e`x`ecute to run a command in a separate tab, go to next `t`ab and previous
+`T`ab.
 
 Workspace related bindings are under `ALT+SHIFT+key`, you can `o`pen a folder in a workspace, `s`elect a workspace, go to `n`ext or `p`revious workspace
 

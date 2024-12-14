@@ -217,6 +217,9 @@ config.keys = {
   { key = 'x', mods = 'ALT', action = wezterm.action_callback(apps.start) },
   { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
+  { key = 't', mods = 'ALT', action = act.ActivateTabRelative(1) },
+  { key = 'T', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(-1) },
+
   { key = 'n', mods = 'ALT', action = act.ActivatePaneDirection 'Next' },
   { key = 'p', mods = 'ALT', action = act.ActivatePaneDirection 'Prev' },
 
