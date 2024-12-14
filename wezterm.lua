@@ -11,6 +11,7 @@ local workspace_sessionizer = require 'workspace_sessionizer'
 local utils = require 'utils'
 local platform = require 'platform'
 local tab_bar = require 'tab_bar'
+local apps = require 'apps'
 local act = wezterm.action
 local mux = wezterm.mux
 local io = require 'io'
@@ -213,27 +214,13 @@ config.keys = {
   { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
   { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
 
-  { key = 'x', mods = 'ALT', action = act.CloseCurrentPane { confirm = true } }, -- forced close pane
-  { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } }, -- forced close pane
+  { key = 'x', mods = 'ALT', action = wezterm.action_callback(apps.start) },
+  { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
   { key = 'n', mods = 'ALT', action = act.ActivatePaneDirection 'Next' },
   { key = 'p', mods = 'ALT', action = act.ActivatePaneDirection 'Prev' },
 
-  -- Cli apps
-  -- lagy[g]it
-  { key = 'g', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'lazygit' } } },
-  { key = 'g', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-e', 'lazygit' } } },
-  -- open broot, alt-x to close pane, ctrl-c to go back to shell
-  { key = 'b', mods = 'ALT', action = act.SplitHorizontal { args = { 'nu', '-e', 'br' } } },
-  { key = 'b', mods = 'CTRL|ALT', action = act.SplitVertical { args = { 'nu', '-e', 'br' } } },
-
-  { key = 't', mods = 'ALT', action = act.SplitVertical { cwd = zettelkasten, args = { 'nu', '-e', 'nvim ' .. zettelkasten .. 'todos.md' } } },
-  { key = 't', mods = 'CTRL|ALT', action = act.SplitVertical { cwd = zettelkasten, args = { 'nu', '-e', 'nvim ' .. zettelkasten .. 'todos.md' } } },
-
   { key = 'e', mods = 'ALT', action = act.EmitEvent 'trigger-nvim-with-scrollback' },
-  --m[o]nitoring
-  { key = 'm', mods = 'ALT', action = act.SplitVertical { args = { 'btm' } } },
-  { key = 'm', mods = 'CTRL|ALT', action = act.SplitHorizontal { args = { 'btm' } } },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
