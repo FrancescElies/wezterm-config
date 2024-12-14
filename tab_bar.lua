@@ -12,7 +12,7 @@ wezterm.on('update-right-status', function(window, pane)
   local keybinding_hints = {
     alt .. '  Action Edit eXec Copy Find Debug' .. ' MODE',
     alt .. '  Next Prev H←J↓↑L→ Vertical(\\)Split(-) sWap Quit' .. '  PANE',
-    alt_shift .. ' Next Prev Create Current Session Default' .. '  WORKSPACE',
+    alt_shift .. ' Next Prev Default Select/new Open' .. '  WORKSPACE',
     alt_shift .. ' Bottom Top' .. '  WINDOW',
   }
   for i, x in pairs(keybinding_hints) do

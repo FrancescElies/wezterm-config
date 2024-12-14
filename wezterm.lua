@@ -171,10 +171,10 @@ config.keys = {
 
   -- Workspaces (alt + shift)
   { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
-  { key = 'C', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- fuzzy search Current workspaces or Create new [w]orkspace
+  { key = 'S', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- Select from current or create new workspace
   { key = 'N', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
   { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
-  { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- open new session
+  { key = 'O', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- Open new session
 
   { key = 'B', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnBottom },
   { key = 'T', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnTop },
