@@ -56,6 +56,7 @@ if platform.is_mac then
     PATH = table.concat({
       wezterm.home_dir .. '/.cargo/bin',
       wezterm.home_dir .. '/bin',
+      '/opt/homebrew/bin',
       os.getenv 'PATH',
     }, ':'),
     -- prepend the path to custom binaries
@@ -74,10 +75,10 @@ if platform.is_win then
   }
 else
   -- wezterm.log_info 'on mac or linux'
-  config.default_prog = { wezterm.home_dir .. '/bin/nu' }
+  config.default_prog = { 'nu' }
   launch_menu = {
     { label = 'Bash', args = { 'bash' } },
-    { label = 'Nushell', args = { wezterm.home_dir .. '/bin/nu' } },
+    { label = 'Nushell', args = { 'nu' } },
     { label = 'Zsh', args = { 'zsh' } },
   }
 end
