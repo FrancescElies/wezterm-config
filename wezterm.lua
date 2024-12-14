@@ -10,6 +10,7 @@ local wezterm = require 'wezterm'
 local workspace_sessionizer = require 'workspace_sessionizer'
 local utils = require 'utils'
 local platform = require 'platform'
+local tab_bar = require 'tab_bar'
 local act = wezterm.action
 local mux = wezterm.mux
 local io = require 'io'
@@ -34,7 +35,7 @@ end
 config.font_size = 12
 
 -- config.disable_default_key_bindings = true
-config.hide_tab_bar_if_only_one_tab = true
+-- config.hide_tab_bar_if_only_one_tab = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
 
@@ -170,8 +171,7 @@ config.keys = {
 
   -- Workspaces (alt + shift)
   { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
-  { key = 'A', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace }, -- [a]dd a new workspace with a random name and switch to it
-  { key = 'W', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- fuzzy search or create new [w]orkspace
+  { key = 'C', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- fuzzy search Current workspaces or Create new [w]orkspace
   { key = 'N', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
   { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
   { key = 'S', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- open new session
