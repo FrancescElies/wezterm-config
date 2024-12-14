@@ -10,12 +10,12 @@ wezterm.on('update-right-status', function(window, pane)
   local alt = (platform.is_mac and '󰘵' or 'Alt')
   local alt_shift = alt .. '󰘶'
   local keybinding_hints = {
-    alt .. '  Action Edit eXec Copy Find Debug' .. ' MODE',
-    alt .. '  Next Prev H←J↓↑L→ Vertical(\\)Split(-) sWap Quit' .. '  PANE',
+    alt .. '  Action Edit eXecTab Copy Find Debug' .. ' MODE',
+    alt .. '  Next Prev H←J↓↑L→ VerticalSplit sWap Quit' .. '  PANE',
     alt_shift .. ' Next Prev Default Select/new Open' .. '  WORKSPACE',
     alt_shift .. ' Bottom Top' .. '  WINDOW',
   }
-  for i, x in pairs(keybinding_hints) do
+  for _, x in pairs(keybinding_hints) do
     table.insert(cells, x)
   end
 
