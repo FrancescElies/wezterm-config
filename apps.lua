@@ -19,7 +19,7 @@ M.start = function(window, pane)
           wezterm.log_info('Selected app: ' .. label)
           win:perform_action(
             wezterm.action.SpawnCommandInNewTab {
-              args = { 'nu', '-e', label },
+              args = { 'nu', '-e', id },
             },
             pane
           )
