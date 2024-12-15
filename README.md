@@ -6,15 +6,13 @@ capabilities that works on linux, mac and windows.
 ![screenshot screenshot](./images/keys.jpg)
 
 This wezterm config is organized around the `ALT+key` Among other things it can
-run a wezterm `a`ction (command palette), `-` to `s`plit current pane or `\\`
-for a `v`ertical , - `h j k l` for moving between splits (add `SHIFT` for
-resizing instead), `q`uit pane, s`w`ap panes, `z`oom in/out pane
+run a wezterm `a`ction (command palette), `-` to make a `n`ew `s`plit pane or
+`\\` for a `v`ertical , `h←j↓k↑l→` for moving (add `SHIFT` for resizing),
+`q`uit, s`w`ap or `z`oom in/out panes.
 
-Inside a pane you can `f`ind text, open visible area in `e`ditor, e`x`ecute to
-run a command in a separate tab, go to next `t`ab and previous `T`ab.
+Inside a pane you can `f`ind text, open visible area in `e`ditor or e`x`ecute a
+command in a separate tab.
 
-Workspace related bindings are under `ALT+SHIFT+key`, you can `g`o to a
-workspace, open a `p`roject in a new workspace.
-
-`ALT+SHIFT+key` to keep wezterm window on `T`op or keep it at the `B`ottom
-
+Workspace related bindings are under `ALT+SHIFT+key`, you can create a new or
+select an open workspace, you can open an existing `p`roject/directory on disk
+in a new workspace with the same name.
