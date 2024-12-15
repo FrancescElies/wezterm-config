@@ -157,11 +157,15 @@ config.keys = {
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
 
   -- Main bidings
-  { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
+  { key = 'F9', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnBottom },
+  { key = 'F10', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnTop },
+  { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
+
+  { key = 'n', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = 'v', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 's', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
   { key = 'c', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
   { key = 'd', mods = 'ALT', action = act.ShowDebugOverlay },
@@ -173,13 +177,12 @@ config.keys = {
 
   -- Workspaces (alt + shift)
   { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
-  { key = 'S', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- Select from current or create new workspace
-  { key = 'N', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) }, -- [n]ext
-  { key = 'P', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) }, -- [p]revious
-  { key = 'O', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- Open new session
+  { key = 'S', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- Go to workspace
+  { key = 'N', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- Go to workspace
+  { key = 'I', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) },
+  { key = 'O', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) },
+  { key = 'P', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- Open Project
 
-  { key = 'B', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnBottom },
-  { key = 'T', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnTop },
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
   -- OSC 133 escapes allow marking regions of output as Output (from the commands that you run), Input (that you type) and Prompt ("chrome" from your shell).
@@ -199,9 +202,6 @@ config.keys = {
     },
   },
 
-  -- Window
-  { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
-
   { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- adjust panes
@@ -218,11 +218,9 @@ config.keys = {
   { key = 'x', mods = 'ALT', action = wezterm.action_callback(apps.start) },
   { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
-  { key = 't', mods = 'ALT', action = act.ActivateTabRelative(1) },
-  { key = 'T', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(-1) },
-
-  { key = 'n', mods = 'ALT', action = act.ActivatePaneDirection 'Next' },
-  { key = 'p', mods = 'ALT', action = act.ActivatePaneDirection 'Prev' },
+  { key = 'ı', mods = 'ALT', action = act.ActivateTabRelative(-1) },
+  { key = 'i', mods = 'ALT', action = act.ActivateTabRelative(-1) },
+  { key = 'o', mods = 'ALT', action = act.ActivateTabRelative(1) },
 
   { key = 'e', mods = 'ALT', action = act.EmitEvent 'trigger-nvim-with-scrollback' },
 }

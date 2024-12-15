@@ -10,17 +10,18 @@ wezterm.on('update-right-status', function(window, pane)
   local alt = (platform.is_mac and '󰘵' or 'Alt')
   local alt_shift = alt .. '󰘶'
   local keybinding_hints = {
-    alt .. '  Action Edit eXecTab Copy Find Debug',
-    alt .. '  Next Prev H←J↓↑L→ (Vert.)Split sWap Rotate Quit Zoom' .. '  PANE',
-    alt_shift .. ' Next Prev Default Select/new Open' .. '  WORKSPACE',
-    alt_shift .. ' Bottom Top' .. '  WINDOW',
+    alt .. '  Act Edit eXec Copy Find Debug MODE',
+    alt .. '  H←J↓K↑L→ New V-Split sWap Quit Zoom PANE',
+    alt .. '  I←O→ TAB',
+    alt_shift .. ' I←O→ New/Sel Def. Project' .. '  W.SPACE',
+    ' F9-Btm  F10-Top F11-Full' .. '  WIN.',
   }
   for _, x in pairs(keybinding_hints) do
     table.insert(cells, x)
   end
 
   -- I like my date/time in this style: "Wed Mar 3 08:14"
-  local date = wezterm.strftime '%H:%M'
+  local date = wezterm.strftime '%v:%M'
   table.insert(cells, date)
 
   -- An entry for each battery (typically 0 or 1 battery)
@@ -30,6 +31,7 @@ wezterm.on('update-right-status', function(window, pane)
 
   -- Color palette for the backgrounds of each cell
   local colors = {
+    '#52307c',
     '#52307c',
     '#663a82',
     '#7c5295',
