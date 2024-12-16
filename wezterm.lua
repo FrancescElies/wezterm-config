@@ -216,7 +216,7 @@ config.keys = {
   { key = 'x', mods = 'ALT', action = wezterm.action_callback(apps.start) },
   { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
-  { key = 't', mods = 'ALT', action = act.SpawnTab 'CurrentPaneDomain' },
+  { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
   { key = 'ı', mods = 'ALT', action = act.ActivateTabRelative(-1) },
   { key = 'i', mods = 'ALT', action = act.ActivateTabRelative(-1) },
   { key = 'o', mods = 'ALT', action = act.ActivateTabRelative(1) },

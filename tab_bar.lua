@@ -12,7 +12,7 @@ wezterm.on('update-right-status', function(window, pane)
   local keybinding_hints = {
     'F9-󰘡  F10-󰘣 F11󰊓',
     ' : ' .. alt .. ' + Act Edit eXec Copy Find Debug',
-    '󰯋 : ' .. alt .. ' + HJKL( ←↓↑→ ) V Split  sWap Quit Zoom',
+    '󰯋 : ' .. alt .. ' + HJKL( ←↓↑→ ) V Split  Quit sWap ToTab Zoom ',
     '󱞞 : ' .. alt .. ' + IO( ←→ )',
     alt_shift .. ' + IO( ←→ ) Sel Def. Project 󰐨',
   }
