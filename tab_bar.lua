@@ -8,13 +8,13 @@ wezterm.on('update-right-status', function(window, pane)
   local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 
   local alt = (platform.is_mac and '󰘵' or 'Alt')
-  local alt_shift = alt .. '󰘶'
+  local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
-    alt .. '  Act Edit eXec Copy Find Debug MODE',
-    alt .. '  H←J↓K↑L→ New V-Split sWap Quit Zoom PANE',
-    alt .. '  I←O→ TAB',
-    alt_shift .. ' I←O→ New/Sel Def. Project' .. '  W.SPACE',
-    ' F9-Btm  F10-Top F11-Full' .. '  WIN.',
+    'F9-󰘡  F10-󰘣 F11󰊓',
+    ' : ' .. alt .. ' + Act Edit eXec Copy Find Debug',
+    '󰯋 : ' .. alt .. ' + HJKL( ←↓↑→ ) New V Split  sWap Quit Zoom',
+    '󱞞 : ' .. alt .. ' + IO( ←→ )',
+    alt_shift .. ' + IO( ←→ ) New/Sel Def. Project 󰐨',
   }
   for _, x in pairs(keybinding_hints) do
     table.insert(cells, x)
@@ -32,11 +32,14 @@ wezterm.on('update-right-status', function(window, pane)
 
   -- Color palette for the backgrounds of each cell
   local colors = {
-    '#52307c',
-    '#52307c',
-    '#663a82',
-    '#7c5295',
-    '#b491c8',
+    -- pastel gradient -n 6 silver indigo | pastel darken 0.1 | pastel format hex
+    -- violets
+    '#2e004f',
+    '#4b2469',
+    '#64437b',
+    '#7d5d90',
+    '#937f9e',
+    -- blues
     '#3c5295',
     '#3491c8',
   }
