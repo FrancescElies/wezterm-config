@@ -12,9 +12,9 @@ wezterm.on('update-right-status', function(window, pane)
   local keybinding_hints = {
     'F9-󰘡  F10-󰘣 F11󰊓',
     ' : ' .. alt .. ' + Act Edit eXec Copy Find Debug',
-    '󰯋 : ' .. alt .. ' + HJKL( ←↓↑→ ) New V Split  sWap Quit Zoom',
+    '󰯋 : ' .. alt .. ' + HJKL( ←↓↑→ ) V Split  sWap Quit Zoom',
     '󱞞 : ' .. alt .. ' + IO( ←→ )',
-    alt_shift .. ' + IO( ←→ ) New/Sel Def. Project 󰐨',
+    alt_shift .. ' + IO( ←→ ) Sel Def. Project 󰐨',
   }
   for _, x in pairs(keybinding_hints) do
     table.insert(cells, x)
