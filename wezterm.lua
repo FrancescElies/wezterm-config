@@ -179,7 +179,7 @@ config.keys = {
   { key = 'S', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- Go to workspace
   { key = 'I', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) },
   { key = 'O', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) },
-  { key = 'P', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- Open Project
+  { key = 'F', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- Fuzzy open project
 
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
