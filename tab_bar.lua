@@ -25,9 +25,11 @@ wezterm.on('update-right-status', function(window, pane)
   local date = wezterm.strftime '%H:%M'
   table.insert(cells, date)
 
+  local charge_syms = { '󰁺', '󰁻', '󰁼', '󰁽', '󰁾', '󰁿', '󰂀', '󰂁', '󰂂', '󰁹', '󰁹' }
   -- An entry for each battery (typically 0 or 1 battery)
   for _, b in ipairs(wezterm.battery_info()) do
-    table.insert(cells, string.format('󰂎%.0f%%', b.state_of_charge * 100))
+    local charge = b.state_of_charge * 100
+    table.insert(cells, string.format(charge_syms[math.floor(charge / 10 + 1.5)] .. '%.0f%%', charge))
   end
 
   -- Color palette for the backgrounds of each cell
