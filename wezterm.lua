@@ -157,8 +157,8 @@ config.keys = {
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
 
   -- Main bidings
-  { key = 'F9', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnBottom },
-  { key = 'F10', mods = 'ALT|SHIFT', action = wezterm.action.ToggleAlwaysOnTop },
+  { key = 'F9', mods = 'NONE', action = wezterm.action.ToggleAlwaysOnBottom },
+  { key = 'F10', mods = 'NONE', action = wezterm.action.ToggleAlwaysOnTop },
   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
   { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },

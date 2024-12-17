@@ -10,11 +10,11 @@ wezterm.on('update-right-status', function(window, pane)
   local alt = (platform.is_mac and '󰘵' or 'Alt')
   local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
+    ' : ' .. alt .. ' + Act Edit eXec Copy Find D',
+    '󰯋 : ' .. alt .. ' + HJKL(←↓↑→) V S  Quit sWap ToTab Zoom',
+    '󱞞 : ' .. alt .. ' + IO(←→)',
+    '󰋃 : ' .. alt_shift .. ' + IO(←→) Def. Find Project',
     '󰡱: 9󰘡  10󰘣  11󰊓',
-    ' : ' .. alt .. ' + Act Edit eXec Copy Find Debug',
-    '󰯋 : ' .. alt .. ' + HJKL( ←↓↑→ ) V Split  Quit sWap ToTab Zoom ',
-    '󱞞 : ' .. alt .. ' + IO( ←→ )',
-    '󰋃 : ' .. alt_shift .. ' + IO( ←→ ) Def. Find Project',
   }
   for _, x in pairs(keybinding_hints) do
     table.insert(cells, x)
