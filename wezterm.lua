@@ -7,7 +7,7 @@
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local wezterm = require 'wezterm'
-local workspace_sessionizer = require 'workspace_sessionizer'
+local project_opener = require 'project-opener'
 local utils = require 'utils'
 local platform = require 'platform'
 local tab_bar = require 'tab_bar'
@@ -176,16 +176,16 @@ config.keys = {
 
   -- Workspaces (alt + shift)
   { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
-  { key = 'S', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- Go to workspace
+  { key = 'F', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { key = 'I', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) },
   { key = 'O', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) },
-  { key = 'F', mods = 'ALT|SHIFT', action = wezterm.action_callback(workspace_sessionizer.start) }, -- Fuzzy open project
+  { key = 'P', mods = 'ALT|SHIFT', action = wezterm.action_callback(project_opener.start) },
 
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
   -- OSC 133 escapes allow marking regions of output as Output (from the commands that you run), Input (that you type) and Prompt ("chrome" from your shell).
-  -- { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
-  -- { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
+  { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
+  { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
 
   -- open config file
   {

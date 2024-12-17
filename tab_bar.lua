@@ -14,7 +14,7 @@ wezterm.on('update-right-status', function(window, pane)
     ' : ' .. alt .. ' + Act Edit eXec Copy Find Debug',
     '󰯋 : ' .. alt .. ' + HJKL( ←↓↑→ ) V Split  Quit sWap ToTab Zoom ',
     '󱞞 : ' .. alt .. ' + IO( ←→ )',
-    '󰋃 : ' .. alt_shift .. ' + IO( ←→ ) Sel Def. Fuzzy',
+    '󰋃 : ' .. alt_shift .. ' + IO( ←→ ) Def. Find Project',
   }
   for _, x in pairs(keybinding_hints) do
     table.insert(cells, x)
