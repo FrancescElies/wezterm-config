@@ -71,5 +71,6 @@ wezterm.on('update-right-status', function(window, pane)
     push(cell, #cells == 0)
   end
 
+  window:set_left_status(window:active_workspace():match '[%a%s-_]+$')
   window:set_right_status(wezterm.format(elements))
 end)
