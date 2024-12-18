@@ -11,8 +11,8 @@ wezterm.on('update-right-status', function(window, pane)
   local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
     ' : ' .. alt .. ' + Act Edit eXec Copy Find D',
-    '󰯋 : ' .. alt .. ' + HJKL(←↓↑→) V S  Quit sWap ToTab Zoom',
-    '󰋃 : ' .. alt_shift .. ' + HJKL(←↓↑→) Open Project',
+    '󰯋 : ' .. alt .. ' + HJKL V S  Quit sWap ToTab Zoom',
+    '󰋃 : ' .. alt_shift .. ' + HJKL Open Project',
     '󰡱: 9󰘡  10󰘣  11󰊓',
   }
   for _, x in pairs(keybinding_hints) do
