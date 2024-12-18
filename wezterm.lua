@@ -176,10 +176,13 @@ config.keys = {
 
   -- Workspaces (alt + shift)
   { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
-  { key = 'F', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'I', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) },
-  { key = 'O', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) },
+  { key = 'O', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { key = 'P', mods = 'ALT|SHIFT', action = wezterm.action_callback(project_opener.start) },
+
+  { key = 'H', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(-1) },
+  { key = 'L', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(1) },
+  { key = 'J', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) },
+  { key = 'K', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) },
 
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
@@ -203,10 +206,10 @@ config.keys = {
   { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- adjust panes
-  { key = 'H', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'L', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'J', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'K', mods = 'ALT|SHIFT', action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'H', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'L', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'J', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'K', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Up', 3 } },
 
   { key = 'h', mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
   { key = 'j', mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
@@ -217,9 +220,6 @@ config.keys = {
   { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
   { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
-  { key = 'ı', mods = 'ALT', action = act.ActivateTabRelative(-1) },
-  { key = 'i', mods = 'ALT', action = act.ActivateTabRelative(-1) },
-  { key = 'o', mods = 'ALT', action = act.ActivateTabRelative(1) },
 
   { key = 'e', mods = 'ALT', action = act.EmitEvent 'trigger-nvim-with-scrollback' },
 }
