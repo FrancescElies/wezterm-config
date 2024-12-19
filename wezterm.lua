@@ -35,7 +35,7 @@ end
 
 config.font_size = 12
 
--- config.disable_default_key_bindings = true
+config.disable_default_key_bindings = true
 -- config.hide_tab_bar_if_only_one_tab = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
@@ -225,6 +225,9 @@ config.keys = {
   { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
 
   { key = 'e', mods = 'ALT', action = act.EmitEvent 'trigger-nvim-with-scrollback' },
+
+  { key = 'C', mods = 'CTRL|SHIFT', action = act.CopyTo 'ClipboardAndPrimarySelection' },
+  { key = 'V', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
