@@ -190,21 +190,21 @@ config.keys = {
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
   -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
   -- OSC 133 escapes allow marking regions of output as Output (from the commands that you run), Input (that you type) and Prompt ("chrome" from your shell).
-  { key = 'UpArrow', mods = 'SHIFT', action = act.ScrollToPrompt(-1) },
-  { key = 'DownArrow', mods = 'SHIFT', action = act.ScrollToPrompt(1) },
+  { key = 'UpArrow', mods = 'ALT', action = act.ScrollToPrompt(-1) },
+  { key = 'DownArrow', mods = 'ALT', action = act.ScrollToPrompt(1) },
 
   -- open config file
-  {
-    key = ',',
-    mods = 'ALT',
-    action = act.SwitchToWorkspace {
-      name = 'wezterm-config',
-      spawn = {
-        cwd = os.getenv 'WEZTERM_CONFIG_DIR',
-        args = { 'nu', '-e', 'nvim $env.WEZTERM_CONFIG_FILE' },
-      },
-    },
-  },
+  -- {
+  --   key = ',',
+  --   mods = 'ALT',
+  --   action = act.SwitchToWorkspace {
+  --     name = 'wezterm-config',
+  --     spawn = {
+  --       cwd = os.getenv 'WEZTERM_CONFIG_DIR',
+  --       args = { 'nu', '-e', 'nvim $env.WEZTERM_CONFIG_FILE' },
+  --     },
+  --   },
+  -- },
 
   { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 

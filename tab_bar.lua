@@ -10,7 +10,7 @@ wezterm.on('update-right-status', function(window, pane)
   local alt = (platform.is_mac and '󰘵' or 'Alt')
   local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
-    ' : ' .. alt .. ' + Act Edit eXec Copy Find D',
+    ' : ' .. alt .. ' + ↕️(osc133) Act Edit eXec Copy Find D',
     '󰯋 : ' .. alt .. ' + HJKL V S  Quit sWap ToTab Zoom',
     '󰋃 : ' .. alt_shift .. ' + HJKL Open Project',
     '󰡱: 9󰘡  10󰘣  11󰊓',
