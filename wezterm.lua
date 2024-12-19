@@ -209,10 +209,10 @@ config.keys = {
   { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
   -- adjust panes
-  { key = 'H', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'L', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'J', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'K', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'h', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'l', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'j', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'k', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Up', 3 } },
 
   { key = 'h', mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
   { key = 'j', mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
