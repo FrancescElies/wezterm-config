@@ -40,6 +40,9 @@ config.font_size = 12
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
 
+config.switch_to_last_active_tab_when_closing_tab = false
+config.adjust_window_size_when_changing_font_size = false
+
 -- config.color_scheme = 'AdventureTime'
 -- config.color_scheme = 'rose-pine'
 -- config.color_scheme = 'Dracula (Gogh)'
