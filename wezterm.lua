@@ -7,17 +7,17 @@
 
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local wezterm = require 'wezterm'
-local project_opener = require 'project-opener'
-local utils = require 'utils'
-local platform = require 'platform'
-local tab_bar = require 'tab_bar'
-local apps = require 'apps'
 local act = wezterm.action
 local mux = wezterm.mux
 local io = require 'io'
 local os = require 'os'
 
-local zettelkasten = wezterm.home_dir .. '/src/zettelkasten/'
+local platform = {
+  is_win = string.find(wezterm.target_triple, 'windows') ~= nil,
+  is_linux = string.find(wezterm.target_triple, 'linux') ~= nil,
+  is_mac = string.find(wezterm.target_triple, 'apple') ~= nil,
+}
+
 -- Troubleshooting
 -- https://wezfurlong.org/wezterm/troubleshooting.html
 
@@ -43,16 +43,11 @@ config.debug_key_events = false
 config.switch_to_last_active_tab_when_closing_tab = false
 config.adjust_window_size_when_changing_font_size = false
 
--- config.color_scheme = 'AdventureTime'
--- config.color_scheme = 'rose-pine'
--- config.color_scheme = 'Dracula (Gogh)'
--- config.color_scheme = 'Gruvbox (Gogh)'
--- config.color_scheme = 'Gruvbox Dark (Gogh)'
-
 wezterm.on('gui-startup', function()
   local _, _, window = mux.spawn_window {}
   window:gui_window():maximize()
 end)
+
 -- https://wezfurlong.org/wezterm/faq.html?h=path#im-on-macos-and-wezterm-cannot-find-things-in-my-path
 if platform.is_mac then
   config.set_environment_variables = {
@@ -148,6 +143,91 @@ config.mouse_bindings = {
   },
 }
 
+local function normalize_path(path)
+  local is_win = string.find(wezterm.target_triple, 'windows') ~= nil
+  return is_win and path:gsub('\\', '/') or path
+end
+
+local home = normalize_path(wezterm.home_dir)
+
+local open_project_dir = function(window, pane)
+  local folders_to_search = {
+    home .. '/src',
+    home .. '/src/work',
+    home .. '/src/work/ekl',
+    home .. '/src/oss',
+  }
+  -------------------------------------------------------
+
+  local projects = {}
+
+  for _, folder in ipairs(folders_to_search) do
+    wezterm.log_info(folder)
+    for _, project in pairs(wezterm.glob(folder .. '/*')) do
+      project = normalize_path(project)
+      table.insert(projects, { label = project, id = project })
+    end
+  end
+
+  window:perform_action(
+    wezterm.action.InputSelector {
+      action = wezterm.action_callback(function(win, _, id, label)
+        if not id and not label then
+          wezterm.log_info 'Select Project cancelled'
+        else
+          wezterm.log_info('Selected project: ' .. label)
+          win:perform_action(
+            wezterm.action.SwitchToWorkspace {
+              name = id,
+              spawn = {
+                cwd = label,
+                args = { 'nu', '-e', 'br' }, -- opens broot directly
+                -- args = { 'nu' }, -- just open shell
+              },
+            },
+            pane
+          )
+        end
+      end),
+      fuzzy = true,
+      title = 'Select project',
+      choices = projects,
+    },
+    pane
+  )
+end
+
+local select_app = function(window, pane)
+  local apps = {
+    { id = 'lazygit', label = 'Lazygit' },
+    { id = 'br', label = 'Broot' },
+    { id = 'todos', label = 'nvim Todos' },
+    { id = 'btm', label = 'Bottom (top)' },
+  }
+
+  window:perform_action(
+    wezterm.action.InputSelector {
+      action = wezterm.action_callback(function(win, _, id, label)
+        if not id and not label then
+          wezterm.log_info 'Select app cancelled'
+        else
+          wezterm.log_info('Selected app: ' .. label)
+          win:perform_action(
+            wezterm.action.SpawnCommandInNewTab {
+              args = { 'nu', '-e', id },
+            },
+            pane
+          )
+        end
+      end),
+      fuzzy = true,
+      title = 'Select app',
+      choices = apps,
+    },
+    pane
+  )
+end
+
 config.keys = {
 
   { key = '0', mods = 'ALT', action = wezterm.action.ResetFontSize },
@@ -180,7 +260,7 @@ config.keys = {
   -- Workspaces (alt + shift)
   { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
   { key = 'O', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'P', mods = 'ALT|SHIFT', action = wezterm.action_callback(project_opener.start) },
+  { key = 'P', mods = 'ALT|SHIFT', action = wezterm.action_callback(open_project_dir) },
 
   { key = 'H', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(-1) },
   { key = 'L', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(1) },
@@ -192,19 +272,6 @@ config.keys = {
   -- OSC 133 escapes allow marking regions of output as Output (from the commands that you run), Input (that you type) and Prompt ("chrome" from your shell).
   { key = 'UpArrow', mods = 'ALT', action = act.ScrollToPrompt(-1) },
   { key = 'DownArrow', mods = 'ALT', action = act.ScrollToPrompt(1) },
-
-  -- open config file
-  -- {
-  --   key = ',',
-  --   mods = 'ALT',
-  --   action = act.SwitchToWorkspace {
-  --     name = 'wezterm-config',
-  --     spawn = {
-  --       cwd = os.getenv 'WEZTERM_CONFIG_DIR',
-  --       args = { 'nu', '-e', 'nvim $env.WEZTERM_CONFIG_FILE' },
-  --     },
-  --   },
-  -- },
 
   { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
 
@@ -219,7 +286,7 @@ config.keys = {
   { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
   { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
 
-  { key = 'x', mods = 'ALT', action = wezterm.action_callback(apps.start) },
+  { key = 'x', mods = 'ALT', action = wezterm.action_callback(select_app) },
   { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
   { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
@@ -242,7 +309,6 @@ config.hyperlink_rules = {
   { regex = '\\{(\\w+://\\S+)\\}', format = '$1', highlight = 1 },
   -- Matches: a URL in angle brackets: <URL>
   { regex = '<(\\w+://\\S+)>', format = '$1', highlight = 1 },
-
   -- Matches:  numbers
   -- {
   --   regex = '(\\d+)',
@@ -254,5 +320,79 @@ config.hyperlink_rules = {
   -- implicit mailto link
   { regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b', format = 'mailto:$0', highlight = 1 },
 }
+
+wezterm.on('update-right-status', function(window, pane)
+  -- Each element holds the text for a cell in a "powerline" style << fade
+  local cells = {}
+
+  local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
+
+  local alt = (platform.is_mac and '󰘵' or 'Alt')
+  local alt_shift = alt .. ' 󰘶'
+  local keybinding_hints = {
+    ' : ' .. alt .. ' + ↕️(osc133) Act Edit eXec Copy Find D',
+    '󰯋 : ' .. alt .. ' + HJKL V S  Quit sWap ToTab Zoom',
+    '󰋃 : ' .. alt_shift .. ' + HJKL Open Project',
+    '󰡱: 9󰘡  10󰘣  11󰊓',
+  }
+  for _, x in pairs(keybinding_hints) do
+    table.insert(cells, x)
+  end
+
+  -- I like my date/time in this style: "Wed Mar 3 08:14"
+  -- local date = wezterm.strftime '%v %H:%M'
+  local date = wezterm.strftime '%H:%M'
+  table.insert(cells, date)
+
+  local charge_syms = { '󰁺', '󰁻', '󰁼', '󰁽', '󰁾', '󰁿', '󰂀', '󰂁', '󰂂', '󰁹', '󰁹' }
+  -- An entry for each battery (typically 0 or 1 battery)
+  for _, b in ipairs(wezterm.battery_info()) do
+    local charge = b.state_of_charge * 100
+    table.insert(cells, string.format(charge_syms[math.floor(charge / 10 + 1.5)] .. '%.0f%%', charge))
+  end
+
+  -- Color palette for the backgrounds of each cell
+  local colors = {
+    -- pastel gradient -n 6 silver indigo | pastel darken 0.1 | pastel format hex
+    -- violets
+    '#2e004f',
+    '#4b2469',
+    '#64437b',
+    '#7d5d90',
+    '#937f9e',
+    -- blues
+    '#3c5295',
+    '#3491c8',
+  }
+
+  -- Foreground color for the text across the fade
+  local text_fg = '#c0c0c0'
+
+  -- The elements to be formatted
+  local elements = {}
+  -- How many cells have been formatted
+  local num_cells = 0
+
+  -- Translate a cell into elements
+  local function push(text, is_last)
+    local cell_no = num_cells + 1
+    table.insert(elements, { Foreground = { Color = text_fg } })
+    table.insert(elements, { Background = { Color = colors[cell_no] } })
+    table.insert(elements, { Text = ' ' .. text .. ' ' })
+    if not is_last then
+      table.insert(elements, { Foreground = { Color = colors[cell_no + 1] } })
+      table.insert(elements, { Text = SOLID_LEFT_ARROW })
+    end
+    num_cells = num_cells + 1
+  end
+
+  while #cells > 0 do
+    local cell = table.remove(cells, 1)
+    push(cell, #cells == 0)
+  end
+
+  window:set_left_status(window:active_workspace():match '[%a%s-._]+$')
+  window:set_right_status(wezterm.format(elements))
+end)
 
 return config
