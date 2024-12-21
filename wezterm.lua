@@ -197,6 +197,26 @@ local open_project_dir = function(window, pane)
   )
 end
 
+function active_tab(window)
+  for _, item in ipairs(window:tabs_with_info()) do
+    if item.is_active then
+      return item.tab
+    end
+  end
+end
+
+-- poor man's zellij split pane like function (alt-n)
+function auto_split_pane(window, pane)
+  wezterm.log_info { window, pane }
+  local tab = window:active_tab(window)
+  local num_panes = #tab:panes_with_info()
+  if num_panes == 1 then
+    pane:split { direction = 'Right' }
+  else
+    pane:split { direction = 'Bottom' }
+  end
+end
+
 local select_app = function(window, pane)
   local apps = {
     { id = 'lazygit', label = 'Lazygit' },
@@ -246,6 +266,8 @@ config.keys = {
 
   { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+
+  { key = 'n', mods = 'ALT', action = wezterm.action_callback(auto_split_pane) },
   { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
@@ -331,7 +353,7 @@ wezterm.on('update-right-status', function(window, pane)
   local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
     ' : ' .. alt .. ' + ↕️(osc133) Act Edit eXec Copy Find D',
-    '󰯋 : ' .. alt .. ' + HJKL V S  Quit sWap ToTab Zoom',
+    '󰯋 : ' .. alt .. ' + HJKL N(V S)  Quit sWap ToTab Zoom',
     '󰋃 : ' .. alt_shift .. ' + HJKL Open Project',
     '󰡱: 9󰘡  10󰘣  11󰊓',
   }
