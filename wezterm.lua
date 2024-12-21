@@ -88,34 +88,6 @@ config.inactive_pane_hsb = {
   brightness = 0.7, -- dims or increases the perceived amount of light
 }
 
--- https://wezfurlong.org/wezterm/config/lua/wezterm/on.html#custom-events
-wezterm.on('trigger-nvim-with-scrollback', function(window, pane)
-  -- Retrieve the text from the pane
-  local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
-
-  -- Create a temporary file to pass to vim
-  local name = os.tmpname()
-  local f = io.open(name, 'w+')
-  if f == nil then
-    wezterm.log_error('failed to open ' .. name)
-    return
-  end
-  f:write(text)
-  f:flush()
-  f:close()
-
-  window:perform_action(act.SplitHorizontal { args = { 'nu', '-e', 'nvim ' .. name } }, pane)
-
-  -- Wait "enough" time for vim to read the file before we remove it.
-  -- The window creation and process spawn are asynchronous wrt. running
-  -- this script and are not awaitable, so we just pick a number.
-  --
-  -- Note: We don't strictly need to remove this file, but it is nice
-  -- to avoid cluttering up the temporary directory.
-  wezterm.sleep_ms(1000)
-  os.remove(name)
-end)
-
 config.mouse_bindings = {
   --   -- https://dystroy.org/blog/from-terminator-to-wezterm/
   --   -- Disable the default click behavior
@@ -143,111 +115,6 @@ config.mouse_bindings = {
   },
 }
 
-local function normalize_path(path)
-  local is_win = string.find(wezterm.target_triple, 'windows') ~= nil
-  return is_win and path:gsub('\\', '/') or path
-end
-
-local home = normalize_path(wezterm.home_dir)
-
-local open_project_dir = function(window, pane)
-  local folders_to_search = {
-    home .. '/src',
-    home .. '/src/work',
-    home .. '/src/work/ekl',
-    home .. '/src/oss',
-  }
-  -------------------------------------------------------
-
-  local projects = {}
-
-  for _, folder in ipairs(folders_to_search) do
-    wezterm.log_info(folder)
-    for _, project in pairs(wezterm.glob(folder .. '/*')) do
-      project = normalize_path(project)
-      table.insert(projects, { label = project, id = project })
-    end
-  end
-
-  window:perform_action(
-    wezterm.action.InputSelector {
-      action = wezterm.action_callback(function(win, _, id, label)
-        if not id and not label then
-          wezterm.log_info 'Select Project cancelled'
-        else
-          wezterm.log_info('Selected project: ' .. label)
-          win:perform_action(
-            wezterm.action.SwitchToWorkspace {
-              name = id,
-              spawn = {
-                cwd = label,
-                args = { 'nu', '-e', 'br' }, -- opens broot directly
-                -- args = { 'nu' }, -- just open shell
-              },
-            },
-            pane
-          )
-        end
-      end),
-      fuzzy = true,
-      title = 'Select project',
-      choices = projects,
-    },
-    pane
-  )
-end
-
-function active_tab(window)
-  for _, item in ipairs(window:tabs_with_info()) do
-    if item.is_active then
-      return item.tab
-    end
-  end
-end
-
--- poor man's zellij split pane like function (alt-n)
-function auto_split_pane(window, pane)
-  wezterm.log_info { window, pane }
-  local tab = window:active_tab(window)
-  local num_panes = #tab:panes_with_info()
-  if num_panes == 1 then
-    pane:split { direction = 'Right' }
-  else
-    pane:split { direction = 'Bottom' }
-  end
-end
-
-local select_app = function(window, pane)
-  local apps = {
-    { id = 'lazygit', label = 'Lazygit' },
-    { id = 'br', label = 'Broot' },
-    { id = 'todos', label = 'nvim Todos' },
-    { id = 'btm', label = 'Bottom (top)' },
-  }
-
-  window:perform_action(
-    wezterm.action.InputSelector {
-      action = wezterm.action_callback(function(win, _, id, label)
-        if not id and not label then
-          wezterm.log_info 'Select app cancelled'
-        else
-          wezterm.log_info('Selected app: ' .. label)
-          win:perform_action(
-            wezterm.action.SpawnCommandInNewTab {
-              args = { 'nu', '-e', id },
-            },
-            pane
-          )
-        end
-      end),
-      fuzzy = true,
-      title = 'Select app',
-      choices = apps,
-    },
-    pane
-  )
-end
-
 config.keys = {
 
   { key = '0', mods = 'ALT', action = wezterm.action.ResetFontSize },
@@ -266,7 +133,20 @@ config.keys = {
 
   { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 'n', mods = 'ALT', action = wezterm.action_callback(auto_split_pane) },
+  {
+    key = 'n', -- poor man's zellij New split pane (alt-n)
+    mods = 'ALT',
+    action = wezterm.action_callback(function(window, pane)
+      wezterm.log_info { window, pane }
+      local tab = window:active_tab(window)
+      local num_panes = #tab:panes_with_info()
+      if num_panes == 1 then
+        pane:split { direction = 'Right' }
+      else
+        pane:split { direction = 'Bottom' }
+      end
+    end),
+  },
   -- { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
   -- { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
 
@@ -282,7 +162,63 @@ config.keys = {
   -- Workspaces (alt + shift)
   { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
   { key = 'O', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'P', mods = 'ALT|SHIFT', action = wezterm.action_callback(open_project_dir) },
+  {
+    key = 'P', -- open Project
+    mods = 'ALT|SHIFT',
+    action = wezterm.action_callback(function(window, pane)
+      local function normalize_path(path)
+        local is_win = string.find(wezterm.target_triple, 'windows') ~= nil
+        return is_win and path:gsub('\\', '/') or path
+      end
+
+      local home = normalize_path(wezterm.home_dir)
+
+      local folders_to_search = {
+        home .. '/src',
+        home .. '/src/work',
+        home .. '/src/work/ekl',
+        home .. '/src/oss',
+      }
+      -------------------------------------------------------
+
+      local projects = {}
+
+      for _, folder in ipairs(folders_to_search) do
+        wezterm.log_info(folder)
+        for _, project in pairs(wezterm.glob(folder .. '/*')) do
+          project = normalize_path(project)
+          table.insert(projects, { label = project, id = project })
+        end
+      end
+
+      window:perform_action(
+        wezterm.action.InputSelector {
+          action = wezterm.action_callback(function(win, _, id, label)
+            if not id and not label then
+              wezterm.log_info 'Select Project cancelled'
+            else
+              wezterm.log_info('Selected project: ' .. label)
+              win:perform_action(
+                wezterm.action.SwitchToWorkspace {
+                  name = id,
+                  spawn = {
+                    cwd = label,
+                    args = { 'nu', '-e', 'br' }, -- opens broot directly
+                    -- args = { 'nu' }, -- just open shell
+                  },
+                },
+                pane
+              )
+            end
+          end),
+          fuzzy = true,
+          title = 'Select project',
+          choices = projects,
+        },
+        pane
+      )
+    end),
+  },
 
   { key = 'H', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(-1) },
   { key = 'L', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(1) },
@@ -308,12 +244,40 @@ config.keys = {
   { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
   { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
 
-  { key = 'x', mods = 'ALT', action = wezterm.action_callback(select_app) },
   { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
   { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
 
-  { key = 'e', mods = 'ALT', action = act.EmitEvent 'trigger-nvim-with-scrollback' },
+  {
+    key = 'e',
+    mods = 'ALT',
+    action = wezterm.action_callback(function(window, pane)
+      -- Retrieve the text from the pane
+      local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+
+      -- Create a temporary file to pass to vim
+      local name = os.tmpname()
+      local f = io.open(name, 'w+')
+      if f == nil then
+        wezterm.log_error('failed to open ' .. name)
+        return
+      end
+      f:write(text)
+      f:flush()
+      f:close()
+
+      window:perform_action(act.SplitHorizontal { args = { 'nu', '-e', 'nvim ' .. name } }, pane)
+
+      -- Wait "enough" time for vim to read the file before we remove it.
+      -- The window creation and process spawn are asynchronous wrt. running
+      -- this script and are not awaitable, so we just pick a number.
+      --
+      -- Note: We don't strictly need to remove this file, but it is nice
+      -- to avoid cluttering up the temporary directory.
+      wezterm.sleep_ms(1000)
+      os.remove(name)
+    end),
+  },
 
   { key = 'C', mods = 'CTRL|SHIFT', action = act.CopyTo 'ClipboardAndPrimarySelection' },
   { key = 'V', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
