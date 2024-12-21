@@ -265,11 +265,11 @@ config.keys = {
   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
   { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-
-  { key = 'n', mods = 'ALT', action = wezterm.action_callback(auto_split_pane) },
   { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 'n', mods = 'ALT', action = wezterm.action_callback(auto_split_pane) },
+  -- { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  -- { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+
   { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
   { key = 'c', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
   { key = 'd', mods = 'ALT', action = act.ShowDebugOverlay },
@@ -353,7 +353,7 @@ wezterm.on('update-right-status', function(window, pane)
   local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
     ' : ' .. alt .. ' + ↕️(osc133) Act Edit eXec Copy Find D',
-    '󰯋 : ' .. alt .. ' + HJKL N(V S)  Quit sWap ToTab Zoom',
+    '󰯋 : ' .. alt .. ' + HJKL New  Quit sWap ToTab Zoom',
     '󰋃 : ' .. alt_shift .. ' + HJKL Open Project',
     '󰡱: 9󰘡  10󰘣  11󰊓',
   }
