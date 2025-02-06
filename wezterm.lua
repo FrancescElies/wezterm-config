@@ -43,11 +43,6 @@ config.debug_key_events = false
 config.switch_to_last_active_tab_when_closing_tab = false
 config.adjust_window_size_when_changing_font_size = false
 
-wezterm.on('gui-startup', function()
-  local _, _, window = mux.spawn_window {}
-  window:gui_window():maximize()
-end)
-
 -- https://wezfurlong.org/wezterm/faq.html?h=path#im-on-macos-and-wezterm-cannot-find-things-in-my-path
 if platform.is_mac then
   config.set_environment_variables = {
