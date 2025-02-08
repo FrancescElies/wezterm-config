@@ -40,6 +40,9 @@ config.disable_default_key_bindings = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
 
+config.hide_mouse_cursor_when_typing = false
+config.pane_focus_follows_mouse = true
+
 config.switch_to_last_active_tab_when_closing_tab = false
 config.adjust_window_size_when_changing_font_size = false
 
@@ -79,8 +82,8 @@ config.launch_menu = launch_menu
 
 -- Styling Inactive Panes
 config.inactive_pane_hsb = {
-  saturation = 0.9, -- smaller values can make it appear more washed out
-  brightness = 0.7, -- dims or increases the perceived amount of light
+  saturation = 0.4, -- smaller values can make it appear more washed out
+  brightness = 1, -- dims or increases the perceived amount of light
 }
 
 config.mouse_bindings = {
