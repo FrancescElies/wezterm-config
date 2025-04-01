@@ -41,7 +41,7 @@ config.disable_default_key_bindings = true
 config.debug_key_events = false
 
 config.hide_mouse_cursor_when_typing = false
-config.pane_focus_follows_mouse = true
+config.pane_focus_follows_mouse = false
 
 config.switch_to_last_active_tab_when_closing_tab = false
 config.adjust_window_size_when_changing_font_size = false
