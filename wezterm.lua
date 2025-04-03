@@ -174,7 +174,7 @@ config.keys = {
       local folders_to_search = {
         home .. '/src',
         home .. '/src/work',
-        home .. '/src/work/ekl',
+        home .. '/src/work/ekl-worktrees',
         home .. '/src/oss',
       }
       -------------------------------------------------------
