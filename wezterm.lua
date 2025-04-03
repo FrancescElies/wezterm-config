@@ -33,14 +33,14 @@ end
 -- https://github.com/tonsky/FiraCode
 -- https://github.com/adobe-fonts/source-code-pro
 
-config.font_size = 12
+config.font_size = 11
 
 config.disable_default_key_bindings = true
 -- config.hide_tab_bar_if_only_one_tab = true
 -- https://wezfurlong.org/wezterm/config/lua/config/debug_key_events.html
 config.debug_key_events = false
 
-config.hide_mouse_cursor_when_typing = false
+config.hide_mouse_cursor_when_typing = true
 config.pane_focus_follows_mouse = false
 
 config.switch_to_last_active_tab_when_closing_tab = false
