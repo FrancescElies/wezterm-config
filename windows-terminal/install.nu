@@ -1,12 +1,5 @@
 # NOTE: everything needs to be backslashes
 
-let wezterm_settings = ( '~\.config\wezterm'  | path expand --no-symlink )
-let my_wezterm_config = ( '~\src\wezterm-config' | path expand --strict )  # must exist
-
-print $"(ansi purple_bold)trying ($wezterm_settings) <=> ($my_wezterm_config)(ansi reset)"
-try { rm --trash $wezterm_settings }
-try { mklink /j $wezterm_settings  $my_wezterm_config }
-
 # https:\\learn.microsoft.com\en-us\windows\terminal\install#settings-json-file
 let settings = [
     ($env.LOCALAPPDATA | path join 'Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'), # Terminal (stable \ general release)

@@ -13,4 +13,9 @@ install:
 
 [windows]
 install:
+    # NOTE: everything must be backslashes
+    let link_name = ( '~\.config\wezterm'  | path expand --no-symlink )
+    rm -f --trash $link_name
+    mklink /j $link_name  ( '~\src\wezterm-config' | path expand --strict )
+
     nu ./windows-terminal/install.nu
