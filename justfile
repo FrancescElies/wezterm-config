@@ -4,12 +4,14 @@ set shell := ["nu", "--config", "~/src/nushell-config/config.nu", "-c"]
 [linux]
 install:
     ln -snf ~/src/wezterm-config ~/.config/wezterm
+    ln -snf ~/src/wezterm-config/zellij ~/.config/zellij
 
 # `ln -h` do not follow symlink. This is most useful with the -f option,
 #         to replace a symlink which may point to a directory.
 [macos]
 install:
     ln -shf ~/src/wezterm-config ~/.config/wezterm
+    ln -shf ~/src/wezterm-config/zellij ~/.config/zellij
 
 [windows]
 install:
