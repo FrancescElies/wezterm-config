@@ -17,7 +17,7 @@ install: clean
 install:
     let link_name = ('.'  | path expand --no-symlink)
     rm -f --trash $link_name
-    mklink /j $link_name  ( ~/src/wezterm-config/wezterm | path expand --strict )
+    mklink /j $link_name  ('~/src/wezterm-config/wezterm' | path expand --strict)
 
     nu ./windows-terminal/install.nu
 
