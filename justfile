@@ -1,4 +1,4 @@
-set shell := ["nu", "--config", "~/src/nushell-config/config.nu", "-c"]
+set shell := ["nu", "-c"]
 
 # `ln -n` treat LINK_NAME as a normal file if it is a symbolic link to a directory
 [linux]
