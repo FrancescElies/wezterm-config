@@ -82,7 +82,7 @@ config.launch_menu = launch_menu
 
 -- Styling Inactive Panes
 config.inactive_pane_hsb = {
-  saturation = 0.7, -- smaller values can make it appear more washed out
+  saturation = 0.9, -- smaller values can make it appear more washed out
   brightness = 1, -- dims or increases the perceived amount of light
 }
 
