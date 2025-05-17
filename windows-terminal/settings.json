@@ -5,15 +5,11 @@
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{aab79973-318f-43b6-a9bc-b4096493753f}",
-    "keybindings": 
+    "keybindings":
     [
         {
             "id": "Terminal.MoveFocusRight",
             "keys": "alt+l"
-        },
-        {
-            "id": "Terminal.ClosePane",
-            "keys": "alt+q"
         },
         {
             "id": "Terminal.ResizePaneUp",
@@ -164,16 +160,16 @@
             "keys": "alt+\\"
         }
     ],
-    "newTabMenu": 
+    "newTabMenu":
     [
         {
             "type": "remainingProfiles"
         }
     ],
-    "profiles": 
+    "profiles":
     {
         "defaults": {},
-        "list": 
+        "list":
         [
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
@@ -213,7 +209,7 @@
             },
             {
                 "commandline": "nu.exe",
-                "font": 
+                "font":
                 {
                     "face": "Cascadia Code"
                 },

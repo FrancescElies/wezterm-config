@@ -242,7 +242,7 @@ config.keys = {
   { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
   { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
 
-  { key = 'q', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
+  { key = 'x', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
   { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
 
