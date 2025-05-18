@@ -116,7 +116,7 @@ config.mouse_bindings = {
 config.keys = {
 
   { key = '0', mods = 'ALT', action = wezterm.action.ResetFontSize },
-  { key = '=', mods = 'CTRL|ALT', action = wezterm.action.DecreaseFontSize },
+  { key = '-', mods = 'ALT', action = wezterm.action.DecreaseFontSize },
   { key = '=', mods = 'ALT', action = wezterm.action.IncreaseFontSize },
 
   { key = 'z', mods = 'ALT', action = act.TogglePaneZoomState },
@@ -132,8 +132,8 @@ config.keys = {
   { key = 'F10', mods = 'NONE', action = wezterm.action.ToggleAlwaysOnTop },
   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
-  { key = '-', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = '\\', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   {
     key = 'n', -- poor man's zellij New split pane (alt-n)
     mods = 'ALT',
@@ -148,8 +148,6 @@ config.keys = {
       end
     end),
   },
-  -- { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  -- { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
 
   { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
   { key = 'c', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
@@ -318,7 +316,7 @@ wezterm.on('update-right-status', function(window, pane)
   local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
     ' : ' .. alt .. ' + [⬆️⬇️]osc133 [A]ct [E]dit e[X]ec [C]opy [F]ind De🐛',
-    '󰯋 : ' .. alt .. ' + [HJKL] [-\\N]ew  [Q]uit s[W]ap to[T]ab pane[Z]oom [=]Font🔎',
+    '󰯋 : ' .. alt .. ' + [HJKL] [N]ew[V][S]plit  [Q]uit s[W]ap to[T]ab pane[Z]oom [=]Font🔎',
     '󰋃 : ' .. alt_shift .. ' + [HJKL] [O]pen [P]roject✨',
     '󰡱: 9󰘡  10󰘣  11󰊓',
   }
