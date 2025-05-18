@@ -116,6 +116,8 @@ config.mouse_bindings = {
 config.keys = {
 
   { key = '0', mods = 'ALT', action = wezterm.action.ResetFontSize },
+  { key = '=', mods = 'CTRL|ALT', action = wezterm.action.DecreaseFontSize },
+  { key = '=', mods = 'ALT', action = wezterm.action.IncreaseFontSize },
 
   { key = 'z', mods = 'ALT', action = act.TogglePaneZoomState },
   -- { key = 'd',   mods = 'ALT',        action = act.DisableDefaultAssignment },  -- don't remember why
