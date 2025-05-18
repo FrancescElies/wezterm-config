@@ -116,6 +116,7 @@ config.mouse_bindings = {
 config.keys = {
 
   { key = '0', mods = 'ALT', action = wezterm.action.ResetFontSize },
+
   { key = 'z', mods = 'ALT', action = act.TogglePaneZoomState },
   -- { key = 'd',   mods = 'ALT',        action = act.DisableDefaultAssignment },  -- don't remember why
 
@@ -314,9 +315,9 @@ wezterm.on('update-right-status', function(window, pane)
   local alt = (platform.is_mac and '󰘵' or 'Alt')
   local alt_shift = alt .. ' 󰘶'
   local keybinding_hints = {
-    ' : ' .. alt .. ' + ↕️(osc133) Act Edit eXec Copy Find D',
-    '󰯋 : ' .. alt .. ' + HJKL New  Quit sWap ToTab Zoom',
-    '󰋃 : ' .. alt_shift .. ' + HJKL Open Project',
+    ' : ' .. alt .. ' + [⬆️⬇️]osc133 [A]ct [E]dit e[X]ec [C]opy [F]ind De🐛',
+    '󰯋 : ' .. alt .. ' + [HJKL] [-\\N]ew  [Q]uit s[W]ap to[T]ab pane[Z]oom [=]Font🔎',
+    '󰋃 : ' .. alt_shift .. ' + [HJKL] [O]pen [P]roject✨',
     '󰡱: 9󰘡  10󰘣  11󰊓',
   }
   for _, x in pairs(keybinding_hints) do
