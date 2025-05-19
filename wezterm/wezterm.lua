@@ -312,10 +312,10 @@ wezterm.on('update-right-status', function(window, pane)
 
   local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 
-  local alt = (platform.is_mac and '󰘵' or 'Alt')
-  local alt_shift = alt .. ' 󰘶'
+  local alt = (platform.is_mac and '[󰘵]' or '[Alt]')
+  local alt_shift = (platform.is_mac and '[󰘶󰘵]' or '[󰘶Alt]')
   local keybinding_hints = {
-    ' : ' .. alt .. ' + [⬆️⬇️]osc133 [A]ct [E]dit e[X]ec [C]opy [F]ind De🐛',
+    '⚡: ' .. alt .. ' + [⬆️⬇️]osc133 [A]ct [E]dit e[X]ec [C]opy [F]ind De🐛',
     '󰯋 : ' .. alt .. ' + [HJKL] [N]ew[V][S]plit  [Q]uit s[W]ap to[T]ab pane[Z]oom [=]Font🔎',
     '󰋃 : ' .. alt_shift .. ' + [HJKL] [O]pen [P]roject✨',
     '󰡱: 9󰘡  10󰘣  11󰊓',
