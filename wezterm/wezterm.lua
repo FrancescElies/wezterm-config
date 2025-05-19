@@ -248,8 +248,8 @@ config.keys = {
   { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
 
   {
-    key = 'e',
-    mods = 'ALT',
+    key = 'E',
+    mods = 'ALT|SHIFT',
     action = wezterm.action_callback(function(window, pane)
       -- Retrieve the text from the pane
       local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
