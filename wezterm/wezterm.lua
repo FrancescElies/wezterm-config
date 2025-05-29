@@ -155,7 +155,6 @@ config.keys = {
   { key = 'f', mods = 'ALT', action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
   { key = 'r', mods = 'ALT', action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
   { key = 'r', mods = 'CTRL|ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
-  { key = 'w', mods = 'ALT', action = act.PaneSelect { mode = 'SwapWithActive' } }, -- [s]wap pane with another one
   { key = 'u', mods = 'ALT', action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
 
   -- Workspaces (alt + shift)
