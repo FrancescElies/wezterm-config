@@ -124,6 +124,10 @@ config.keys = {
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
   { key = ' ', mods = 'CTRL', action = act.SendKey { key = ' ', mods = 'CTRL' } },
+  { key = ',', mods = 'CTRL', action = act.SendKey { key = ',', mods = 'CTRL' } },
+  { key = 'm', mods = 'CTRL', action = act.SendKey { key = 'Enter' } },
+  { key = 'i', mods = 'CTRL', action = act.SendKey { key = 'Tab' } },
+  { key = '[', mods = 'CTRL', action = act.SendKey { key = 'Escape' } },
 
   -- { key = '^',   mods = "NONE", action = act.SendKey { key = '6', mods = mods.shift_ctrl } },
 
