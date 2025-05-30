@@ -205,8 +205,8 @@ config.keys = {
                   name = id,
                   spawn = {
                     cwd = label,
-                    -- args = { 'nu', '-e', 'br' }, -- opens broot directly
-                    args = { 'nu' }, -- just open shell
+                    args = { 'nu', '-e', 'nvim' },
+                    -- args = { 'nu' }, -- just open shell
                   },
                 },
                 pane
