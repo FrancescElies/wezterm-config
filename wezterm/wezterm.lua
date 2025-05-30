@@ -59,6 +59,27 @@ if platform.is_mac then
   }
 end
 
+local function normalize_path(path)
+  local is_win = string.find(wezterm.target_triple, 'windows') ~= nil
+  return is_win and path:gsub('\\', '/') or path
+end
+
+local home = normalize_path(wezterm.home_dir)
+local folders_to_search = {}
+if platform.is_win then
+  folders_to_search = {
+    'c:/s',
+    'c:/s/work',
+    'c:/s/work/ekl-worktrees',
+    'c:/s/oss',
+  }
+else
+  folders_to_search = {
+    home .. '/src',
+    home .. '/src/oss',
+  }
+end
+
 local launch_menu = {}
 if platform.is_win then
   -- wezterm.log_info 'on windows'
@@ -168,21 +189,6 @@ config.keys = {
     key = 'P', -- open Project
     mods = 'ALT|SHIFT',
     action = wezterm.action_callback(function(window, pane)
-      local function normalize_path(path)
-        local is_win = string.find(wezterm.target_triple, 'windows') ~= nil
-        return is_win and path:gsub('\\', '/') or path
-      end
-
-      local home = normalize_path(wezterm.home_dir)
-
-      local folders_to_search = {
-        home .. '/src',
-        home .. '/src/work',
-        home .. '/src/work/ekl-worktrees',
-        home .. '/src/oss',
-      }
-      -------------------------------------------------------
-
       local projects = {}
 
       for _, folder in ipairs(folders_to_search) do
