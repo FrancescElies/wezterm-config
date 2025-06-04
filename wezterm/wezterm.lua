@@ -144,6 +144,7 @@ config.keys = {
   -- { key = 'd',   mods = 'ALT',        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
+  { key = 'Enter', mods = 'CTRL', action = act.SendKey { key = 'Enter', mods = 'CTRL' } },
   { key = ' ', mods = 'CTRL', action = act.SendKey { key = ' ', mods = 'CTRL' } },
   { key = ',', mods = 'CTRL', action = act.SendKey { key = ',', mods = 'CTRL' } },
   { key = 'm', mods = 'CTRL', action = act.SendKey { key = 'Enter' } },
