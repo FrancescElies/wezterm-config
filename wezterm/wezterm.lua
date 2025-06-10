@@ -71,6 +71,7 @@ if platform.is_win then
     'c:/s',
     'c:/s/work',
     'c:/s/work/ekl-worktrees',
+    'c:/s/work/customerprj/',
     'c:/s/oss',
   }
 else
