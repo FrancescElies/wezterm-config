@@ -317,48 +317,71 @@ config.hyperlink_rules = {
   { regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b', format = 'mailto:$0', highlight = 1 },
 }
 
+-- https://wezterm.org/config/lua/window/set_right_status.html
 wezterm.on('update-right-status', function(window, pane)
   -- Each element holds the text for a cell in a "powerline" style << fade
   local cells = {}
 
-  local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
+  -- Figure out the cwd and host of the current pane.
+  -- This will pick up the hostname for the remote host if your
+  -- shell is using OSC 7 on the remote host.
+  local cwd_uri = pane:get_current_working_dir()
+  if cwd_uri then
+    local cwd = ''
+    local hostname = ''
 
-  local alt = (platform.is_mac and '[󰘵]' or '[Alt]')
-  local alt_shift = (platform.is_mac and '[󰘶󰘵]' or '[󰘶Alt]')
-  local keybinding_hints = {
-    '⚡: ' .. alt .. ' + [⬆️⬇️]osc133 [A]ct [E]dit e[X]ec [C]opy [F]ind De🐛',
-    '󰯋 : ' .. alt .. ' + [HJKL] [N]ew[V][S]plit  [Q]uit s[W]ap to[T]ab pane[Z]oom [=]Font🔎',
-    '󰋃 : ' .. alt_shift .. ' + [HJKL] [O]pen [P]roject✨',
-    '󰡱: 9󰘡  10󰘣  11󰊓',
-  }
-  for _, x in pairs(keybinding_hints) do
-    table.insert(cells, x)
+    if type(cwd_uri) == 'userdata' then
+      -- Running on a newer version of wezterm and we have
+      -- a URL object here, making this simple!
+
+      cwd = cwd_uri.file_path
+      hostname = cwd_uri.host or wezterm.hostname()
+    else
+      -- an older version of wezterm, 20230712-072601-f4abf8fd or earlier,
+      -- which doesn't have the Url object
+      cwd_uri = cwd_uri:sub(8)
+      local slash = cwd_uri:find '/'
+      if slash then
+        hostname = cwd_uri:sub(1, slash - 1)
+        -- and extract the cwd from the uri, decoding %-encoding
+        cwd = cwd_uri:sub(slash):gsub('%%(%x%x)', function(hex) return string.char(tonumber(hex, 16)) end)
+      end
+    end
+
+    -- Remove the domain name portion of the hostname
+    local dot = hostname:find '[.]'
+    if dot then
+      hostname = hostname:sub(1, dot - 1)
+    end
+    if hostname == '' then
+      hostname = wezterm.hostname()
+    end
+
+    table.insert(cells, cwd)
+    table.insert(cells, hostname)
   end
 
   -- I like my date/time in this style: "Wed Mar 3 08:14"
-  -- local date = wezterm.strftime '%v %H:%M'
-  -- local date = wezterm.strftime '%H:%M'
-  -- table.insert(cells, date)
+  local date = wezterm.strftime '%a %b %-d %H:%M'
+  table.insert(cells, date)
 
-  -- local charge_syms = { '󰁺', '󰁻', '󰁼', '󰁽', '󰁾', '󰁿', '󰂀', '󰂁', '󰂂', '󰁹', '󰁹' }
-  -- -- An entry for each battery (typically 0 or 1 battery)
-  -- for _, b in ipairs(wezterm.battery_info()) do
-  --   local charge = b.state_of_charge * 100
-  --   table.insert(cells, string.format(charge_syms[math.floor(charge / 10 + 1.5)] .. '%.0f%%', charge))
-  -- end
+  -- An entry for each battery (typically 0 or 1 battery)
+  for _, b in ipairs(wezterm.battery_info()) do
+    table.insert(cells, string.format('%.0f%%', b.state_of_charge * 100))
+  end
+
+  -- The powerline < symbol
+  local LEFT_ARROW = utf8.char(0xe0b3)
+  -- The filled in variant of the < symbol
+  local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 
   -- Color palette for the backgrounds of each cell
   local colors = {
-    -- pastel gradient -n 6 silver indigo | pastel darken 0.1 | pastel format hex
-    -- violets
-    '#2e004f',
-    '#4b2469',
-    '#64437b',
-    '#7d5d90',
-    '#937f9e',
-    -- blues
-    '#3c5295',
-    '#3491c8',
+    '#3c1361',
+    '#52307c',
+    '#663a82',
+    '#7c5295',
+    '#b491c8',
   }
 
   -- Foreground color for the text across the fade
@@ -370,7 +393,7 @@ wezterm.on('update-right-status', function(window, pane)
   local num_cells = 0
 
   -- Translate a cell into elements
-  local function push(text, is_last)
+  function push(text, is_last)
     local cell_no = num_cells + 1
     table.insert(elements, { Foreground = { Color = text_fg } })
     table.insert(elements, { Background = { Color = colors[cell_no] } })
@@ -387,7 +410,6 @@ wezterm.on('update-right-status', function(window, pane)
     push(cell, #cells == 0)
   end
 
-  window:set_left_status(window:active_workspace():match '[%a%s-._]+$')
   window:set_right_status(wezterm.format(elements))
 end)
 
