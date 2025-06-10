@@ -213,8 +213,8 @@ config.keys = {
                   name = id,
                   spawn = {
                     cwd = label,
-                    args = { 'nu', '-e', 'nvim' },
-                    -- args = { 'nu' }, -- just open shell
+                    -- args = { 'nu', '-e', 'nvim' }, -- open nvim
+                    args = { 'nu' }, -- just open shell
                   },
                 },
                 pane
