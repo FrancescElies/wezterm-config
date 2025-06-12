@@ -68,11 +68,11 @@ local home = normalize_path(wezterm.home_dir)
 local folders_to_search = {}
 if platform.is_win then
   folders_to_search = {
-    'c:/s',
-    'c:/s/work',
-    'c:/s/work/ekl-worktrees',
-    'c:/s/work/customerprj/',
-    'c:/s/oss',
+    home .. '/src',
+    home .. '/src/work',
+    home .. '/src/work/ekl-worktrees',
+    home .. '/src/work/customerprj/',
+    home .. '/src/oss',
   }
 else
   folders_to_search = {
