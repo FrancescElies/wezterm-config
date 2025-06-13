@@ -177,8 +177,8 @@ config.keys = {
   },
 
   { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
-  { key = 'c', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
-  { key = 'd', mods = 'ALT', action = act.ShowDebugOverlay },
+  { key = 'C', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
+  { key = 'D', mods = 'ALT|SHIFT', action = act.ShowDebugOverlay },
   { key = 'f', mods = 'ALT', action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
   { key = 'r', mods = 'ALT', action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
   { key = 'r', mods = 'CTRL|ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
