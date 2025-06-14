@@ -15,13 +15,13 @@ install: clean
 
 [windows]
 install:
-    rm -f --trash ~/.config/wezterm
+    rm -rf ~/.config/wezterm
     mklink /j ("~/.config/wezterm" | path expand)  ('~/src/wezterm-config/wezterm' | path expand --strict)
 
     nu ./windows-terminal/install.nu
 
 [private]
 clean:
-    rm -f --trash ~/.config/wezterm
-    rm -f --trash ~/.config/zellij
+    rm -rf ~/.config/wezterm
+    rm -rf ~/.config/zellij
 

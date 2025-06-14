@@ -11,6 +11,6 @@ let settings = [
 for link_name in $settings {
     let target = ($this_repo | path join 'windows-terminal\settings.json')
     print $"(ansi purple_bold)trying ($link_name) <=> ($target)(ansi reset)"
-    try { rm --trash $link_name }
+    try { rm $link_name }
     try { mklink $link_name  $target }
 }
