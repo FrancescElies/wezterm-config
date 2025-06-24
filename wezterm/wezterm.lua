@@ -8,7 +8,7 @@
 -- NOTE: environment variable WEZTERM_CONFIG_DIR should point to this file
 local wezterm = require 'wezterm'
 local act = wezterm.action
-local mux = wezterm.mux
+-- local mux = wezterm.mux
 local io = require 'io'
 local os = require 'os'
 
@@ -135,14 +135,96 @@ config.mouse_bindings = {
   },
 }
 
+local mods = 'CTRL|SHIFT'
+local mods = 'CTRL|SHIFT'
+
+local edit_pane_in_nvim = wezterm.action_callback(function(window, pane)
+  -- Retrieve the text from the pane
+  local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+
+  -- Create a temporary file to pass to vim
+  local name = os.tmpname()
+  local f = io.open(name, 'w+')
+  if f == nil then
+    wezterm.log_error('failed to open ' .. name)
+    return
+  end
+  f:write(text)
+  f:flush()
+  f:close()
+
+  window:perform_action(act.SplitHorizontal { args = { 'nu', '-e', 'nvim ' .. name } }, pane)
+
+  -- Wait "enough" time for vim to read the file before we remove it.
+  -- The window creation and process spawn are asynchronous wrt. running
+  -- this script and are not awaitable, so we just pick a number.
+  --
+  -- Note: We don't strictly need to remove this file, but it is nice
+  -- to avoid cluttering up the temporary directory.
+  wezterm.sleep_ms(1000)
+  os.remove(name)
+end)
+
+local new_pane = wezterm.action_callback(function(window, pane)
+  wezterm.log_info { window, pane }
+  local tab = window:active_tab(window)
+  local num_panes = #tab:panes_with_info()
+  if num_panes == 1 then
+    pane:split { direction = 'Right' }
+  else
+    pane:split { direction = 'Bottom' }
+  end
+end)
+
+local open_project = wezterm.action_callback(function(window, pane)
+  local projects = {}
+
+  for _, folder in ipairs(folders_to_search) do
+    wezterm.log_info(folder)
+    for _, project in pairs(wezterm.glob(folder .. '/*')) do
+      project = normalize_path(project)
+      table.insert(projects, { label = project, id = project })
+    end
+  end
+
+  window:perform_action(
+    wezterm.action.InputSelector {
+      action = wezterm.action_callback(function(win, _, id, label)
+        if not id and not label then
+          wezterm.log_info 'Select Project cancelled'
+        else
+          wezterm.log_info('Selected project: ' .. label)
+          win:perform_action(
+            wezterm.action.SwitchToWorkspace {
+              name = id,
+              spawn = {
+                cwd = label,
+                -- args = { 'nu', '-e', 'nvim' }, -- open nvim
+                args = { 'nu' }, -- just open shell
+              },
+            },
+            pane
+          )
+        end
+      end),
+      fuzzy = true,
+      title = 'Select project',
+      choices = projects,
+    },
+    pane
+  )
+end)
+
+local break_to_new_tab = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end)
+
 config.keys = {
 
-  { key = '0', mods = 'ALT', action = wezterm.action.ResetFontSize },
-  { key = '-', mods = 'ALT', action = wezterm.action.DecreaseFontSize },
-  { key = '=', mods = 'ALT', action = wezterm.action.IncreaseFontSize },
+  { key = '0', mods = mods, action = wezterm.action.ResetFontSize },
+  { key = '-', mods = mods, action = wezterm.action.DecreaseFontSize },
+  { key = '=', mods = mods, action = wezterm.action.IncreaseFontSize },
 
-  { key = 'z', mods = 'ALT', action = act.TogglePaneZoomState },
-  -- { key = 'd',   mods = 'ALT',        action = act.DisableDefaultAssignment },  -- don't remember why
+  { key = 'z', mods = mods, action = act.TogglePaneZoomState },
+  -- { key = 'd',   mods = mods,        action = act.DisableDefaultAssignment },  -- don't remember why
 
   -- fix ctrl-space not reaching the term https://github.com/wez/wezterm/issues/4055#issuecomment-1694542317
   { key = 'Enter', mods = 'CTRL', action = act.SendKey { key = 'Enter', mods = 'CTRL' } },
@@ -159,138 +241,42 @@ config.keys = {
   { key = 'F10', mods = 'NONE', action = wezterm.action.ToggleAlwaysOnTop },
   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
-  { key = 's', mods = 'ALT', action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = 'v', mods = 'ALT', action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
-  {
-    key = 'n', -- poor man's zellij New split pane (alt-n)
-    mods = 'ALT',
-    action = wezterm.action_callback(function(window, pane)
-      wezterm.log_info { window, pane }
-      local tab = window:active_tab(window)
-      local num_panes = #tab:panes_with_info()
-      if num_panes == 1 then
-        pane:split { direction = 'Right' }
-      else
-        pane:split { direction = 'Bottom' }
-      end
-    end),
-  },
+  { key = 's', mods = mods, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  { key = 'v', mods = mods, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  { key = 'n', mods = mods, action = new_pane }, -- poor man's zellij New split pane
 
-  { key = 'a', mods = 'ALT', action = act.ActivateCommandPalette }, -- [c]ommands
-  { key = 'C', mods = 'ALT', action = act.ActivateCopyMode }, -- [C]opy
-  { key = 'D', mods = 'ALT|SHIFT', action = act.ShowDebugOverlay },
-  { key = 'f', mods = 'ALT', action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
-  { key = 'r', mods = 'ALT', action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
-  { key = 'r', mods = 'CTRL|ALT', action = act.RotatePanes 'CounterClockwise' }, -- [r]otate panes counter clockwise
-  { key = 'u', mods = 'ALT', action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
+  { key = 'a', mods = mods, action = act.ActivateCommandPalette }, -- [c]ommands
+  { key = 'd', mods = mods, action = act.ShowDebugOverlay },
+  { key = 'f', mods = mods, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
+  { key = 'r', mods = mods, action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
+  { key = 'u', mods = mods, action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
 
   -- Workspaces (alt + shift)
-  { key = 'D', mods = 'ALT|SHIFT', action = act.SwitchToWorkspace { name = 'default' } }, -- switch to the [d]efault workspace
-  { key = 'O', mods = 'ALT|SHIFT', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  {
-    key = 'P', -- open Project
-    mods = 'ALT|SHIFT',
-    action = wezterm.action_callback(function(window, pane)
-      local projects = {}
+  { key = 'o', mods = mods, action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 'p', mods = mods, action = open_project },
 
-      for _, folder in ipairs(folders_to_search) do
-        wezterm.log_info(folder)
-        for _, project in pairs(wezterm.glob(folder .. '/*')) do
-          project = normalize_path(project)
-          table.insert(projects, { label = project, id = project })
-        end
-      end
-
-      window:perform_action(
-        wezterm.action.InputSelector {
-          action = wezterm.action_callback(function(win, _, id, label)
-            if not id and not label then
-              wezterm.log_info 'Select Project cancelled'
-            else
-              wezterm.log_info('Selected project: ' .. label)
-              win:perform_action(
-                wezterm.action.SwitchToWorkspace {
-                  name = id,
-                  spawn = {
-                    cwd = label,
-                    -- args = { 'nu', '-e', 'nvim' }, -- open nvim
-                    args = { 'nu' }, -- just open shell
-                  },
-                },
-                pane
-              )
-            end
-          end),
-          fuzzy = true,
-          title = 'Select project',
-          choices = projects,
-        },
-        pane
-      )
-    end),
-  },
-
-  { key = 'H', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(-1) },
-  { key = 'L', mods = 'ALT|SHIFT', action = act.ActivateTabRelative(1) },
-  { key = 'J', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(-1) },
-  { key = 'K', mods = 'ALT|SHIFT', action = act.SwitchWorkspaceRelative(1) },
-
-  -- https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html
-  -- This action operates on Semantic Zones defined by applications that use OSC 133 Semantic Prompt Escapes and requires configuring your shell to emit those sequences.
-  -- OSC 133 escapes allow marking regions of output as Output (from the commands that you run), Input (that you type) and Prompt ("chrome" from your shell).
-  { key = 'UpArrow', mods = 'ALT', action = act.ScrollToPrompt(-1) },
-  { key = 'DownArrow', mods = 'ALT', action = act.ScrollToPrompt(1) },
-
-  { key = 'Enter', mods = 'ALT', action = act.DisableDefaultAssignment }, -- broot uses alt-enter
+  { key = 't', mods = mods, action = act.ActivateTabRelative(1) },
+  { key = 'w', mods = mods, action = act.SwitchWorkspaceRelative(1) },
 
   -- adjust panes
-  { key = 'h', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Left', 3 } },
-  { key = 'l', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Right', 3 } },
-  { key = 'j', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Down', 3 } },
-  { key = 'k', mods = 'ALT|CTRL', action = act.AdjustPaneSize { 'Up', 3 } },
+  { key = 'LeftArrow', mods = mods, action = act.AdjustPaneSize { 'Left', 3 } },
+  { key = 'RightArrow', mods = mods, action = act.AdjustPaneSize { 'Right', 3 } },
+  { key = 'DownArrow', mods = mods, action = act.AdjustPaneSize { 'Down', 3 } },
+  { key = 'UpArrow', mods = mods, action = act.AdjustPaneSize { 'Up', 3 } },
 
-  { key = 'h', mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
-  { key = 'j', mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
-  { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
-  { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
+  { key = 'h', mods = mods, action = act.ActivatePaneDirection 'Left' },
+  { key = 'j', mods = mods, action = act.ActivatePaneDirection 'Down' },
+  { key = 'k', mods = mods, action = act.ActivatePaneDirection 'Up' },
+  { key = 'l', mods = mods, action = act.ActivatePaneDirection 'Right' },
 
-  { key = 'x', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
+  { key = 'x', mods = mods, action = act.CloseCurrentPane { confirm = false } },
 
-  { key = 't', mods = 'ALT', action = wezterm.action_callback(function(_, pane) pane:move_to_new_tab() end) },
+  { key = 'b', mods = mods, action = break_to_new_tab },
 
-  {
-    key = 'E',
-    mods = 'ALT|SHIFT',
-    action = wezterm.action_callback(function(window, pane)
-      -- Retrieve the text from the pane
-      local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+  { key = 'e', mods = mods, action = edit_pane_in_nvim },
 
-      -- Create a temporary file to pass to vim
-      local name = os.tmpname()
-      local f = io.open(name, 'w+')
-      if f == nil then
-        wezterm.log_error('failed to open ' .. name)
-        return
-      end
-      f:write(text)
-      f:flush()
-      f:close()
-
-      window:perform_action(act.SplitHorizontal { args = { 'nu', '-e', 'nvim ' .. name } }, pane)
-
-      -- Wait "enough" time for vim to read the file before we remove it.
-      -- The window creation and process spawn are asynchronous wrt. running
-      -- this script and are not awaitable, so we just pick a number.
-      --
-      -- Note: We don't strictly need to remove this file, but it is nice
-      -- to avoid cluttering up the temporary directory.
-      wezterm.sleep_ms(1000)
-      os.remove(name)
-    end),
-  },
-
-  { key = 'C', mods = 'CTRL|SHIFT', action = act.CopyTo 'ClipboardAndPrimarySelection' },
-  { key = 'V', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
+  { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo 'ClipboardAndPrimarySelection' },
+  { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
 }
 
 config.switch_to_last_active_tab_when_closing_tab = true
@@ -334,7 +320,9 @@ wezterm.on('update-right-status', function(window, pane)
       -- Running on a newer version of wezterm and we have
       -- a URL object here, making this simple!
 
+      ---@diagnostic disable-next-line: undefined-field
       cwd = cwd_uri.file_path
+      ---@diagnostic disable-next-line: undefined-field
       hostname = cwd_uri.host or wezterm.hostname()
     else
       -- an older version of wezterm, 20230712-072601-f4abf8fd or earlier,
@@ -371,8 +359,7 @@ wezterm.on('update-right-status', function(window, pane)
   end
 
   -- The powerline < symbol
-  local LEFT_ARROW = utf8.char(0xe0b3)
-  -- The filled in variant of the < symbol
+  ---@diagnostic disable-next-line: undefined-global
   local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 
   -- Color palette for the backgrounds of each cell
@@ -393,7 +380,7 @@ wezterm.on('update-right-status', function(window, pane)
   local num_cells = 0
 
   -- Translate a cell into elements
-  function push(text, is_last)
+  local function push(text, is_last)
     local cell_no = num_cells + 1
     table.insert(elements, { Foreground = { Color = text_fg } })
     table.insert(elements, { Background = { Color = colors[cell_no] } })
