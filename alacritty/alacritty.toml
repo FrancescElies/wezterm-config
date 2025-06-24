@@ -1,0 +1,34 @@
+[terminal.shell]
+program = "nu"
+args = ["-l"] # Use login shell to ensure your shell's dotfiles are sourced.
+
+# Modifier keys: Shift, Control, Alt, Super (Windows/Cmd key)
+# For a full list of key names, see `alacritty-bindings(5)` or the Alacritty man page.
+[keyboard]
+bindings = [
+    # macOS Specific
+    { key = "C", mods = "Command", action = "Copy" },
+    { key = "V", mods = "Command", action = "Paste" },
+    { key = "N", mods = "Command", action = "CreateNewWindow" },
+
+    # Linux/Windows Specific
+    { key = "C", mods = "Control|Shift", action = "Copy" },
+    { key = "V", mods = "Control|Shift", action = "Paste" },
+    { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" }, # Open new Alacritty window in current working directory
+    { key = "=", mods = "Control", action = "IncreaseFontSize" },
+    { key = "-", mods = "Control", action = "DecreaseFontSize" },
+    { key = "0", mods = "Control", action = "ResetFontSize" },
+
+    # Vi Mode (default: Ctrl+Shift+Space to toggle)
+    # This allows vim-like navigation in the scrollback buffer.
+    # { key = "Space", mods = "Control|Shift", action = "ToggleViMode" },
+
+    # Hints (Ctrl+Shift+O by default for URLs)
+    # This feature allows you to click on URLs, file paths, etc.
+    # To open URLs with `xdg-open` (Linux/BSD):
+    { key = "O", mods = "Control|Shift", action = "Open" }, # Default
+    # Search (Ctrl+Shift+F by default for forward search)
+    # { key = "F", mods = "Control|Shift", action = "SearchForward" },
+    # { key = "B", mods = "Control|Shift", action = "SearchBackward" },
+]
+

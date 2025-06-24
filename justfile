@@ -3,6 +3,7 @@ set shell := ["nu", "-c"]
 # `ln -n` treat LINK_NAME as a normal file if it is a symbolic link to a directory
 [linux]
 install: clean
+    ln -snf ("./alacritty" | path expand) ~/.config/alacritty
     ln -snf ("./wezterm" | path expand) ~/.config/wezterm
     ln -snf ("./zellij" | path expand) ~/.config/zellij
 
@@ -10,6 +11,7 @@ install: clean
 #         to replace a symlink which may point to a directory.
 [macos]
 install: clean
+    ln -snf ("./alacritty" | path expand) ~/.config/alacritty
     ln -shf ("./wezterm" | path expand) ~/.config/wezterm
     ln -shf ("./zellij" | path expand) ~/.config/zellij
 
@@ -17,6 +19,7 @@ install: clean
 install:
     rm -rf ~/.config/wezterm
     mklink /j ("~/.config/wezterm" | path expand)  ('~/src/wezterm-config/wezterm' | path expand --strict)
+    mklink /j ($env.APPDATA | path join "alacritty" | path expand)  ('~/src/wezterm-config/alacritty' | path expand --strict)
 
     nu ./windows-terminal/install.nu
 
