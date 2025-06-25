@@ -1,4 +1,21 @@
+# https://alacritty.org/config-alacritty.html
+
 # https://donsnotes.com/tech/charsets/ascii.html
+
+[font]
+size = 12.0
+
+# https://www.nerdfonts.com/font-downloads
+normal.family = "JetBrainsMono Nerd Font"
+bold.family = "JetBrainsMono Nerd Font"
+italic.family = "JetBrainsMono Nerd Font"
+bold_italic.family = "JetBrainsMono Nerd Font"
+
+# normal.family = "Cascadia Code"
+# bold.family = "Cascadia Code"
+# italic.family = "Cascadia Code"
+# bold_italic.family = "Cascadia Code"
+
 
 [terminal.shell]
 program = "nu"
@@ -17,7 +34,7 @@ bindings = [
     { key = "C", mods = "Control|Shift", action = "Copy" },
     { key = "V", mods = "Control|Shift", action = "Paste" },
     { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" }, # Open new Alacritty window in current working directory
-    { key = "=", mods = "Control", action = "IncreaseFontSize" },
+    { key = "=", mods = "Alt", action = "IncreaseFontSize" },
     { key = "-", mods = "Control", action = "DecreaseFontSize" },
     { key = "0", mods = "Control", action = "ResetFontSize" },
 
