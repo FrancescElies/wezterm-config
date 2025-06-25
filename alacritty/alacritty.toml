@@ -1,8 +1,5 @@
 # https://donsnotes.com/tech/charsets/ascii.html
 
-[font.normal]
-family = "Cascadia Code"
-
 [terminal.shell]
 program = "nu"
 args = ["-l"] # Use login shell to ensure your shell's dotfiles are sourced.
@@ -33,7 +30,9 @@ bindings = [
     # To open URLs with `xdg-open` (Linux/BSD):
     { key = "O", mods = "Control|Shift", action = "Open" }, # Default
     # Search (Ctrl+Shift+F by default for forward search)
-    # { key = "F", mods = "Control|Shift", action = "SearchForward" },
-    # { key = "B", mods = "Control|Shift", action = "SearchBackward" },
+
+    # https://en.wikipedia.org/wiki/Private_Use_Areas
+	# U+E000..U+F8FF
+    { key = ",", mods = "Control", chars = "\uE000" },
 ]
 
