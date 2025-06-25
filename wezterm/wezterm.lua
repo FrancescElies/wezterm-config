@@ -241,8 +241,8 @@ config.keys = {
   { key = 'F10', mods = 'NONE', action = wezterm.action.ToggleAlwaysOnTop },
   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
 
-  { key = 's', mods = mods, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
-  { key = 'v', mods = mods, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
+  -- { key = 's', mods = mods, action = act { SplitVertical = { domain = 'CurrentPaneDomain' } } },
+  -- { key = 'v', mods = mods, action = act { SplitHorizontal = { domain = 'CurrentPaneDomain' } } },
   { key = 'n', mods = mods, action = new_pane }, -- poor man's zellij New split pane
 
   { key = 'a', mods = mods, action = act.ActivateCommandPalette }, -- [c]ommands
