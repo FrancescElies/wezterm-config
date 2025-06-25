@@ -1,3 +1,5 @@
+# https://donsnotes.com/tech/charsets/ascii.html
+
 [terminal.shell]
 program = "nu"
 args = ["-l"] # Use login shell to ensure your shell's dotfiles are sourced.
