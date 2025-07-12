@@ -246,7 +246,7 @@ config.keys = {
 
   { key = 'a', mods = mods, action = act.ActivateCommandPalette }, -- [c]ommands
   { key = 'd', mods = mods, action = act.ShowDebugOverlay },
-  { key = 'f', mods = mods, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
+  { key = 's', mods = mods, action = act.Search { CaseInSensitiveString = '' } }, -- [f]ind
   { key = 'r', mods = mods, action = act.RotatePanes 'Clockwise' }, -- [r]otate panes
   { key = 'u', mods = mods, action = act.CharSelect }, -- insert [u]nicode character, e.g. emoji
 
