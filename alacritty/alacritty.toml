@@ -3,7 +3,7 @@
 # https://donsnotes.com/tech/charsets/ascii.html
 
 [window]
-decorations = "None"
+decorations = "Full"  # "Full" | "None" | "Transparent" (mac) | "Buttonless" (mac)
 
 [font]
 size = 12.0
@@ -53,6 +53,6 @@ bindings = [
 
     # https://en.wikipedia.org/wiki/Private_Use_Areas
 	# U+E000..U+F8FF
-    { key = ",", mods = "Control", chars = "\uE000" },
+    { key = ",", mods = "Control", chars = "\uf8ff" },  ## 0xef8f
 ]
 
