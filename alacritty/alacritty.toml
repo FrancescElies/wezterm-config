@@ -9,16 +9,15 @@ decorations = "Full"  # "Full" | "None" | "Transparent" (mac) | "Buttonless" (ma
 size = 12.0
 
 # https://www.nerdfonts.com/font-downloads
-normal.family = "JetBrainsMono Nerd Font"
-bold.family = "JetBrainsMono Nerd Font"
-italic.family = "JetBrainsMono Nerd Font"
-bold_italic.family = "JetBrainsMono Nerd Font"
+normal.family = "JetBrainsMonoNerdFont"
+bold.family = "JetBrainsMonoNerdFont"
+italic.family = "JetBrainsMonoNerdFont"
+bold_italic.family = "JetBrainsMonoNerdFont"
 
 # normal.family = "Cascadia Code"
 # bold.family = "Cascadia Code"
 # italic.family = "Cascadia Code"
 # bold_italic.family = "Cascadia Code"
-
 
 [terminal.shell]
 program = "nu"
